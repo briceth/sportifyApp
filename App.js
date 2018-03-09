@@ -5,8 +5,13 @@ import { Planning } from './src/views/Planning'
 
 console.ignoredYellowBox = ['Warning: componentWill', 'Remote debugger']
 
-export const App = StackNavigator({
-  Main: { screen: Activities },
-  Login: { screen: Login },
-  Planning: { screen: Planning }
-})
+export const App = StackNavigator(
+  {
+    Login: { screen: Login },
+    Activities: { screen: Activities },
+    Planning: { screen: Planning }
+  },
+  {
+    initialRouteName: 'Login'
+  }
+)
