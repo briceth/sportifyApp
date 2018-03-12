@@ -1,11 +1,5 @@
 import React, { Component } from 'react'
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity
-} from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { MyText } from '../components/MyText'
 import { DARKBLUE, LIGHTBLUE, BLACK, mainStyles } from '../mainStyle'
 import { Input } from '../components/Input'
