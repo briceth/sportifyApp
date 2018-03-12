@@ -15,13 +15,13 @@ export class RadioInput extends Component {
       <View style={styles.input}>
         <TouchableOpacity
           style={[styles.radio, radioMale]}
-          onPress={() => this.props.handleChange('Male', this.props.data)}
+          onPress={() => this.props.handleInputs('Male', this.props.data)}
         >
           <Text style={[styles.radioText, textMale]}>Homme</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.radio, radioFemale]}
-          onPress={() => this.props.handleChange('Female', this.props.data)}
+          onPress={() => this.props.handleInputs('Female', this.props.data)}
         >
           <Text style={[styles.radioText, textFemale]}>Femme</Text>
         </TouchableOpacity>
