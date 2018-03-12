@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { StyleSheet, TextInput } from 'react-native'
 import { LINEGREY } from '../mainStyle'
+import { BLACK } from '../mainStyle'
 import PropTypes from 'prop-types'
 
 export class Input extends Component {
@@ -41,10 +42,11 @@ export class Input extends Component {
 }
 const styles = StyleSheet.create({
   input: {
-    fontSize: 22,
-    height: 65,
+    fontSize: 18,
+    height: 55,
     paddingVertical: 10,
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
+    color: BLACK
   },
   border: {
     borderBottomWidth: 1,

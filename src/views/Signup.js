@@ -5,69 +5,79 @@ import { DARKBLUE, LIGHTBLUE, BLACK, mainStyles } from '../mainStyle'
 import { Input } from '../components/Input'
 import { Form } from '../components/Form'
 import { Button } from '../components/Button'
+import { RadioInput } from '../components/RadioInput'
 import axios from 'axios'
-const log = console.log
 
-export class Login extends Component {
+export class Signup extends Component {
   static navigationOptions = { header: null }
 
-  state = {}
-
-  handleInputs = (text, key) => {
-    this.setState({ [key]: text }, () => {
-      log('state', this.state)
-    })
+  state = {
+    gender: 'Male'
   }
 
-  handleSubmit = () => {
-    const { email, password } = this.state
-    log('this.state handle submit', this.state)
+  handleInputs = (text, key) => {
+    this.setState({ [key]: text })
+  }
 
+  signup = () => {
     axios
-      .post('http://localhost:3100/auth/log_in', { email, password })
-      .then(response => {
-        log('response', response)
+      .post('')
+      .then(response => {})
+      .catch(error => {
+        console.log(error)
       })
-      .catch(e => log(e))
   }
 
   render() {
-    console.log('this.props', this.props)
     return (
       <View style={mainStyles.container}>
         <View style={styles.logoContainer}>
           <Text style={styles.logo}>
             Sporti<Text style={styles.subLogo}>fy</Text>
           </Text>
-          <MyText style={styles.tagline}>Renseignez vos identifiants</MyText>
+          <MyText style={styles.tagline}>Bienvenue jeune padawan !</MyText>
         </View>
         <View style={styles.subContainer}>
           <Form>
             <Input
-              noCapitalize
+              data="firstName"
+              placeholder="Prénom"
               handleInputs={this.handleInputs}
-              data="email" //to receive key arg in handleInput
-              placeholder="Email"
             />
             <Input
+              data="lastName"
+              placeholder="Nom"
               handleInputs={this.handleInputs}
-              data="password" //to receive key arg in handleInput
+            />
+            <RadioInput
+              data="gender"
+              gender={this.state.gender}
+              handleInputs={this.handleInputs}
+            />
+            <Input
+              noCapitalize
+              data="email"
+              placeholder="Email"
+              handleInputs={this.handleInputs}
+            />
+            <Input
+              secureTextEntry
+              noCapitalize
+              data="password"
               noBorderBottom
               placeholder="Mot de passe"
-              secureTextEntry
+              handleInputs={this.handleInputs}
             />
           </Form>
         </View>
         <View style={styles.subContainer}>
-          <Button handleSubmit={this.handleSubmit}>Se connecter</Button>
+          <Button onPress={() => this.signup()}>S'inscrire</Button>
         </View>
 
         <View style={[styles.subContainer, styles.footer]}>
-          <MyText>Pas de compte ?</MyText>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Signup')}
-          >
-            <MyText style={mainStyles.lightblueText}>S'inscrire</MyText>
+          <MyText>Déjà inscrit ?</MyText>
+          <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+            <MyText style={mainStyles.lightblueText}>Se connecter</MyText>
           </TouchableOpacity>
         </View>
       </View>
@@ -80,7 +90,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   logoContainer: {
-    marginTop: 80,
+    marginTop: 50,
     justifyContent: 'center',
     alignItems: 'center'
   },
