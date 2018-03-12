@@ -568,16 +568,6 @@
 				3DAD3EAB1DF850E9000B6D8A /* libcxxreact.a */,
 				3DAD3EAD1DF850E9000B6D8A /* libjschelpers.a */,
 				3DAD3EAF1DF850E9000B6D8A /* libjschelpers.a */,
-<<<<<<< HEAD
-				0AF4E8932056826400CC041E /* libjsinspector.a */,
-				0AF4E8952056826400CC041E /* libjsinspector-tvOS.a */,
-				0AF4E8972056826400CC041E /* libthird-party.a */,
-				0AF4E8992056826400CC041E /* libthird-party.a */,
-				0AF4E89B2056826400CC041E /* libdouble-conversion.a */,
-				0AF4E89D2056826400CC041E /* libdouble-conversion.a */,
-				0AF4E89F2056826400CC041E /* libprivatedata.a */,
-				0AF4E8A12056826400CC041E /* libprivatedata-tvOS.a */,
-=======
 				3E34B6E1205686CE00B457FB /* libjsinspector.a */,
 				3E34B6E3205686CE00B457FB /* libjsinspector-tvOS.a */,
 				3E34B6E5205686CE00B457FB /* libthird-party.a */,
@@ -586,7 +576,6 @@
 				3E34B6EB205686CE00B457FB /* libdouble-conversion.a */,
 				3E34B6ED205686CE00B457FB /* libprivatedata.a */,
 				3E34B6EF205686CE00B457FB /* libprivatedata-tvOS.a */,
->>>>>>> 3f5d3acad69a86f3fcbfe261ad9ba0446384280b
 			);
 			name = Products;
 			sourceTree = "<group>";
