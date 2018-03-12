@@ -1,6 +1,6 @@
 import { StackNavigator } from 'react-navigation'
 import { Login } from './src/views/Login'
-import { Activities } from './src/views/Activities'
+import { Home } from './src/views/Home'
 import { Planning } from './src/views/Planning'
 import { Signup } from './src/views/Signup'
 
@@ -10,10 +10,10 @@ export const App = StackNavigator(
   {
     Login: { screen: Login },
     Signup: { screen: Signup },
-    Activities: { screen: Activities },
+    Home: { screen: Home },
     Planning: { screen: Planning }
   },
   {
-    initialRouteName: 'Login'
+    initialRouteName: 'Home'
   }
 )
