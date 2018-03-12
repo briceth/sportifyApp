@@ -9,6 +9,7 @@ import { Button } from '../components/Button'
 export class Login extends Component {
   static navigationOptions = { header: null }
   render() {
+    console.log('this.props', this.props)
     return (
       <View style={mainStyles.container}>
         <View style={styles.logoContainer}>
@@ -29,7 +30,9 @@ export class Login extends Component {
 
         <View style={[styles.subContainer, styles.footer]}>
           <MyText>Pas de compte ?</MyText>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('Signup')}
+          >
             <MyText style={mainStyles.lightblueText}>S'inscrire</MyText>
           </TouchableOpacity>
         </View>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { StyleSheet, TextInput } from 'react-native'
 import { LINEGREY } from '../mainStyle'
+import { BLACK } from '../mainStyle'
 
 export class Input extends Component {
   render() {
@@ -11,17 +12,17 @@ export class Input extends Component {
       <TextInput
         style={[styles.input, border]}
         placeholder={this.props.placeholder}
-        onChangeText={text => this.setState({ text })}
       />
     )
   }
 }
 const styles = StyleSheet.create({
   input: {
-    fontSize: 22,
-    height: 65,
+    fontSize: 18,
+    height: 55,
     paddingVertical: 10,
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
+    color: BLACK
   },
   border: {
     borderBottomWidth: 1,
