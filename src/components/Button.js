@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { TouchableOpacity, StyleSheet } from 'react-native'
 import { MyText } from '../components/MyText'
-import { DARKBLUE } from '../mainStyle'
+import { mainStyles, DARKBLUE } from '../mainStyle'
 import PropTypes from 'prop-types'
 
 export class Button extends Component {
@@ -12,7 +12,10 @@ export class Button extends Component {
 
   render() {
     return (
-      <TouchableOpacity onPress={this.props.handleSubmit} style={styles.button}>
+      <TouchableOpacity
+        onPress={this.props.handleSubmit}
+        style={[styles.button, mainStyles.shadow]}
+      >
         <MyText style={styles.text}>{this.props.children}</MyText>
       </TouchableOpacity>
     )

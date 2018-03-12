@@ -1,17 +1,27 @@
 import React, { Component } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import { MyText } from '../components/MyText'
+import PropTypes from 'prop-types'
+import axios from 'axios'
 import { DARKBLUE, LIGHTBLUE, BLACK, mainStyles } from '../mainStyle'
+import { MyText } from '../components/MyText'
 import { Input } from '../components/Input'
 import { Form } from '../components/Form'
 import { Button } from '../components/Button'
-import axios from 'axios'
+import { FlashAlert } from '../components/FlashAlert'
 const log = console.log
 
 export class Login extends Component {
   static navigationOptions = { header: null }
+  static propTypes = {
+    navigation: PropTypes.object,
+    navigate: PropTypes.func
+  }
 
-  state = {}
+  state = {
+    flashAlert: false,
+    email: '',
+    password: ''
+  }
 
   handleInputs = (text, key) => {
     this.setState({ [key]: text }, () => {
@@ -21,21 +31,43 @@ export class Login extends Component {
 
   handleSubmit = () => {
     const { email, password } = this.state
-    log('this.state handle submit', this.state)
 
     axios
       .post('http://localhost:3100/auth/log_in', { email, password })
       .then(response => {
-        log('response', response)
+        if (response.status === 200) {
+          return this.props.navigation.navigate('Activities')
+        }
       })
-      .catch(e => log(e))
+      .catch(e => {
+        if (e.response.status === 401) {
+          this.setState({ flashAlert: true })
+        }
+      })
+  }
+
+  renderFlashAlert = () => {
+    if (this.state.flashAlert) {
+      return (
+        <FlashAlert
+          removeFlashAlert={this.removeFlashAlert}
+          message="email ou mot de passe incorrect"
+        />
+      )
+    }
+    return null
+  }
+
+  //remove flash alert pop-up and make email & password inputs empty
+  removeFlashAlert = () => {
+    this.setState({ flashAlert: false, email: '', password: '' })
   }
 
   render() {
-    console.log('this.props', this.props)
     return (
       <View style={mainStyles.container}>
         <View style={styles.logoContainer}>
+          {this.renderFlashAlert()}
           <Text style={styles.logo}>
             Sporti<Text style={styles.subLogo}>fy</Text>
           </Text>
@@ -48,6 +80,7 @@ export class Login extends Component {
               handleInputs={this.handleInputs}
               data="email" //to receive key arg in handleInput
               placeholder="Email"
+              text={this.state.email}
             />
             <Input
               handleInputs={this.handleInputs}
@@ -55,6 +88,7 @@ export class Login extends Component {
               noBorderBottom
               placeholder="Mot de passe"
               secureTextEntry
+              text={this.state.password}
             />
           </Form>
         </View>
