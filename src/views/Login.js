@@ -5,9 +5,32 @@ import { DARKBLUE, LIGHTBLUE, BLACK, mainStyles } from '../mainStyle'
 import { Input } from '../components/Input'
 import { Form } from '../components/Form'
 import { Button } from '../components/Button'
+import axios from 'axios'
+const log = console.log
 
 export class Login extends Component {
   static navigationOptions = { header: null }
+
+  state = {}
+
+  handleInputs = (text, key) => {
+    this.setState({ [key]: text }, () => {
+      log('state', this.state)
+    })
+  }
+
+  handleSubmit = () => {
+    const { email, password } = this.state
+    log('this.state handle submit', this.state)
+
+    axios
+      .post('http://localhost:3100/auth/log_in', { email, password })
+      .then(response => {
+        log('response', response)
+      })
+      .catch(e => log(e))
+  }
+
   render() {
     return (
       <View style={mainStyles.container}>
@@ -19,12 +42,23 @@ export class Login extends Component {
         </View>
         <View style={styles.subContainer}>
           <Form>
-            <Input placeholder="Email" />
-            <Input noBorderBottom placeholder="Mot de passe" />
+            <Input
+              noCapitalize
+              handleInputs={this.handleInputs}
+              data="email" //to receive key arg in handleInput
+              placeholder="Email"
+            />
+            <Input
+              handleInputs={this.handleInputs}
+              data="password" //to receive key arg in handleInput
+              noBorderBottom
+              placeholder="Mot de passe"
+              secureTextEntry
+            />
           </Form>
         </View>
         <View style={styles.subContainer}>
-          <Button>Se connecter</Button>
+          <Button handleSubmit={this.handleSubmit}>Se connecter</Button>
         </View>
 
         <View style={[styles.subContainer, styles.footer]}>
