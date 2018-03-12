@@ -20,11 +20,14 @@ export class Signup extends Component {
   }
 
   signup = () => {
+    console.log('STATE', this.state)
     axios
-      .post('')
-      .then(response => {})
+      .post('http://localhost:3100/auth/sign_up', this.state)
+      .then(response => {
+        this.props.navigation.navigate('Planning')
+      })
       .catch(error => {
-        console.log(error)
+        console.log('ERROR', error.response)
       })
   }
 
@@ -71,7 +74,7 @@ export class Signup extends Component {
           </Form>
         </View>
         <View style={styles.subContainer}>
-          <Button onPress={() => this.signup()}>S'inscrire</Button>
+          <Button handleSubmit={this.signup}>S'inscrire</Button>
         </View>
 
         <View style={[styles.subContainer, styles.footer]}>
