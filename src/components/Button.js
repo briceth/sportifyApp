@@ -1,13 +1,18 @@
 import React, { Component } from 'react'
-import { TouchableOpacity, View, StyleSheet } from 'react-native'
+import { TouchableOpacity, StyleSheet } from 'react-native'
 import { MyText } from '../components/MyText'
-import { mainStyles } from '../mainStyle'
 import { DARKBLUE } from '../mainStyle'
+import PropTypes from 'prop-types'
 
 export class Button extends Component {
+  static propTypes = {
+    handleSubmit: PropTypes.func,
+    children: PropTypes.node
+  }
+
   render() {
     return (
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity onPress={this.props.handleSubmit} style={styles.button}>
         <MyText style={styles.text}>{this.props.children}</MyText>
       </TouchableOpacity>
     )
