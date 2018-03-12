@@ -17,5 +17,12 @@ export const mainStyles = StyleSheet.create({
     fontWeight: 'bold',
     lineHeight: 25,
     textDecorationLine: 'underline'
+  },
+  shadow: {
+    shadowColor: '#3e3e3e',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.7,
+    shadowRadius: 2,
+    elevation: 1
   }
 })
