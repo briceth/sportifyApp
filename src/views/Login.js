@@ -36,6 +36,12 @@ export class Login extends Component {
       .then(response => {
         if (response.status === 200) {
           store.save('currentUser', response.data.user)
+          store.save('userSessions', response.data.user.account.sessions)
+          store.save(
+            'userFavoritesActivities',
+            response.data.user.account.favoritesActivities
+          )
+
           return this.props.navigation.navigate('Home')
         }
       })

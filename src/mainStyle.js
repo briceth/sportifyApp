@@ -13,7 +13,7 @@ export const mainStyles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   containerFlex: {
-    flex: 1,
+    flex: 1
   },
   lightblueText: {
     color: LIGHTBLUE,

@@ -7,6 +7,7 @@ export class Reservation extends Component {
     children: PropTypes.node,
     style: PropTypes.array
   }
+
   render() {
     return <View style={this.props.style}>{this.props.children}</View>
   }

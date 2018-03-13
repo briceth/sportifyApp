@@ -6,9 +6,12 @@ import { Reservation } from './Reservation'
 import { ReservationInfos } from './ReservationInfos'
 import { Actions } from './Actions'
 import { Action } from './Action'
+import { MyText } from '../../MyText'
 import PropTypes from 'prop-types'
 import axios from 'axios'
 import store from 'react-native-simple-store'
+import { format } from 'date-fns'
+import fr from 'date-fns/locale/fr'
 
 export class Reservations extends Component {
   static propTypes = {
@@ -52,8 +55,8 @@ export class Reservations extends Component {
   }
 
   renderReservations = () => {
-    if (this.state.loading) return <Text>'loading...'</Text>
-    const reservations = this.state.reservations.map((session, index) => {
+    if (this.state.loading) return <MyText>'loading...'</MyText>
+    let reservations = this.state.reservations.map((session, index) => {
       console.log(session)
       return (
         <Reservation
@@ -61,8 +64,11 @@ export class Reservations extends Component {
           key={index}
         >
           <ReservationInfos>
-            <Text style={mainStyles.boldText}>{session.activity.name}</Text>
-            <Text>Hello</Text>
+            <MyText style={mainStyles.boldText}>{session.activity.name}</MyText>
+            <MyText>{session.activity.center.name}</MyText>
+            <MyText>
+              {format(session.startsAt, 'ddd DD MMM [à] HH:mm', { locale: fr })}
+            </MyText>
           </ReservationInfos>
           <Actions style={[styles.actions]}>
             <Action icon="qrcode" style={[styles.action]} />
@@ -71,11 +77,19 @@ export class Reservations extends Component {
         </Reservation>
       )
     })
+    console.log('Taille reservations :', reservations.length === 0)
+    if (reservations.length === 0) {
+      reservations = (
+        <MyText style={styles.centerText} key="no-res">
+          Vous n'avez pas encore de réservations
+        </MyText>
+      )
+    }
 
     return [
-      <Text key="title" style={mainStyles.title}>
+      <MyText key="title" style={mainStyles.title}>
         Mes réservations
-      </Text>,
+      </MyText>,
       reservations
     ]
   }
@@ -97,9 +111,14 @@ const styles = StyleSheet.create({
   },
   actions: {
     // backgroundColor: 'red',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   action: {
-    marginLeft: 15
+    marginLeft: 20
+  },
+  centerText: {
+    textAlign: 'center',
+    paddingBottom: 20
   }
 })
