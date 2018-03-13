@@ -35,5 +35,10 @@ export const mainStyles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
     paddingVertical: 10
+  },
+  boldText: {
+    color: BLACK,
+    fontWeight: 'bold',
+    fontSize: 16
   }
 })
