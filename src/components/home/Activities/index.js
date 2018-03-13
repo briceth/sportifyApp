@@ -3,6 +3,7 @@ import { FlatList, View, StyleSheet } from 'react-native'
 import { MyText } from '../../MyText'
 import { Activity } from './Activity'
 import config from '../../../../config'
+import { mainStyles } from '../../../mainStyle'
 import axios from 'axios'
 
 export class Activities extends Component {
@@ -27,7 +28,7 @@ export class Activities extends Component {
   render() {
     return (
       <View>
-        <MyText style={styles.title}>Les cours</MyText>
+        <MyText style={mainStyles.title}>Les cours</MyText>
 
         <FlatList
           data={this.state.activities}

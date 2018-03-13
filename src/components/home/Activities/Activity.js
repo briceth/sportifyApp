@@ -6,10 +6,29 @@ import { LIGHTBLUE } from '../../../mainStyle'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 export class Activity extends Component {
-  state = {}
+  state = {
+    session: null
+  }
+
+  componentWillMount() {
+    const sessions = this.props.data
+
+    if (sessions.length > 0) {
+      this.setState({
+        session: sessions.sort(compare)[0].startsAt
+      })
+    }
+
+    function compare(a, b) {
+      if (a.startsAt < b.startsAt) return -1
+      if (a.startsAt > b.startsAt) return 1
+      return 0
+    }
+  }
 
   render() {
     const { image, name, center } = this.props.data
+    console.log(name, this.state.session)
     return (
       <TouchableOpacity style={styles.lessonContainer}>
         <Image
