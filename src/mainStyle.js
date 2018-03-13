@@ -12,9 +12,8 @@ export const mainStyles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between'
   },
-  containerPadded: {
+  containerFlex: {
     flex: 1,
-    padding: '5%'
   },
   lightblueText: {
     color: LIGHTBLUE,
