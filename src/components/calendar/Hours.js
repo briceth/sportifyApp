@@ -1,18 +1,8 @@
 import React, { Component } from 'react'
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView
-} from 'react-native'
-import PropTypes from 'prop-types'
+import { View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import { MyText } from './MyText'
-import { DARKBLUE } from '../mainStyle'
 
 export class Hours extends Component {
-  static propTypes = {}
-
   state = {
     isSelected: null,
     hours: ''

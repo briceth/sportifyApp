@@ -2,11 +2,16 @@ import React, { Component } from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 import { MyText } from '../MyText'
 import { DARKBLUE } from '../../mainStyle'
+import PropTypes from 'prop-types'
 
 export class CallToAction extends Component {
+  static propTypes = {
+    children: PropTypes.node
+  }
+
   render() {
     return (
-      <TouchableOpacity style={[styles.button]}>
+      <TouchableOpacity style={styles.button}>
         <MyText style={styles.text}>{this.props.children}</MyText>
       </TouchableOpacity>
     )

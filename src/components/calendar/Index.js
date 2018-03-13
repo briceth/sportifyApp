@@ -6,13 +6,11 @@ import {
   TouchableOpacity,
   ScrollView
 } from 'react-native'
-//import PropTypes from 'prop-types'
 import { MyText } from '../MyText'
 import { DARKBLUE } from '../../mainStyle'
 const log = console.log
 
 export class Calendar extends Component {
-  // static propTypes = {}
   state = {
     isDaySelected: null,
     isHourSelected: null,
