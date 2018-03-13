@@ -34,6 +34,6 @@ export const mainStyles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 20,
-    paddingVertical: 5
+    paddingVertical: 10
   }
 })

@@ -3,8 +3,9 @@ import { StyleSheet, Text, View } from 'react-native'
 import { Reservations } from '../components/home/Reservations'
 import { Reservation } from '../components/home/Reservations/Reservation'
 import { ReservationInfos } from '../components/home/Reservations/ReservationInfos'
-import { mainStyles, BLACK } from '../mainStyle'
+import { mainStyles, BLACK, LIGHTBLUE } from '../mainStyle'
 import { Actions } from '../components/home/Reservations/Actions'
+import { Action } from '../components/home/Reservations/Action'
 
 export class Home extends Component {
   state = {
@@ -27,9 +28,11 @@ export class Home extends Component {
         <Reservation style={[styles.reservation, mainStyles.shadow]}>
           <ReservationInfos>
             <Text>Mes infos resa</Text>
+            <Text>Hello</Text>
           </ReservationInfos>
-          <Actions style={styles.actions}>
-            <Text>Delete</Text>
+          <Actions style={[styles.actions]}>
+            <Action icon="qrcode" style={[styles.action]} />
+            <Action icon="cog" style={[styles.action]} />
           </Actions>
         </Reservation>
       </Reservations>
@@ -53,6 +56,10 @@ const styles = StyleSheet.create({
     // borderColor: BLACK
   },
   actions: {
-    backgroundColor: 'red'
+    // backgroundColor: 'red',
+    flexDirection: 'row'
+  },
+  action: {
+    marginLeft: 15
   }
 })

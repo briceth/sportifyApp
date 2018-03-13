@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import PropTypes from 'prop-types'
 
 export class ReservationInfos extends Component {
