@@ -35,5 +35,26 @@ export const mainStyles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
     paddingVertical: 10
+  },
+  subTitle: {
+    fontSize: 18
+  },
+  paragraphe: {
+    fontSize: 20,
+    fontWeight: '500',
+    color: 'white',
+    shadowColor: 'black',
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.8,
+    shadowRadius: 4
+  },
+  tagline: {
+    fontSize: 16,
+    fontWeight: '300',
+    color: 'white',
+    shadowColor: 'black',
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2
   }
 })
