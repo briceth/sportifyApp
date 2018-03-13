@@ -10,7 +10,6 @@ import { Button } from '../components/Button'
 import { FlashAlert } from '../components/FlashAlert'
 import config from '../../config'
 import store from 'react-native-simple-store'
-const log = console.log
 
 export class Login extends Component {
   static navigationOptions = { header: null }

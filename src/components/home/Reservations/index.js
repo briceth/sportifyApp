@@ -1,17 +1,13 @@
 import config from '../../../../config'
 import React, { Component } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-import { mainStyles, BLACK, LIGHTBLUE } from '../../../mainStyle'
+import { View, StyleSheet } from 'react-native'
+import { mainStyles } from '../../../mainStyle'
 import { Reservation } from './Reservation'
-import { ReservationInfos } from './ReservationInfos'
-import { Actions } from './Actions'
-import { Action } from './Action'
 import { MyText } from '../../MyText'
+
 import PropTypes from 'prop-types'
 import axios from 'axios'
 import store from 'react-native-simple-store'
-import { format } from 'date-fns'
-import fr from 'date-fns/locale/fr'
 
 export class Reservations extends Component {
   static propTypes = {
@@ -62,19 +58,8 @@ export class Reservations extends Component {
         <Reservation
           style={[styles.reservation, mainStyles.shadow]}
           key={index}
-        >
-          <ReservationInfos>
-            <MyText style={mainStyles.boldText}>{session.activity.name}</MyText>
-            <MyText>{session.activity.center.name}</MyText>
-            <MyText>
-              {format(session.startsAt, 'ddd DD MMM [à] HH:mm', { locale: fr })}
-            </MyText>
-          </ReservationInfos>
-          <Actions style={[styles.actions]}>
-            <Action icon="qrcode" style={[styles.action]} />
-            <Action icon="cog" style={[styles.action]} />
-          </Actions>
-        </Reservation>
+          session={session}
+        />
       )
     })
     console.log('Taille reservations :', reservations.length === 0)
@@ -95,28 +80,27 @@ export class Reservations extends Component {
   }
 
   render() {
-    return <View style={this.props.style}>{this.renderReservations()}</View>
+    return (
+      <View key="view" style={this.props.style}>
+        {this.renderReservations()}
+      </View>
+    )
   }
 }
 
 const styles = StyleSheet.create({
   reservation: {
     backgroundColor: 'white',
-    paddingVertical: 15,
+    paddingVertical: 8,
     paddingHorizontal: 10,
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    position: 'relative',
+    overflow: 'hidden'
     // borderWidth: 1,
     // borderColor: BLACK
   },
-  actions: {
-    // backgroundColor: 'red',
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  action: {
-    marginLeft: 20
-  },
+
   centerText: {
     textAlign: 'center',
     paddingBottom: 20
