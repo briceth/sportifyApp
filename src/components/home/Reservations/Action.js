@@ -12,7 +12,7 @@ export class Action extends Component {
   render() {
     return (
       <TouchableOpacity style={this.props.style}>
-        <Icon name={this.props.icon} size={40} color={LIGHTBLUE} />
+        <Icon name={this.props.icon} size={30} color={LIGHTBLUE} />
       </TouchableOpacity>
     )
   }
