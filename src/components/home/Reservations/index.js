@@ -24,8 +24,6 @@ export class Reservations extends Component {
   componentDidMount = async () => {
     const currentUser = await store.get('currentUser')
     console.log('user after async ', currentUser)
-    console.log('URL : ', `${config.API_URL}/users/${currentUser._id}`)
-    console.log(`user token : ${currentUser.token}`)
     axios
       .get(`${config.API_URL}/api/users/${currentUser._id}`, {
         headers: {
@@ -55,41 +53,30 @@ export class Reservations extends Component {
 
   renderReservations = () => {
     if (this.state.loading) return <Text>'loading...'</Text>
-    // this.state.reservations.map((reservation, index) => {
-    //   return (
-    //     <Reservation
-    //       style={[styles.reservation, mainStyles.shadow]}
-    //       key={index}
-    //     >
-    //       <ReservationInfos>
-    //         <Text style={mainStyles.boldText}>Mes infos resa</Text>
-    //         <Text>Hello</Text>
-    //       </ReservationInfos>
-    //       <Actions style={[styles.actions]}>
-    //         <Action icon="qrcode" style={[styles.action]} />
-    //         <Action icon="cog" style={[styles.action]} />
-    //       </Actions>
-    //     </Reservation>
-    //   )
-    // })
+    const reservations = this.state.reservations.map((session, index) => {
+      console.log(session)
+      return (
+        <Reservation
+          style={[styles.reservation, mainStyles.shadow]}
+          key={index}
+        >
+          <ReservationInfos>
+            <Text style={mainStyles.boldText}>{session.activity.name}</Text>
+            <Text>Hello</Text>
+          </ReservationInfos>
+          <Actions style={[styles.actions]}>
+            <Action icon="qrcode" style={[styles.action]} />
+            <Action icon="cog" style={[styles.action]} />
+          </Actions>
+        </Reservation>
+      )
+    })
 
     return [
       <Text key="title" style={mainStyles.title}>
         Mes réservations
       </Text>,
-      <Reservation
-        key="reservation"
-        style={[styles.reservation, mainStyles.shadow]}
-      >
-        <ReservationInfos>
-          <Text style={mainStyles.boldText}>Mes infos resa</Text>
-          <Text>Hello</Text>
-        </ReservationInfos>
-        <Actions style={[styles.actions]}>
-          <Action icon="qrcode" style={[styles.action]} />
-          <Action icon="cog" style={[styles.action]} />
-        </Actions>
-      </Reservation>
+      reservations
     ]
   }
 
