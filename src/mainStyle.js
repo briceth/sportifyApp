@@ -12,6 +12,10 @@ export const mainStyles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between'
   },
+  containerPadded: {
+    flex: 1,
+    padding: '5%'
+  },
   lightblueText: {
     color: LIGHTBLUE,
     fontWeight: 'bold',
@@ -24,5 +28,12 @@ export const mainStyles = StyleSheet.create({
     shadowOpacity: 0.7,
     shadowRadius: 2,
     elevation: 1
+  },
+  title: {
+    color: BLUE,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 20,
+    paddingVertical: 10
   }
 })
