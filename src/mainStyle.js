@@ -12,6 +12,9 @@ export const mainStyles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between'
   },
+  containerFlex: {
+    flex: 1,
+  },
   lightblueText: {
     color: LIGHTBLUE,
     fontWeight: 'bold',
@@ -24,5 +27,17 @@ export const mainStyles = StyleSheet.create({
     shadowOpacity: 0.7,
     shadowRadius: 2,
     elevation: 1
+  },
+  title: {
+    color: BLUE,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 20,
+    paddingVertical: 10
+  },
+  boldText: {
+    color: BLACK,
+    fontWeight: 'bold',
+    fontSize: 16
   }
 })

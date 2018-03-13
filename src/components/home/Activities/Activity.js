@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, Image, TouchableOpacity } from 'react-native'
-import { MyText } from '../components/MyText'
-import { LIGHTBLUE } from '../mainStyle'
+import { MyText } from '../../MyText'
+import { LIGHTBLUE } from '../../../mainStyle'
 
 import Icon from 'react-native-vector-icons/FontAwesome'
 

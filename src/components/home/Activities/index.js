@@ -1,17 +1,18 @@
 import React, { Component } from 'react'
 import { FlatList, View, StyleSheet } from 'react-native'
-import { MyText } from './MyText'
+import { MyText } from '../../MyText'
 import { Activity } from './Activity'
+import config from '../../../../config'
 import axios from 'axios'
 
-export class ActivitiesComponent extends Component {
+export class Activities extends Component {
   state = {
     activities: []
   }
 
   componentDidMount() {
     axios
-      .get('http://localhost:3100/api/activities')
+      .get(`${config.API_URL}/api/activities`)
       .then(response => {
         console.log('RESPONSE.data', response.data)
         this.setState({
