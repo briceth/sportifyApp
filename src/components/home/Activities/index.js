@@ -28,7 +28,7 @@ export class Activities extends Component {
   render() {
     return (
       <View>
-        <MyText style={mainStyles.title}>Les cours</MyText>
+        <MyText style={[mainStyles.title]}>Les cours</MyText>
 
         <FlatList
           data={this.state.activities}

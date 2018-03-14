@@ -97,7 +97,7 @@ export class Reservation extends Component {
               )
             }
           >
-            <MyText style={styles.deleteTxt}>Delete</MyText>
+            <MyText style={[styles.deleteTxt]}>Delete</MyText>
           </TouchableOpacity>
         </Animated.View>
       </View>
