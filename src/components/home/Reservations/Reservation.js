@@ -4,7 +4,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Animated,
-  TouchableWithoutFeedback,
   Alert
 } from 'react-native'
 import PropTypes from 'prop-types'
@@ -13,8 +12,8 @@ import { Actions } from './Actions'
 import { Action } from './Action'
 import { MyText } from '../../MyText'
 import { format } from 'date-fns'
-import { ReservationInfos } from './ReservationInfos'
 import fr from 'date-fns/locale/fr'
+import { ReservationInfos } from './ReservationInfos'
 
 const deleteBtnWidth = 130
 
@@ -22,7 +21,8 @@ export class Reservation extends Component {
   static propTypes = {
     children: PropTypes.node,
     style: PropTypes.array,
-    session: PropTypes.object
+    session: PropTypes.object,
+    toggleQrCode: PropTypes.func
   }
 
   state = {
@@ -55,6 +55,13 @@ export class Reservation extends Component {
   render() {
     const { session, style } = this.props
     const { deleteBtnFromRight } = this.state
+    const sessionInfos = {
+      activity: session.activity.name,
+      center: session.activity.center.name,
+      startsAt: session.startsAt,
+      duration: session.duration,
+      teacher: session.teacher.account.firstName
+    }
     return [
       <View style={style}>
         <ReservationInfos>
@@ -65,7 +72,12 @@ export class Reservation extends Component {
           </MyText>
         </ReservationInfos>
         <Actions style={[styles.actions]}>
-          <Action icon="qrcode" style={[styles.action]} />
+          <Action
+            icon="qrcode"
+            style={[styles.action]}
+            handleTouch={this.props.toggleQrCode}
+            sessionInfos={sessionInfos}
+          />
           <Action
             icon="trash"
             style={[styles.action]}

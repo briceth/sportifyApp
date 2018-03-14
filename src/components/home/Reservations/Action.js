@@ -8,14 +8,18 @@ export class Action extends Component {
   static propTypes = {
     icon: PropTypes.string,
     style: PropTypes.array,
-    handleTouch: PropTypes.func
+    handleTouch: PropTypes.func,
+    sessionInfos: PropTypes.object
   }
 
   render() {
     const { style, icon, handleTouch } = this.props
     console.log('handleTouch : ', handleTouch)
     return (
-      <TouchableOpacity style={style} onPress={handleTouch}>
+      <TouchableOpacity
+        style={style}
+        onPress={() => handleTouch(this.props.sessionInfos)}
+      >
         <Icon name={icon} size={25} color={LIGHTBLUE} />
       </TouchableOpacity>
     )
