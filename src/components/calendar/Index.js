@@ -6,11 +6,17 @@ import {
   TouchableOpacity,
   ScrollView
 } from 'react-native'
+import PropTypes from 'prop-types'
+import { parse, format } from 'date-fns'
 import { MyText } from '../MyText'
 import { DARKBLUE } from '../../mainStyle'
 const log = console.log
 
 export class Calendar extends Component {
+  static propTypes = {
+    sessions: PropTypes.array
+  }
+
   state = {
     isDaySelected: null,
     isHourSelected: null,
@@ -19,51 +25,57 @@ export class Calendar extends Component {
   }
 
   selectHour = (hour, index) => {
-    this.setState({ hour, isHourSelected: index }, () => {
-      log(this.state)
-    })
+    this.setState({ hour, isHourSelected: index })
   }
 
   renderHours = () => {
+    const { sessions } = this.props
     const { isHourSelected } = this.state
 
-    if (this.state.isDaySelected !== null) {
-      return ['10:00', '10:30', '11:00', '15:00', '19:00', '21:00'].map(
-        (hour, index) => {
-          return (
-            <TouchableOpacity
-              onPress={() => this.selectHour(hour, index)}
-              key={index}
-              style={[
-                styles.hourContainer,
-                index === isHourSelected && styles.selected
-              ]}
-            >
-              <Text>{hour} am</Text>
-            </TouchableOpacity>
-          )
-        }
-      )
-    }
-  }
+    const { hours } = this.formatDate(sessions.map(session => session.startsAt))
 
-  selectday = (day, index) => {
-    this.setState({ day, isDaySelected: index }, () => {
-      console.log('this state', this.state)
+    return hours.map((hour, index) => {
+      return (
+        <TouchableOpacity
+          onPress={() => this.selectHour(hour, index)}
+          key={index}
+          style={[
+            styles.hourContainer,
+            index === isHourSelected && styles.selected
+          ]}
+        >
+          <Text>{hour}</Text>
+        </TouchableOpacity>
+      )
     })
   }
 
+  selectday = (day, index) => {
+    this.setState({ day, isDaySelected: index })
+  }
+
+  formatDate = dates => {
+    //log(dates.map(date => format(parse(date), 'MM DD YYYY HH:MM')))
+    const days = dates.map(date => {
+      return {
+        letter: format(parse(date), 'ddd'), //SUN, MON, TUE
+        num: format(parse(date), 'DD') //07, 08, 09
+      }
+    })
+    const months = dates.map(date => format(parse(date), 'MM')) //04, 05, 11
+    const hours = dates.map(date => format(parse(date), 'HH:MM')) //14:00, 11:30, 15:00
+    return { days, months, hours }
+  }
+
   renderDays = () => {
+    const { sessions } = this.props
     const { isDaySelected } = this.state
-    return [
-      { num: '22', letter: 'SUN' },
-      { num: '23', letter: 'MON' },
-      { num: '24', letter: 'TUE' },
-      { num: '25', letter: 'WED' },
-      { num: '26', letter: 'FRI' },
-      { num: '27', letter: 'SAT' },
-      { num: '28', letter: 'SUN' }
-    ].map((day, index) => {
+
+    const { days, months } = this.formatDate(
+      sessions.map(session => session.startsAt)
+    )
+
+    return days.map((day, index) => {
       return (
         <TouchableOpacity
           key={index}
