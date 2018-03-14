@@ -11,7 +11,6 @@ import { FlashAlert } from '../components/FlashAlert'
 import { Title } from '../components/Title'
 import config from '../../config'
 import store from 'react-native-simple-store'
-const log = console.log
 
 export class Login extends Component {
   static navigationOptions = { header: null }
@@ -37,6 +36,12 @@ export class Login extends Component {
       .then(response => {
         if (response.status === 200) {
           store.save('currentUser', response.data.user)
+          store.save('userSessions', response.data.user.account.sessions)
+          store.save(
+            'userFavoritesActivities',
+            response.data.user.account.favoritesActivities
+          )
+
           return this.props.navigation.navigate('Home')
         }
       })
