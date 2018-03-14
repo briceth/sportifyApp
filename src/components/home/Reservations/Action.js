@@ -14,7 +14,6 @@ export class Action extends Component {
 
   render() {
     const { style, icon, handleTouch } = this.props
-    console.log('handleTouch : ', handleTouch)
     return (
       <TouchableOpacity
         style={style}

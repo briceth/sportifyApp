@@ -12,7 +12,6 @@ import {
 import { mainStyles } from '../../../mainStyle'
 import { Reservation } from './Reservation'
 import { MyText } from '../../MyText'
-import { SwipeListView } from 'react-native-swipe-list-view'
 import Modal from 'react-native-modal'
 import PropTypes from 'prop-types'
 import axios from 'axios'
@@ -20,6 +19,7 @@ import store from 'react-native-simple-store'
 import { format } from 'date-fns'
 import fr from 'date-fns/locale/fr'
 import { formatDuration } from '../../../utils/utils'
+import { SwipeListView } from 'react-native-swipe-list-view'
 
 const { width } = Dimensions.get('window')
 const deleteBtnWidth = 150
@@ -34,8 +34,7 @@ export class Reservations extends Component {
     loading: true,
     reservations: [],
     isQrCodeVisible: false,
-    qrData: {},
-    flatListData: [{ key: 1, text: 'Salut' }, { key: 1, text: 'Hello' }]
+    qrData: {}
   }
 
   toggleQrCode = (sessionInfos = {}) =>
@@ -46,7 +45,6 @@ export class Reservations extends Component {
 
   componentDidMount = async () => {
     const currentUser = await store.get('currentUser')
-    console.log('user after async ', currentUser)
     axios
       .get(`${config.API_URL}/api/users/${currentUser._id}`, {
         headers: {
@@ -56,12 +54,10 @@ export class Reservations extends Component {
       })
       .then(response => {
         if (response.status === 200) {
-          this.setState(
-            { reservations: response.data.account.sessions },
-            () => {
-              console.log('State reservations : ', this.state.reservations)
-            }
-          )
+          this.setState({
+            reservations: response.data.account.sessions,
+            loading: false
+          })
         }
       })
       .catch(e => {
@@ -71,59 +67,70 @@ export class Reservations extends Component {
           this.setState({ flashAlert: true })
         }
       })
-    this.setState({ loading: false })
+  }
+
+  openRow = rowRef => {
+    // Use an internal method to manually swipe the row open to whatever value you pass
+    rowRef.manuallySwipeRow(-deleteBtnWidth)
   }
 
   renderReservations = () => {
     if (this.state.loading) return <MyText>'loading...'</MyText>
+
+    console.log('Reservations state : ', this.state.reservations)
     let reservations = (
       <SwipeListView
-        key="swipeList"
         useFlatList
         disableRightSwipe
-        // previewOpenValue={0}
+        keyExtractor={item => item._id}
         data={this.state.reservations}
-        renderItem={(data, rowMap) => (
+        renderItem={(rowData, rowMap) => (
           <Reservation
-            key={`res ${data.item._id}`}
+            key={`${rowData.item._id}`}
             style={[styles.reservation, mainStyles.shadow]}
-            session={data.item}
+            session={rowData.item}
             toggleQrCode={this.toggleQrCode}
+            openRow={() => this.openRow(rowMap[rowData.item._id])}
           />
         )}
-        renderHiddenItem={(data, rowMap) => (
-          <TouchableOpacity
-            key={`hidden ${data.item._id}`}
-            style={styles.deleteBtn}
-            onPress={() =>
-              Alert.alert(
-                'Confirmation',
-                'Etes vous sûr de vouloir supprimer cette réservation ?',
-                [
-                  {
-                    text: 'Annuler',
-                    onPress: () => console.log('Cancel Pressed'),
-                    style: 'cancel'
-                  },
-                  {
-                    text: 'Supprimer',
-                    onPress: () => console.log('OK Pressed'),
-                    style: 'destructive'
-                  }
-                ],
-                { cancelable: false }
-              )
-            }
+        renderHiddenItem={(rowData, rowMap) => (
+          <View
+            style={styles.deleteBtnContainer}
+            key={`hidden${rowData.item._id}`}
           >
-            <MyText style={[styles.deleteBtnText]}>Supprimer</MyText>
-          </TouchableOpacity>
+            <View style={styles.deleteBtnSpacer} />
+            <TouchableOpacity
+              style={styles.deleteBtn}
+              onPress={() =>
+                Alert.alert(
+                  'Confirmation',
+                  'Etes vous sûr de vouloir supprimer cette réservation ?',
+                  [
+                    {
+                      text: 'Annuler',
+                      onPress: () => console.log('Cancel Pressed'),
+                      style: 'cancel'
+                    },
+                    {
+                      text: 'Supprimer',
+                      onPress: () => console.log('OK Pressed'),
+                      style: 'destructive'
+                    }
+                  ],
+                  { cancelable: false }
+                )
+              }
+            >
+              <MyText style={[styles.deleteBtnText]}>Supprimer</MyText>
+            </TouchableOpacity>
+          </View>
         )}
         rightOpenValue={-deleteBtnWidth}
       />
     )
     if (this.state.reservations.length === 0) {
       reservations = (
-        <MyText style={[styles.centerText]} key="no-res">
+        <MyText style={[styles.centerText]} key="noRes">
           Vous n'avez pas encore de réservations
         </MyText>
       )
@@ -138,57 +145,65 @@ export class Reservations extends Component {
   }
 
   render() {
+    console.log('Rendering reservation with state : ', this.state)
     return (
       <View key="view" style={this.props.style}>
-        {this.renderReservations()},
-        <Modal
-          isVisible={this.state.isQrCodeVisible}
-          onBackdropPress={() => this.setState({ isQrCodeVisible: false })}
-          onSwipe={() => this.setState({ isQrCodeVisible: false })}
-          swipeDirection="down"
-          style={styles.modal}
-        >
-          <View style={[styles.modalContent]}>
-            <View style={styles.infos}>
-              <MyText style={[mainStyles.boldText]}>
-                {this.state.qrData.activity}
-              </MyText>
-              <MyText style={[mainStyles.boldText]}>
-                {this.state.qrData.center}
-              </MyText>
-              <View style={[styles.infoLine, { paddingTop: 20 }]}>
-                <Text style={styles.label}>Prof : </Text>
-                <MyText>{this.state.qrData.teacher}</MyText>
-              </View>
-              <View style={styles.infoLine}>
-                <Text style={styles.label}>Date : </Text>
-                <MyText>
-                  {format(this.state.qrData.startsAt, 'ddd DD MMM', {
-                    locale: fr
-                  })}
-                </MyText>
-              </View>
-              <View style={styles.infoLine}>
-                <Text style={styles.label}>Heure : </Text>
-                <MyText>
-                  {format(this.state.qrData.startsAt, 'HH:mm', {
-                    locale: fr
-                  })}
-                </MyText>
-              </View>
-              <View style={styles.infoLine}>
-                <Text style={styles.label}>Durée : </Text>
-                <MyText>{formatDuration(this.state.qrData.duration)}</MyText>
-              </View>
-            </View>
-
-            <Image
-              style={styles.qrImage}
-              source={require('../../../images/QRExemple.png')}
-            />
-          </View>
-        </Modal>
+        {this.renderReservations()}
+        {this.renderQrModal()}
       </View>
+    )
+  }
+
+  renderQrModal = () => {
+    return (
+      <Modal
+        key="qrModal"
+        isVisible={this.state.isQrCodeVisible}
+        onBackdropPress={() => this.setState({ isQrCodeVisible: false })}
+        onSwipe={() => this.setState({ isQrCodeVisible: false })}
+        swipeDirection="down"
+        style={styles.modal}
+      >
+        <View style={[styles.modalContent]}>
+          <View style={styles.infos}>
+            <MyText style={[mainStyles.boldText]}>
+              {this.state.qrData.activity}
+            </MyText>
+            <MyText style={[mainStyles.boldText]}>
+              {this.state.qrData.center}
+            </MyText>
+            <View style={[styles.infoLine, { paddingTop: 20 }]}>
+              <Text style={styles.label}>Prof : </Text>
+              <MyText>{this.state.qrData.teacher}</MyText>
+            </View>
+            <View style={styles.infoLine}>
+              <Text style={styles.label}>Date : </Text>
+              <MyText>
+                {format(this.state.qrData.startsAt, 'ddd DD MMM', {
+                  locale: fr
+                })}
+              </MyText>
+            </View>
+            <View style={styles.infoLine}>
+              <Text style={styles.label}>Heure : </Text>
+              <MyText>
+                {format(this.state.qrData.startsAt, 'HH:mm', {
+                  locale: fr
+                })}
+              </MyText>
+            </View>
+            <View style={styles.infoLine}>
+              <Text style={styles.label}>Durée : </Text>
+              <MyText>{formatDuration(this.state.qrData.duration)}</MyText>
+            </View>
+          </View>
+
+          <Image
+            style={styles.qrImage}
+            source={require('../../../images/QRExemple.png')}
+          />
+        </View>
+      </Modal>
     )
   }
 }
@@ -231,7 +246,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     overflow: 'hidden',
     borderBottomWidth: 1,
-    borderColor: 'grey'
+    borderColor: '#C6C6C7'
   },
 
   centerText: {
@@ -251,5 +266,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     width: deleteBtnWidth
+  },
+  deleteBtnSpacer: {
+    backgroundColor: 'white',
+    flex: 1
+  },
+  deleteBtnContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    height: '100%'
   }
 })

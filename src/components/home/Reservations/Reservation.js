@@ -1,11 +1,5 @@
 import React, { Component } from 'react'
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Animated,
-  Alert
-} from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import PropTypes from 'prop-types'
 import { mainStyles } from '../../../mainStyle'
 import { Actions } from './Actions'
@@ -15,8 +9,6 @@ import { format } from 'date-fns'
 import fr from 'date-fns/locale/fr'
 import { ReservationInfos } from './ReservationInfos'
 
-const deleteBtnWidth = 130
-
 export class Reservation extends Component {
   static propTypes = {
     children: PropTypes.node,
@@ -25,36 +17,8 @@ export class Reservation extends Component {
     toggleQrCode: PropTypes.func
   }
 
-  state = {
-    deleteBtnFromRight: new Animated.Value(-deleteBtnWidth)
-  }
-
-  showDeleteBtn = () => {
-    console.log('In show delete btn')
-    Animated.timing(
-      // Animate over time
-      this.state.deleteBtnFromRight, // The animated value to drive
-      {
-        toValue: 0, // Animate to right: 0
-        duration: 200
-      }
-    ).start() // Starts the animation
-  }
-
-  hideDeleteBtn = () => {
-    Animated.timing(
-      // Animate over time
-      this.state.deleteBtnFromRight, // The animated value to drive
-      {
-        toValue: -deleteBtnWidth, // Animate to right: 0
-        duration: 200
-      }
-    ).start() // Starts the animation
-  }
-
   render() {
     const { session, style } = this.props
-    const { deleteBtnFromRight } = this.state
     const sessionInfos = {
       activity: session.activity.name,
       center: session.activity.center.name,
@@ -62,6 +26,8 @@ export class Reservation extends Component {
       duration: session.duration,
       teacher: session.teacher.account.firstName
     }
+    console.log('openRow : ', this.props.openRow)
+
     return [
       <View style={style}>
         <ReservationInfos>
@@ -81,37 +47,9 @@ export class Reservation extends Component {
           <Action
             icon="trash"
             style={[styles.action]}
-            handleTouch={this.showDeleteBtn}
+            handleTouch={this.props.openRow}
           />
         </Actions>
-        <Animated.View
-          style={[styles.deleteBtn, { right: deleteBtnFromRight }]}
-        >
-          <TouchableOpacity
-            style={styles.deleteTouch}
-            onPress={() =>
-              Alert.alert(
-                'Confirmation',
-                'Etes vous sûr de vouloir supprimer cette réservation ?',
-                [
-                  {
-                    text: 'Annuler',
-                    onPress: () => console.log('Cancel Pressed'),
-                    style: 'cancel'
-                  },
-                  {
-                    text: 'Supprimer',
-                    onPress: () => console.log('OK Pressed'),
-                    style: 'destructive'
-                  }
-                ],
-                { cancelable: false }
-              )
-            }
-          >
-            <MyText style={[styles.deleteTxt]}>Delete</MyText>
-          </TouchableOpacity>
-        </Animated.View>
       </View>
     ]
   }
@@ -125,26 +63,5 @@ const styles = StyleSheet.create({
   },
   action: {
     marginLeft: 20
-  },
-  deleteBtn: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    backgroundColor: 'red',
-    alignItems: 'center',
-    width: deleteBtnWidth
-  },
-  deleteTouch: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    width: deleteBtnWidth - 30,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  deleteTxt: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 25
   }
 })
