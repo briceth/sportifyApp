@@ -6,18 +6,24 @@ import {
   Animated,
   Easing
 } from 'react-native'
+import axios from 'axios'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Calendar } from '../components/calendar/Index'
 import { Title } from '../components/Title'
 import { mainStyles, DARKBLUE } from '../mainStyle'
 import { MyText } from '../components/MyText'
 import { CallToAction } from '../components/buttons/callToAction'
+import config from '../../config'
 const log = console.log
 
 export class Planning extends Component {
   static navigationOptions = { header: null }
 
   state = {
+    name: '',
+    address: '',
+    sessions: [],
+    center: '',
     scaleValue: new Animated.Value(0),
     isOpen: false
   }
@@ -39,13 +45,33 @@ export class Planning extends Component {
   // renderTab = () => {
   //   return this.state.isOpen ? <Hours /> : null
   // }
+  componentDidMount() {
+    //const { activityId } = this.props
+    axios
+      .get(`${config.API_URL}/api/activities/5aa7a17c08e0a71fab3c1273`)
+      .then(response => {
+        log(response.data)
+        const { name } = response.data
+        const { address } = response.data.center
+        const center = response.data.center.name
+        const { sessions } = response.data
+
+        this.setState(
+          { name, address, sessions: [...sessions], center },
+          () => {
+            log('state', this.state)
+          }
+        )
+      })
+      .catch(e => log(e))
+  }
 
   render() {
     // const nearFar = this.state.scaleValue.interpolate({
     //   inputRange: [0, 0.5, 1],
     //   outputRange: [1, 7, 1]
     // })
-
+    const { name, address, center, sessions } = this.state
     return (
       <Animated.ScrollView
         scrollEventThrottle={1}
@@ -71,7 +97,7 @@ export class Planning extends Component {
             style={[styles.img, this.state.imgWidth]}
           >
             <View style={styles.textImg}>
-              <MyText style={[mainStyles.paragraphe]}>WOD CARDIO - 1H30</MyText>
+              <MyText style={[mainStyles.paragraphe]}>{name} - 1H30</MyText>
               <MyText style={[mainStyles.tagline]}>
                 Prochaine session dans 20 min
               </MyText>
@@ -82,15 +108,15 @@ export class Planning extends Component {
           <MyText style={[styles.center]}>Le centre</MyText>
           <View style={styles.infosContainer}>
             <View style={styles.infos}>
-              <MyText style={[styles.text]}>Sportify bellevile</MyText>
-              <MyText style={[styles.text]}>180 blvd de belleville</MyText>
-              <MyText style={[styles.text]}>75011 - Paris</MyText>
+              <MyText style={[styles.text]}>{center}</MyText>
+              <MyText style={[styles.text]}>{address}</MyText>
+              {/* <MyText style={[styles.text]}>75011 - Paris</MyText> */}
             </View>
             <Icon name="phone-square" size={40} color={DARKBLUE} />
           </View>
         </View>
 
-        <Calendar />
+        <Calendar sessions={sessions} />
 
         <CallToAction>Réserver</CallToAction>
 
@@ -108,7 +134,7 @@ export class Planning extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: 'red',
     paddingHorizontal: 5
   },
   img: {
