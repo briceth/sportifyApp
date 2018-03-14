@@ -72,19 +72,19 @@ export class Planning extends Component {
           >
             <View style={styles.textImg}>
               <MyText style={[mainStyles.paragraphe]}>WOD CARDIO - 1H30</MyText>
-              <MyText style={mainStyles.tagline}>
+              <MyText style={[mainStyles.tagline]}>
                 Prochaine session dans 20 min
               </MyText>
             </View>
           </ImageBackground>
         </View>
         <View style={styles.infosWrapper}>
-          <MyText style={styles.center}>Le centre</MyText>
+          <MyText style={[styles.center]}>Le centre</MyText>
           <View style={styles.infosContainer}>
             <View style={styles.infos}>
-              <MyText style={styles.text}>Sportify bellevile</MyText>
-              <MyText style={styles.text}>180 blvd de belleville</MyText>
-              <MyText style={styles.text}>75011 - Paris</MyText>
+              <MyText style={[styles.text]}>Sportify bellevile</MyText>
+              <MyText style={[styles.text]}>180 blvd de belleville</MyText>
+              <MyText style={[styles.text]}>75011 - Paris</MyText>
             </View>
             <Icon name="phone-square" size={40} color={DARKBLUE} />
           </View>

@@ -82,9 +82,10 @@ export class Calendar extends Component {
             {day.num}
           </MyText>
           <MyText
-            style={
-              (styles.letter, index === isDaySelected && styles.selectedTextPan)
-            }
+            style={[
+              styles.letter,
+              index === isDaySelected && styles.selectedTextPan
+            ]}
           >
             {day.letter}
           </MyText>

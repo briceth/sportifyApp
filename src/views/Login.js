@@ -9,6 +9,8 @@ import { Form } from '../components/Form'
 import { Button } from '../components/Button'
 import { FlashAlert } from '../components/FlashAlert'
 import { Title } from '../components/Title'
+import config from '../../config'
+import store from 'react-native-simple-store'
 const log = console.log
 
 export class Login extends Component {
@@ -25,19 +27,17 @@ export class Login extends Component {
   }
 
   handleInputs = (text, key) => {
-    this.setState({ [key]: text }, () => {
-      log('state', this.state)
-    })
+    this.setState({ [key]: text })
   }
 
   handleSubmit = () => {
     const { email, password } = this.state
-
     axios
-      .post('http://localhost:3100/auth/log_in', { email, password })
+      .post(`${config.API_URL}/auth/log_in`, { email, password })
       .then(response => {
         if (response.status === 200) {
-          return this.props.navigation.navigate('Activities')
+          store.save('currentUser', response.data.user)
+          return this.props.navigation.navigate('Home')
         }
       })
       .catch(e => {
