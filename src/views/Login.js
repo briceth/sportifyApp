@@ -8,6 +8,7 @@ import { Input } from '../components/Input'
 import { Form } from '../components/Form'
 import { Button } from '../components/Button'
 import { FlashAlert } from '../components/FlashAlert'
+import { Title } from '../components/Title'
 import config from '../../config'
 import store from 'react-native-simple-store'
 const log = console.log
@@ -68,9 +69,10 @@ export class Login extends Component {
       <View style={mainStyles.container}>
         <View style={styles.logoContainer}>
           {this.renderFlashAlert()}
-          <Text style={styles.logo}>
+          <Title />
+          {/* <Text style={styles.logo}>
             Sporti<Text style={styles.subLogo}>fy</Text>
-          </Text>
+          </Text> */}
           <MyText style={styles.tagline}>Renseignez vos identifiants</MyText>
         </View>
         <View style={styles.subContainer}>
@@ -117,13 +119,6 @@ const styles = StyleSheet.create({
     marginTop: 80,
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  logo: {
-    fontSize: 70,
-    color: DARKBLUE
-  },
-  subLogo: {
-    color: LIGHTBLUE
   },
   tagline: {
     marginTop: 20,
