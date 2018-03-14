@@ -141,34 +141,6 @@ export class Reservations extends Component {
     return (
       <View key="view" style={this.props.style}>
         {this.renderReservations()},
-        <View style={styles.container}>
-          <SwipeListView
-            useFlatList={true}
-            data={this.state.flatListData}
-            renderItem={(rowData, rowMap) => (
-              <View style={styles.line}>
-                <Text>I am {rowData.item.text} in a SwipeListView</Text>
-              </View>
-            )}
-            renderHiddenItem={(rowData, rowMap) => (
-              <View style={styles.rowBack}>
-                <TouchableOpacity
-                  onPress={_ => rowMap[rowData.item.key].closeRow()}
-                >
-                  <Text>Close</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-            leftOpenValue={75}
-            rightOpenValue={-150}
-            onRowOpen={(rowKey, rowMap) => {
-              setTimeout(() => {
-                rowMap[rowKey].closeRow()
-              }, 2000)
-            }}
-            previewRowKey={this.state.flatListData[0].key}
-          />
-        </View>
         <Modal
           isVisible={this.state.isQrCodeVisible}
           // onBackdropPress={() => this.setState({ isVisible: false })}
@@ -178,10 +150,10 @@ export class Reservations extends Component {
         >
           <View style={[styles.modalContent]}>
             <View style={styles.infos}>
-              <MyText style={mainStyles.boldText}>
+              <MyText style={[mainStyles.boldText]}>
                 {this.state.qrData.activity}
               </MyText>
-              <MyText style={mainStyles.boldText}>
+              <MyText style={[mainStyles.boldText]}>
                 {this.state.qrData.center}
               </MyText>
               <MyText>Prof: {this.state.qrData.teacher}</MyText>
