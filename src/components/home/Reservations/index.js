@@ -143,8 +143,8 @@ export class Reservations extends Component {
         {this.renderReservations()},
         <Modal
           isVisible={this.state.isQrCodeVisible}
-          // onBackdropPress={() => this.setState({ isVisible: false })}
-          onSwipe={() => this.setState({ isVisible: false })}
+          onBackdropPress={() => this.setState({ isQrCodeVisible: false })}
+          onSwipe={() => this.setState({ isQrCodeVisible: false })}
           swipeDirection="down"
           style={styles.modal}
         >
@@ -156,26 +156,30 @@ export class Reservations extends Component {
               <MyText style={[mainStyles.boldText]}>
                 {this.state.qrData.center}
               </MyText>
-              <MyText>Prof: {this.state.qrData.teacher}</MyText>
-              <MyText>
-                Date :{' '}
-                {format(this.state.qrData.startsAt, 'ddd DD MMM', {
-                  locale: fr
-                })}
-              </MyText>
-              <MyText>
-                Heure :{' '}
-                {format(this.state.qrData.startsAt, 'HH:mm', {
-                  locale: fr
-                })}
-              </MyText>
-              <MyText>
-                Durée: {formatDuration(this.state.qrData.duration)}
-              </MyText>
-
-              <TouchableOpacity onPress={this.toggleQrCode}>
-                <MyText>Hide me! width : {width}</MyText>
-              </TouchableOpacity>
+              <View style={[styles.infoLine, { paddingTop: 20 }]}>
+                <Text style={styles.label}>Prof : </Text>
+                <MyText>{this.state.qrData.teacher}</MyText>
+              </View>
+              <View style={styles.infoLine}>
+                <Text style={styles.label}>Date : </Text>
+                <MyText>
+                  {format(this.state.qrData.startsAt, 'ddd DD MMM', {
+                    locale: fr
+                  })}
+                </MyText>
+              </View>
+              <View style={styles.infoLine}>
+                <Text style={styles.label}>Heure : </Text>
+                <MyText>
+                  {format(this.state.qrData.startsAt, 'HH:mm', {
+                    locale: fr
+                  })}
+                </MyText>
+              </View>
+              <View style={styles.infoLine}>
+                <Text style={styles.label}>Durée : </Text>
+                <MyText>{formatDuration(this.state.qrData.duration)}</MyText>
+              </View>
             </View>
 
             <Image
@@ -211,6 +215,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: width * 0.75,
     height: width * 0.75
+  },
+  infoLine: {
+    flexDirection: 'row'
+  },
+  label: {
+    width: 60
   },
   reservation: {
     backgroundColor: 'white',
