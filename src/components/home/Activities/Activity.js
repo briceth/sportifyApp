@@ -2,20 +2,34 @@ import React, { Component } from 'react'
 import { StyleSheet, View, Image, TouchableOpacity } from 'react-native'
 import { MyText } from '../../MyText'
 import { LIGHTBLUE } from '../../../mainStyle'
+import { distanceInWords } from 'date-fns'
+
+const frLocale = require('date-fns/locale/fr')
 
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 export class Activity extends Component {
-  state = {
-    session: null
+  constructor(props) {
+    super(props)
+    this.state = {
+      start: null,
+      isFavorite: props.isFavorite
+    }
+    console.log(props.isFavorite)
   }
 
-  componentWillMount() {
-    const sessions = this.props.data
+  componentDidMount() {
+    this.findFirstSession()
+  }
 
-    if (sessions.length > 0) {
+  findFirstSession() {
+    const session = this.props.data.sessions.sort(compare)[0]
+
+    if (session) {
       this.setState({
-        session: sessions.sort(compare)[0].startsAt
+        start: distanceInWords(session.startsAt, new Date(), {
+          locale: frLocale
+        })
       })
     }
 
@@ -26,9 +40,25 @@ export class Activity extends Component {
     }
   }
 
+  // handlePress() {
+  //   if (this.state.isFavorite) {
+  //     this.setState({ isFavorite: false })
+  //     this.props.deleteFavorite(this.props.data._id)
+  //   }
+
+  //   if (!this.state.isFavorite) {
+  //     this.setState({ isFavorite: true })
+  //     this.props.pushFavorite(this.props.data._id)
+  //   }
+  // }
+
   render() {
-    const { image, name, center } = this.props.data
-    console.log(name, this.state.session)
+    console.log('render activity')
+    const { image, name, center, _id } = this.props.data
+    const { start } = this.state
+
+    const star = this.props.isFavorite ? 'star' : 'star-o'
+
     return (
       <TouchableOpacity style={styles.lessonContainer}>
         <Image
@@ -45,15 +75,20 @@ export class Activity extends Component {
           <MyText style={styles.centerText}>{center.name}</MyText>
         </View>
 
-        <TouchableOpacity style={styles.starContainer}>
-          <Icon name="star-o" size={30} color={LIGHTBLUE} />
+        <TouchableOpacity
+          style={styles.starContainer}
+          onPress={() => this.props.updateFavorites(_id)}
+        >
+          <Icon name={star} size={30} color={LIGHTBLUE} />
         </TouchableOpacity>
 
         <View style={styles.textContainer}>
           <MyText style={styles.nameActivities}>{name}</MyText>
-          <MyText style={styles.timeBeforeStart}>
-            Prochaine séance demain
-          </MyText>
+          {this.state.start && (
+            <MyText style={styles.timeBeforeStart}>
+              Prochaine scéance dans {start}
+            </MyText>
+          )}
         </View>
 
         <View style={styles.distanceContainer}>
