@@ -20,6 +20,7 @@ export class Reservation extends Component {
   render() {
     const { session, style } = this.props
     const sessionInfos = {
+      sessionId: session._id,
       activity: session.activity.name,
       center: session.activity.center.name,
       startsAt: session.startsAt,

@@ -20,6 +20,7 @@ import { format } from 'date-fns'
 import fr from 'date-fns/locale/fr'
 import { formatDuration } from '../../../utils/utils'
 import { SwipeListView } from 'react-native-swipe-list-view'
+import QRCode from 'react-native-qrcode'
 
 const { width } = Dimensions.get('window')
 const deleteBtnWidth = 150
@@ -198,9 +199,11 @@ export class Reservations extends Component {
             </View>
           </View>
 
-          <Image
-            style={styles.qrImage}
-            source={require('../../../images/QRExemple.png')}
+          <QRCode
+            value={this.state.qrData.sessionId}
+            size={width * 0.75}
+            bgColor="white"
+            fgColor="black"
           />
         </View>
       </Modal>
@@ -224,7 +227,8 @@ const styles = StyleSheet.create({
   },
   infos: {
     // backgroundColor: 'blue',
-    width: width * 0.75
+    width: width * 0.75,
+    marginBottom: 20
   },
   qrImage: {
     marginTop: 20,
