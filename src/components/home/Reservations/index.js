@@ -230,11 +230,6 @@ const styles = StyleSheet.create({
     width: width * 0.75,
     marginBottom: 20
   },
-  qrImage: {
-    marginTop: 20,
-    width: width * 0.75,
-    height: width * 0.75
-  },
   infoLine: {
     flexDirection: 'row'
   },
