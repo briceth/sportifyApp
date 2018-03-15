@@ -42,7 +42,7 @@ export class Activity extends Component {
         <View style={styles.blackfilter} />
 
         <View style={styles.centerContainer}>
-          <MyText style={styles.centerText}>{center.name}</MyText>
+          <MyText style={[styles.centerText]}>{center.name}</MyText>
         </View>
 
         <TouchableOpacity style={styles.starContainer}>
@@ -50,14 +50,14 @@ export class Activity extends Component {
         </TouchableOpacity>
 
         <View style={styles.textContainer}>
-          <MyText style={styles.nameActivities}>{name}</MyText>
-          <MyText style={styles.timeBeforeStart}>
+          <MyText style={[styles.nameActivities]}>{name}</MyText>
+          <MyText style={[styles.timeBeforeStart]}>
             Prochaine séance demain
           </MyText>
         </View>
 
         <View style={styles.distanceContainer}>
-          <MyText style={styles.distance}>3 km</MyText>
+          <MyText style={[styles.distance]}>3 km</MyText>
         </View>
       </TouchableOpacity>
     )
