@@ -70,7 +70,6 @@ export class Reservations extends Component {
         return session
       }
     )
-    console.log('Reservations state : ', reservations)
     if (reservations.length === 0) {
       return (
         <MyText style={[styles.centerText]} key="noRes">
