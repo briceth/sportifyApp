@@ -1,14 +1,29 @@
 import config from '../../../../config'
 import React, { Component } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-import { mainStyles, BLACK, LIGHTBLUE } from '../../../mainStyle'
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  Text,
+  Image,
+  Dimensions
+} from 'react-native'
+import { mainStyles } from '../../../mainStyle'
 import { Reservation } from './Reservation'
-import { ReservationInfos } from './ReservationInfos'
-import { Actions } from './Actions'
-import { Action } from './Action'
+import { MyText } from '../../MyText'
+import Modal from 'react-native-modal'
 import PropTypes from 'prop-types'
 import axios from 'axios'
 import store from 'react-native-simple-store'
+import { format } from 'date-fns'
+import fr from 'date-fns/locale/fr'
+import { formatDuration } from '../../../utils/utils'
+import { SwipeListView } from 'react-native-swipe-list-view'
+import QRCode from 'react-native-qrcode'
+
+const { width } = Dimensions.get('window')
+const deleteBtnWidth = 150
 
 export class Reservations extends Component {
   static propTypes = {
@@ -18,12 +33,19 @@ export class Reservations extends Component {
 
   state = {
     loading: true,
-    reservations: []
+    reservations: [],
+    isQrCodeVisible: false,
+    qrData: {}
   }
+
+  toggleQrCode = (sessionInfos = {}) =>
+    this.setState({
+      isQrCodeVisible: !this.state.isQrCodeVisible,
+      qrData: sessionInfos
+    })
 
   componentDidMount = async () => {
     const currentUser = await store.get('currentUser')
-    console.log('user after async ', currentUser)
     axios
       .get(`${config.API_URL}/api/users/${currentUser._id}`, {
         headers: {
@@ -33,12 +55,10 @@ export class Reservations extends Component {
       })
       .then(response => {
         if (response.status === 200) {
-          this.setState(
-            { reservations: response.data.account.sessions },
-            () => {
-              console.log('State reservations : ', this.state.reservations)
-            }
-          )
+          this.setState({
+            reservations: response.data.account.sessions,
+            loading: false
+          })
         }
       })
       .catch(e => {
@@ -48,58 +68,211 @@ export class Reservations extends Component {
           this.setState({ flashAlert: true })
         }
       })
-    this.setState({ loading: false })
+  }
+
+  openRow = rowRef => {
+    // Use an internal method to manually swipe the row open to whatever value you pass
+    rowRef.manuallySwipeRow(-deleteBtnWidth)
   }
 
   renderReservations = () => {
-    if (this.state.loading) return <Text>'loading...'</Text>
-    const reservations = this.state.reservations.map((session, index) => {
-      console.log(session)
-      return (
-        <Reservation
-          style={[styles.reservation, mainStyles.shadow]}
-          key={index}
-        >
-          <ReservationInfos>
-            <Text style={mainStyles.boldText}>{session.activity.name}</Text>
-            <Text>Hello</Text>
-          </ReservationInfos>
-          <Actions style={[styles.actions]}>
-            <Action icon="qrcode" style={[styles.action]} />
-            <Action icon="cog" style={[styles.action]} />
-          </Actions>
-        </Reservation>
+    if (this.state.loading) return <MyText>'loading...'</MyText>
+
+    console.log('Reservations state : ', this.state.reservations)
+    let reservations = (
+      <SwipeListView
+        useFlatList
+        disableRightSwipe
+        keyExtractor={item => item._id}
+        data={this.state.reservations}
+        renderItem={(rowData, rowMap) => (
+          <Reservation
+            key={`${rowData.item._id}`}
+            style={[styles.reservation, mainStyles.shadow]}
+            session={rowData.item}
+            toggleQrCode={this.toggleQrCode}
+            openRow={() => this.openRow(rowMap[rowData.item._id])}
+          />
+        )}
+        renderHiddenItem={(rowData, rowMap) => (
+          <View
+            style={styles.deleteBtnContainer}
+            key={`hidden${rowData.item._id}`}
+          >
+            <View style={styles.deleteBtnSpacer} />
+            <TouchableOpacity
+              style={styles.deleteBtn}
+              onPress={() =>
+                Alert.alert(
+                  'Confirmation',
+                  'Etes vous sûr de vouloir supprimer cette réservation ?',
+                  [
+                    {
+                      text: 'Annuler',
+                      onPress: () => console.log('Cancel Pressed'),
+                      style: 'cancel'
+                    },
+                    {
+                      text: 'Supprimer',
+                      onPress: () => console.log('OK Pressed'),
+                      style: 'destructive'
+                    }
+                  ],
+                  { cancelable: false }
+                )
+              }
+            >
+              <MyText style={[styles.deleteBtnText]}>Supprimer</MyText>
+            </TouchableOpacity>
+          </View>
+        )}
+        rightOpenValue={-deleteBtnWidth}
+      />
+    )
+    if (this.state.reservations.length === 0) {
+      reservations = (
+        <MyText style={[styles.centerText]} key="noRes">
+          Vous n'avez pas encore de réservations
+        </MyText>
       )
-    })
+    }
 
     return [
-      <Text key="title" style={mainStyles.title}>
+      <MyText key="title" style={[mainStyles.title]}>
         Mes réservations
-      </Text>,
+      </MyText>,
       reservations
     ]
   }
 
   render() {
-    return <View style={this.props.style}>{this.renderReservations()}</View>
+    console.log('Rendering reservation with state : ', this.state)
+    return (
+      <View key="view" style={this.props.style}>
+        {this.renderReservations()}
+        {this.renderQrModal()}
+      </View>
+    )
+  }
+
+  renderQrModal = () => {
+    return (
+      <Modal
+        key="qrModal"
+        isVisible={this.state.isQrCodeVisible}
+        onBackdropPress={() => this.setState({ isQrCodeVisible: false })}
+        onSwipe={() => this.setState({ isQrCodeVisible: false })}
+        swipeDirection="down"
+        style={styles.modal}
+      >
+        <View style={[styles.modalContent]}>
+          <View style={styles.infos}>
+            <MyText style={[mainStyles.boldText]}>
+              {this.state.qrData.activity}
+            </MyText>
+            <MyText style={[mainStyles.boldText]}>
+              {this.state.qrData.center}
+            </MyText>
+            <View style={[styles.infoLine, { paddingTop: 20 }]}>
+              <Text style={styles.label}>Prof : </Text>
+              <MyText>{this.state.qrData.teacher}</MyText>
+            </View>
+            <View style={styles.infoLine}>
+              <Text style={styles.label}>Date : </Text>
+              <MyText>
+                {format(this.state.qrData.startsAt, 'ddd DD MMM', {
+                  locale: fr
+                })}
+              </MyText>
+            </View>
+            <View style={styles.infoLine}>
+              <Text style={styles.label}>Heure : </Text>
+              <MyText>
+                {format(this.state.qrData.startsAt, 'HH:mm', {
+                  locale: fr
+                })}
+              </MyText>
+            </View>
+            <View style={styles.infoLine}>
+              <Text style={styles.label}>Durée : </Text>
+              <MyText>{formatDuration(this.state.qrData.duration)}</MyText>
+            </View>
+          </View>
+
+          <QRCode
+            value={this.state.qrData.sessionId}
+            size={width * 0.75}
+            bgColor="white"
+            fgColor="black"
+          />
+        </View>
+      </Modal>
+    )
   }
 }
 
 const styles = StyleSheet.create({
-  reservation: {
-    backgroundColor: 'white',
-    paddingVertical: 15,
-    paddingHorizontal: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-    // borderWidth: 1,
-    // borderColor: BLACK
+  modal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+    marginHorizontal: 10
   },
-  actions: {
-    // backgroundColor: 'red',
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    alignItems: 'center',
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    borderColor: 'rgba(0, 0, 0, 0.1)'
+  },
+  infos: {
+    // backgroundColor: 'blue',
+    width: width * 0.75,
+    marginBottom: 20
+  },
+  infoLine: {
     flexDirection: 'row'
   },
-  action: {
-    marginLeft: 15
+  label: {
+    width: 60
+  },
+  reservation: {
+    backgroundColor: 'white',
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    position: 'relative',
+    overflow: 'hidden',
+    borderBottomWidth: 1,
+    borderColor: '#C6C6C7'
+  },
+
+  centerText: {
+    textAlign: 'center',
+    paddingBottom: 20
+  },
+  deleteBtn: {
+    alignItems: 'center',
+    backgroundColor: 'red',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end'
+  },
+  deleteBtnText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 18,
+    textAlign: 'center',
+    width: deleteBtnWidth
+  },
+  deleteBtnSpacer: {
+    backgroundColor: 'white',
+    flex: 1
+  },
+  deleteBtnContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    height: '100%'
   }
 })

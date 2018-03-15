@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, TouchableOpacity } from 'react-native'
 import PropTypes from 'prop-types'
 import axios from 'axios'
-import { DARKBLUE, LIGHTBLUE, BLACK, mainStyles } from '../mainStyle'
+import { BLACK, mainStyles } from '../mainStyle'
 import { MyText } from '../components/MyText'
 import { Input } from '../components/Input'
 import { Form } from '../components/Form'
 import { Button } from '../components/Button'
 import { FlashAlert } from '../components/FlashAlert'
+import { Title } from '../components/Title'
 import config from '../../config'
 import store from 'react-native-simple-store'
-const log = console.log
 
 export class Login extends Component {
   static navigationOptions = { header: null }
@@ -36,6 +36,12 @@ export class Login extends Component {
       .then(response => {
         if (response.status === 200) {
           store.save('currentUser', response.data.user)
+          store.save('userSessions', response.data.user.account.sessions)
+          store.save(
+            'userFavoritesActivities',
+            response.data.user.account.favoritesActivities
+          )
+
           return this.props.navigation.navigate('Home')
         }
       })
@@ -68,9 +74,10 @@ export class Login extends Component {
       <View style={mainStyles.container}>
         <View style={styles.logoContainer}>
           {this.renderFlashAlert()}
-          <Text style={styles.logo}>
+          <Title />
+          {/* <Text style={styles.logo}>
             Sporti<Text style={styles.subLogo}>fy</Text>
-          </Text>
+          </Text> */}
           <MyText style={styles.tagline}>Renseignez vos identifiants</MyText>
         </View>
         <View style={styles.subContainer}>
@@ -117,13 +124,6 @@ const styles = StyleSheet.create({
     marginTop: 80,
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  logo: {
-    fontSize: 70,
-    color: DARKBLUE
-  },
-  subLogo: {
-    color: LIGHTBLUE
   },
   tagline: {
     marginTop: 20,

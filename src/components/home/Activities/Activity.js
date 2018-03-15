@@ -70,7 +70,7 @@ export class Activity extends Component {
         <View style={styles.blackfilter} />
 
         <View style={styles.centerContainer}>
-          <MyText style={styles.centerText}>{center.name}</MyText>
+          <MyText style={[styles.centerText]}>{center.name}</MyText>
         </View>
 
         <TouchableOpacity
@@ -90,7 +90,7 @@ export class Activity extends Component {
         </View>
 
         <View style={styles.distanceContainer}>
-          <MyText style={styles.distance}>3 km</MyText>
+          <MyText style={[styles.distance]}>3 km</MyText>
         </View>
       </TouchableOpacity>
     )

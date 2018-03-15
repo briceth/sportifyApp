@@ -7,12 +7,19 @@ import { LIGHTBLUE } from '../../../mainStyle'
 export class Action extends Component {
   static propTypes = {
     icon: PropTypes.string,
-    style: PropTypes.array
+    style: PropTypes.array,
+    handleTouch: PropTypes.func,
+    sessionInfos: PropTypes.object
   }
+
   render() {
+    const { style, icon, handleTouch } = this.props
     return (
-      <TouchableOpacity style={this.props.style}>
-        <Icon name={this.props.icon} size={30} color={LIGHTBLUE} />
+      <TouchableOpacity
+        style={style}
+        onPress={() => handleTouch(this.props.sessionInfos)}
+      >
+        <Icon name={icon} size={25} color={LIGHTBLUE} />
       </TouchableOpacity>
     )
   }
