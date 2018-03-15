@@ -24,12 +24,13 @@ export class Home extends Component {
         }
       })
       .then(response => {
+        console.log('RESPONSE', response)
         if (response.status === 200) {
           this.setState({
             loading: false,
             userConnected: {
-              id: response.data.id,
-              token: response.data.token
+              id: response.data._id,
+              token: 'O0viI801GMcpsV0zzvcefYrrEDEXgNAo'
             }
           })
         }
@@ -41,6 +42,8 @@ export class Home extends Component {
   }
 
   render() {
+    const { userConnected } = this.state
+
     return this.state.loading ? (
       <View style={[mainStyles.containerFlex, styles.centered]}>
         <ActivityIndicator />
@@ -48,7 +51,7 @@ export class Home extends Component {
     ) : (
       <ScrollView style={mainStyles.containerFlex}>
         <Reservations />
-        <Activities />
+        <Activities userConnected={userConnected} />
       </ScrollView>
     )
   }
