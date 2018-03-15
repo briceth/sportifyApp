@@ -10,33 +10,56 @@ import axios from 'axios'
 export class Home extends Component {
   state = {
     loading: true,
-    userConnected: null
+    userConnected: {},
+    account: {}
   }
 
   componentDidMount = async () => {
     const currentUser = await store.get('currentUser')
+    console.log('currentUser in HOME component disd mount : ', currentUser)
     if (!currentUser) return this.setState({ loading: false })
-    axios
-      .get(`${config.API_URL}/api/users/${currentUser._id}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${currentUser.token}`
-        }
+    this.updateAccountState(currentUser.account)
+    this.updateServerFromStorage(currentUser)
+  }
+
+  updateAccountState = account => {
+    return new Promise((resolve, reject) => {
+      this.setState({ account: account }, () => {
+        resolve(this.state.account)
       })
-      .then(response => {
-        if (response.status === 200) {
-          this.setState({
-            loading: false,
-            userConnected: {
-              id: response.data.id,
-              token: response.data.token
-            }
-          })
+    })
+  }
+
+  updateServerFromStorage = currentUser => {
+    axios
+      .post(
+        `${config.API_URL}/api/users/${currentUser._id}`,
+        {
+          account: currentUser.account
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${currentUser.token}`
+          }
         }
+      )
+      .then(response => {
+        console.log('USER FAVORITES UPDATED', response)
+        this.setState({
+          loading: false
+        })
+        console.log(
+          'updateServerFromStorage CurrentUser in storage : ',
+          currentUser
+        )
       })
       .catch(e => {
-        console.log('Error when fetching user data :', e)
+        console.log('Error when updating user data on server :', e)
         console.log('Response :', e.response)
+        this.setState({
+          loading: false
+        })
       })
   }
 
@@ -47,7 +70,12 @@ export class Home extends Component {
       </View>
     ) : (
       <ScrollView style={mainStyles.containerFlex}>
-        <Reservations />
+        <Reservations
+          updateServerFromStorage={this.updateServerFromStorage}
+          updateAccountState={this.updateAccountState}
+          userConnected={this.state.userConnected}
+          account={this.state.account}
+        />
         <Activities />
       </ScrollView>
     )
