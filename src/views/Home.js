@@ -11,22 +11,31 @@ export class Home extends Component {
   state = {
     loading: true,
     userConnected: {},
-    account: {}
+    currentUser: {}
   }
 
   componentDidMount = async () => {
     const currentUser = await store.get('currentUser')
-    console.log('currentUser in HOME component disd mount : ', currentUser)
     if (!currentUser) return this.setState({ loading: false })
-    this.updateAccountState(currentUser.account)
-    this.updateServerFromStorage(currentUser)
+    this.updateCurrentUserState(currentUser)
+    // this.updateServerFromStorage(currentUser)
   }
 
-  updateAccountState = account => {
+  updateCurrentUserState = currentUser => {
     return new Promise((resolve, reject) => {
-      this.setState({ account: account }, () => {
-        resolve(this.state.account)
-      })
+      this.setState(
+        {
+          currentUser,
+          loading: false,
+          userConnected: {
+            token: currentUser.token,
+            id: currentUser._id
+          }
+        },
+        () => {
+          resolve(this.state.currentUser)
+        }
+      )
     })
   }
 
@@ -75,9 +84,9 @@ export class Home extends Component {
       <ScrollView style={mainStyles.containerFlex}>
         <Reservations
           updateServerFromStorage={this.updateServerFromStorage}
-          updateAccountState={this.updateAccountState}
+          updateCurrentUserState={this.updateCurrentUserState}
           userConnected={this.state.userConnected}
-          account={this.state.account}
+          currentUser={this.state.currentUser}
         />
         <Activities userConnected={userConnected} />
       </ScrollView>
