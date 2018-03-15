@@ -15,7 +15,6 @@ export class Activity extends Component {
       start: null,
       isFavorite: props.isFavorite
     }
-    console.log(props.isFavorite)
   }
 
   componentDidMount() {
@@ -53,7 +52,6 @@ export class Activity extends Component {
   // }
 
   render() {
-    console.log('render activity')
     const { image, name, center, _id } = this.props.data
     const { start } = this.state
 

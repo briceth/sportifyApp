@@ -15,7 +15,7 @@ export class Activities extends Component {
   }
 
   componentDidMount() {
-    store.delete('favoriteActivities')
+    //store.delete('favoriteActivities')
 
     // Get Current User & Favorites
     store.get('currentUser').then(res => {
@@ -47,9 +47,7 @@ export class Activities extends Component {
 
   getFavorites(user) {
     store.get('favoriteActivities').then(res => {
-      console.log('RES', res)
       if (res) {
-        console.log('USER has favorites', res)
         this.setState({
           favorites: res
         })
@@ -62,7 +60,6 @@ export class Activities extends Component {
   }
 
   getFavoritesFromServer(user) {
-    console.log('WARNING getFavoritesFromServer')
     axios
       .get(`${config.API_URL}/api/users/${user._id}`, {
         headers: {
@@ -71,23 +68,13 @@ export class Activities extends Component {
         }
       })
       .then(res => {
-        console.log('RES getFavoritesFromServer', res)
         if (
           res.data.account.favoriteActivities &&
           res.data.account.favoriteActivities.length > 0
         ) {
-          console.log(
-            'getFavoritesFromServer update store',
-            res.data.account.favoriteActivities
-          )
-          this.setState(
-            {
-              favorites: res.data.account.favoriteActivities
-            },
-            () => {
-              console.log('STATE FAVORITES', this.state.favorites)
-            }
-          )
+          this.setState({
+            favorites: res.data.account.favoriteActivities
+          })
 
           store.save('favoriteActivities', res.data.account.favoriteActivities)
         }
@@ -101,15 +88,11 @@ export class Activities extends Component {
     const index = this.state.favorites.indexOf(id)
 
     if (index > -1) {
-      console.log('DELETE FAVORITE')
       store.get('favoriteActivities').then(res => {
-        console.log('OLD favoriteActivities', res)
-        const newFavorites = [...this.state.favorites]
-        newFavorites.splice(index, 1)
+        const favorites = [...this.state.favorites]
+        favorites.splice(index, 1)
 
-        this.setState({ favorites: newFavorites }, () => {
-          console.log('NEW STATE FAVORITES', this.state.favorites)
-        })
+        this.setState({ favorites })
 
         store.save('favoriteActivities', favorites).then(() => {
           store.get('favoriteActivities').then(res => {
@@ -120,11 +103,8 @@ export class Activities extends Component {
     }
 
     if (index === -1) {
-      console.log('PUSH FAVORITE')
       const favorites = [...this.state.favorites, id]
-      this.setState({ favorites }, () => {
-        console.log('NEW STATE FAVORITES', this.state.favorites)
-      })
+      this.setState({ favorites })
 
       store.push('favoriteActivities', id).then(() => {
         store.get('favoriteActivities').then(res => {
@@ -137,8 +117,6 @@ export class Activities extends Component {
   updateFavoritesOnServer(favorites) {
     const { currentUser } = this.state
     if (currentUser) {
-      console.log('POST updateFavoritesOnServer', currentUser._id)
-      console.log('POST updateFavoritesOnServer', currentUser.token)
       axios
         .post(
           `${config.API_URL}/api/users/${currentUser._id}`,
@@ -153,7 +131,7 @@ export class Activities extends Component {
           }
         )
         .then(res => {
-          console.log('RESPONSE', res)
+          console.log('USER FAVORITES UPDATED', res)
         })
         .catch(error => {
           console.log('ERROR', error)
@@ -162,30 +140,27 @@ export class Activities extends Component {
   }
 
   render() {
-    console.log('render Home')
-
     const { activities, favorites } = this.state
 
-    console.log('Favorites', favorites)
-    console.log('Activities', activities)
     return (
       <View>
-        <MyText style={mainStyles.title}>Les cours</MyText>
-
         {activities && (
-          <FlatList
-            data={activities}
-            renderItem={({ item }) => {
-              console.log('item ID', item._id)
-              return (
-                <Activity
-                  data={item}
-                  isFavorite={favorites.indexOf(item._id) > -1 ? true : false}
-                  updateFavorites={this.updateFavorites}
-                />
-              )
-            }}
-          />
+          <View>
+            <MyText style={mainStyles.title}>Les cours</MyText>
+            <FlatList
+              data={activities}
+              extraData={this.state.favorites}
+              renderItem={({ item }) => {
+                return (
+                  <Activity
+                    data={item}
+                    isFavorite={favorites.indexOf(item._id) > -1 ? true : false}
+                    updateFavorites={this.updateFavorites}
+                  />
+                )
+              }}
+            />
+          </View>
         )}
       </View>
     )
