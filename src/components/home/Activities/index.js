@@ -18,13 +18,13 @@ export class Activities extends Component {
 
   componentDidMount() {
     //store.delete('favoriteActivities')
-    const { userConnected } = this.props
+    const { currentUser } = this.props
 
     //Get Activitites
     this.getActivities()
 
     // Get Favorites
-    this.getFavorites(userConnected ? userConnected : false)
+    this.getFavorites(currentUser ? currentUser : false)
   }
 
   getFavorites(user) {
@@ -54,8 +54,6 @@ export class Activities extends Component {
   }
 
   getFavoritesFromServer(user) {
-    console.log('getFavoritesFromServer')
-    console.log('USER', user)
     axios
       .get(`${config.API_URL}/api/users/${user.id}`, {
         headers: {
@@ -83,7 +81,6 @@ export class Activities extends Component {
 
   updateFavorites = id => {
     const index = this.state.favorites.indexOf(id)
-    console.log('updateFavorites index', index)
 
     if (index > -1) {
       store.get('favoriteActivities').then(res => {
@@ -113,28 +110,10 @@ export class Activities extends Component {
   }
 
   updateFavoritesOnServer(favorites) {
-    const { userConnected } = this.props
-    console.log('userConnected', userConnected)
-    if (userConnected) {
-      axios
-        .post(
-          `${config.API_URL}/api/users/${userConnected.id}`,
-          {
-            favorites: favorites
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${userConnected.token}`
-            }
-          }
-        )
-        .then(res => {
-          console.log('USER FAVORITES UPDATED', res)
-        })
-        .catch(error => {
-          console.log('ERROR', error)
-        })
+    const { currentUser } = this.props
+    if (currentUser) {
+      currentUser.account.favoriteActivities = favorites
+      this.props.updateServerFromStorage(currentUser)
     }
   }
 
