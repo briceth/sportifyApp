@@ -36,12 +36,6 @@ export class Login extends Component {
       .then(response => {
         if (response.status === 200) {
           store.save('currentUser', response.data.user)
-          // store.save('userSessions', response.data.user.account.sessions)
-          // store.save(
-          //   'userFavoritesActivities',
-          //   response.data.user.account.favoritesActivities
-          // )
-
           return this.props.navigation.navigate('Home')
         }
       })
@@ -78,7 +72,7 @@ export class Login extends Component {
           {/* <Text style={styles.logo}>
             Sporti<Text style={styles.subLogo}>fy</Text>
           </Text> */}
-          <MyText style={styles.tagline}>Renseignez vos identifiants</MyText>
+          <MyText style={[styles.tagline]}>Renseignez vos identifiants</MyText>
         </View>
         <View style={styles.subContainer}>
           <Form>
@@ -108,7 +102,7 @@ export class Login extends Component {
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate('Signup')}
           >
-            <MyText style={mainStyles.lightblueText}>S'inscrire</MyText>
+            <MyText style={[mainStyles.lightblueText]}>S'inscrire</MyText>
           </TouchableOpacity>
         </View>
       </View>
