@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, Image, TouchableOpacity } from 'react-native'
 import { MyText } from '../../MyText'
-import { LIGHTBLUE } from '../../../mainStyle'
+import { BLUE } from '../../../mainStyle'
 import { distanceInWords } from 'date-fns'
 
 const frLocale = require('date-fns/locale/fr')
@@ -23,7 +23,6 @@ export class Activity extends Component {
 
   findFirstSession() {
     const session = this.props.data.sessions.sort(compare)[0]
-
     if (session) {
       this.setState({
         start: distanceInWords(session.startsAt, new Date(), {
@@ -39,17 +38,11 @@ export class Activity extends Component {
     }
   }
 
-  // handlePress() {
-  //   if (this.state.isFavorite) {
-  //     this.setState({ isFavorite: false })
-  //     this.props.deleteFavorite(this.props.data._id)
-  //   }
-
-  //   if (!this.state.isFavorite) {
-  //     this.setState({ isFavorite: true })
-  //     this.props.pushFavorite(this.props.data._id)
-  //   }
-  // }
+  timeBeforeStartContainer = function() {
+    return {
+      maxWidth: this.props.width - 100
+    }
+  }
 
   render() {
     const { image, name, center, _id } = this.props.data
@@ -77,20 +70,22 @@ export class Activity extends Component {
           style={styles.starContainer}
           onPress={() => this.props.updateFavorites(_id)}
         >
-          <Icon name={star} size={30} color={LIGHTBLUE} />
+          <Icon name={star} size={30} color={BLUE} />
         </TouchableOpacity>
 
         <View style={styles.textContainer}>
           <MyText style={styles.nameActivities}>{name}</MyText>
           {this.state.start && (
-            <MyText style={styles.timeBeforeStart}>
-              Prochaine scéance dans {start}
-            </MyText>
+            <View style={this.timeBeforeStartContainer()}>
+              <MyText style={styles.timeBeforeStart}>
+                Prochaine scéance dans {start}
+              </MyText>
+            </View>
           )}
         </View>
 
         <View style={styles.distanceContainer}>
-          <MyText style={[styles.distance]}>3 km</MyText>
+          <MyText style={[styles.distance]}>33 km</MyText>
         </View>
       </TouchableOpacity>
     )
@@ -127,7 +122,12 @@ const styles = StyleSheet.create({
   textContainer: {
     position: 'absolute',
     bottom: 30,
-    left: 20
+    left: -10,
+    paddingLeft: 30,
+    paddingRight: 10,
+    paddingBottom: 5,
+    borderRadius: 4,
+    backgroundColor: BLUE
   },
   nameActivities: {
     fontSize: 26,
@@ -135,13 +135,13 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   timeBeforeStart: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
     color: 'white'
   },
   distanceContainer: {
     position: 'absolute',
-    bottom: 30,
+    bottom: 35,
     right: 20
   },
   distance: {
@@ -155,6 +155,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)'
+    backgroundColor: 'rgba(0, 0, 0, 0.1)'
   }
 })

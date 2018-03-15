@@ -54,9 +54,15 @@ export class Home extends Component {
         }
       )
       .then(response => {
-        this.setState({
-          loading: false
-        })
+        if (response.status === 200) {
+          this.setState({
+            loading: false,
+            userConnected: {
+              id: response.data._id,
+              token: response.data.token
+            }
+          })
+        }
       })
       .catch(e => {
         console.log('Error when updating user data on server :', e)
@@ -68,6 +74,8 @@ export class Home extends Component {
   }
 
   render() {
+    const { userConnected } = this.state
+
     return this.state.loading ? (
       <View style={[mainStyles.containerFlex, styles.centered]}>
         <ActivityIndicator />
@@ -80,7 +88,7 @@ export class Home extends Component {
           userConnected={this.state.userConnected}
           currentUser={this.state.currentUser}
         />
-        <Activities />
+        <Activities userConnected={userConnected} />
       </ScrollView>
     )
   }
