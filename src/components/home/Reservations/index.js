@@ -26,9 +26,9 @@ export class Reservations extends Component {
   static propTypes = {
     children: PropTypes.node,
     style: PropTypes.array,
-    account: PropTypes.object,
+    currentUser: PropTypes.object,
     userConnected: PropTypes.object,
-    updateAccountState: PropTypes.func,
+    updateCurrentUserState: PropTypes.func,
     updateServerFromStorage: PropTypes.func
   }
 
@@ -44,39 +44,32 @@ export class Reservations extends Component {
       qrData: sessionInfos
     })
 
-  // componentDidMount = async () => {
-  //   const currentUser = await store.get('currentUser')
-  //   if (!currentUser)
-  //     return this.setState({
-  //       userConnected: null
-  //     })
-  //   return this.setState({
-  //     reservations: currentUser.account.sessions,
-  //     userConnected: true
-  //   })
-  // }
-
   openRow = rowRef => {
     // Use an internal method to manually swipe the row open to whatever value you pass
     rowRef.manuallySwipeRow(-deleteBtnWidth)
   }
 
   deleteReservation = sessionId => {
-    console.log('Deleting session : ', sessionId)
-    const newAccount = { ...this.props.account }
-    newAccount.sessions = deleteWhere({ ...this.props.account }.sessions, {
+    const newCurrentUser = { ...this.props.currentUser }
+    const newAccount = { ...newCurrentUser.account }
+    newAccount.sessions = deleteWhere(newAccount.sessions, {
       _id: sessionId
     })
-    this.props.updateAccountState(newAccount).then(acc => {
-      console.log('About to update storage')
-      store.update('account', acc).then(res => {
-        this.props.updateServerFromStorage(acc)
+    newCurrentUser.account = newAccount
+    this.props.updateCurrentUserState(newCurrentUser).then(user => {
+      store.update('currentUser', newCurrentUser).then(res => {
+        this.props.updateServerFromStorage(newCurrentUser)
       })
     })
   }
 
   renderReservations = () => {
-    const reservations = this.props.account.sessions
+    const reservations = this.props.currentUser.account.sessions.map(
+      session => {
+        session.key = session._id
+        return session
+      }
+    )
     console.log('Reservations state : ', reservations)
     if (reservations.length === 0) {
       return (
@@ -89,7 +82,6 @@ export class Reservations extends Component {
       <SwipeListView
         useFlatList
         disableRightSwipe
-        keyExtractor={(item, index) => item._id}
         data={reservations}
         renderItem={(rowData, rowMap) => (
           <Reservation
@@ -138,7 +130,6 @@ export class Reservations extends Component {
   }
 
   render() {
-    console.log('Rendering reservation with state : ', this.state)
     return (
       <View key="view" style={this.props.style}>
         {this.props.userConnected && [
