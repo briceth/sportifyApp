@@ -14,7 +14,8 @@ export class Reservation extends Component {
     children: PropTypes.node,
     style: PropTypes.array,
     session: PropTypes.object,
-    toggleQrCode: PropTypes.func
+    toggleQrCode: PropTypes.func,
+    openRow: PropTypes.func
   }
 
   render() {
