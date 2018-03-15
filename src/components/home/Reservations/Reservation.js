@@ -27,7 +27,6 @@ export class Reservation extends Component {
       duration: session.duration,
       teacher: session.teacher.account.firstName
     }
-    console.log('openRow : ', this.props.openRow)
 
     return [
       <View style={style}>
