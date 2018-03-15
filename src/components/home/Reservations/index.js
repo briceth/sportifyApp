@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   Alert,
   Text,
-  Image,
   Dimensions
 } from 'react-native'
 import { mainStyles } from '../../../mainStyle'
@@ -33,6 +32,7 @@ export class Reservations extends Component {
 
   state = {
     loading: true,
+    userConnected: false,
     reservations: [],
     isQrCodeVisible: false,
     qrData: {}
@@ -46,6 +46,11 @@ export class Reservations extends Component {
 
   componentDidMount = async () => {
     const currentUser = await store.get('currentUser')
+    if (!currentUser)
+      return this.setState({
+        loading: false,
+        userConnected: false
+      })
     axios
       .get(`${config.API_URL}/api/users/${currentUser._id}`, {
         headers: {
@@ -57,7 +62,8 @@ export class Reservations extends Component {
         if (response.status === 200) {
           this.setState({
             reservations: response.data.account.sessions,
-            loading: false
+            loading: false,
+            userConnected: true
           })
         }
       })
@@ -75,9 +81,34 @@ export class Reservations extends Component {
     rowRef.manuallySwipeRow(-deleteBtnWidth)
   }
 
-  renderReservations = () => {
-    if (this.state.loading) return <MyText>'loading...'</MyText>
+  deleteReservation = sessionId => {
+    console.log('Deleting session : ', sessionId)
+    console.log('User : ', currentUser)
+    // axios
+    //   .get(`${config.API_URL}/api/users/${currentUser._id}`, {
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       Authorization: `Bearer ${currentUser.token}`
+    //     }
+    //   })
+    //   .then(response => {
+    //     if (response.status === 200) {
+    //       this.setState({
+    //         reservations: response.data.account.sessions,
+    //         loading: false
+    //       })
+    //     }
+    //   })
+    //   .catch(e => {
+    //     console.log('Error when fetching sessions of the user :', e)
+    //     console.log('Response :', e.response)
+    //     if (e.response.status === 401) {
+    //       this.setState({ flashAlert: true })
+    //     }
+    //   })
+  }
 
+  renderReservations = () => {
     console.log('Reservations state : ', this.state.reservations)
     let reservations = (
       <SwipeListView
@@ -114,7 +145,7 @@ export class Reservations extends Component {
                     },
                     {
                       text: 'Supprimer',
-                      onPress: () => console.log('OK Pressed'),
+                      onPress: () => this.deleteReservation(rowData.item._id),
                       style: 'destructive'
                     }
                   ],
@@ -137,19 +168,22 @@ export class Reservations extends Component {
       )
     }
 
-    return [
-      <MyText key="title" style={[mainStyles.title]}>
-        Mes réservations
-      </MyText>,
-      reservations
-    ]
+    return reservations
   }
 
   render() {
     console.log('Rendering reservation with state : ', this.state)
     return (
       <View key="view" style={this.props.style}>
-        {this.renderReservations()}
+        {this.state.loading && (
+          <MyText style={styles.loading}>loading...</MyText>
+        )}
+        {this.state.userConnected && [
+          <MyText key="title" style={[mainStyles.title]}>
+            Mes réservations
+          </MyText>,
+          this.renderReservations()
+        ]}
         {this.renderQrModal()}
       </View>
     )
@@ -274,5 +308,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     height: '100%'
-  }
+  },
+  loading: { textAlign: 'center', fontSize: 25, paddingTop: 30 }
 })
