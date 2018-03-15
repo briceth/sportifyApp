@@ -16,7 +16,7 @@ export class Button extends Component {
         onPress={this.props.handleSubmit}
         style={[styles.button, mainStyles.shadow]}
       >
-        <MyText style={styles.text}>{this.props.children}</MyText>
+        <MyText style={[styles.text]}>{this.props.children}</MyText>
       </TouchableOpacity>
     )
   }

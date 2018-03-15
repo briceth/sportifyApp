@@ -1,4 +1,3 @@
-import config from '../../../../config'
 import React, { Component } from 'react'
 import {
   View,
@@ -13,11 +12,10 @@ import { Reservation } from './Reservation'
 import { MyText } from '../../MyText'
 import Modal from 'react-native-modal'
 import PropTypes from 'prop-types'
-import axios from 'axios'
 import store from 'react-native-simple-store'
 import { format } from 'date-fns'
 import fr from 'date-fns/locale/fr'
-import { formatDuration } from '../../../utils/utils'
+import { formatDuration, deleteWhere } from '../../../utils/utils'
 import { SwipeListView } from 'react-native-swipe-list-view'
 import QRCode from 'react-native-qrcode'
 
@@ -27,13 +25,15 @@ const deleteBtnWidth = 150
 export class Reservations extends Component {
   static propTypes = {
     children: PropTypes.node,
-    style: PropTypes.array
+    style: PropTypes.array,
+    account: PropTypes.object,
+    userConnected: PropTypes.object,
+    updateAccountState: PropTypes.func,
+    updateServerFromStorage: PropTypes.func
   }
 
   state = {
-    loading: true,
-    userConnected: false,
-    reservations: [],
+    // reservations: [],
     isQrCodeVisible: false,
     qrData: {}
   }
@@ -44,37 +44,17 @@ export class Reservations extends Component {
       qrData: sessionInfos
     })
 
-  componentDidMount = async () => {
-    const currentUser = await store.get('currentUser')
-    if (!currentUser)
-      return this.setState({
-        loading: false,
-        userConnected: false
-      })
-    axios
-      .get(`${config.API_URL}/api/users/${currentUser._id}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${currentUser.token}`
-        }
-      })
-      .then(response => {
-        if (response.status === 200) {
-          this.setState({
-            reservations: response.data.account.sessions,
-            loading: false,
-            userConnected: true
-          })
-        }
-      })
-      .catch(e => {
-        console.log('Error when fetching sessions of the user :', e)
-        console.log('Response :', e.response)
-        if (e.response.status === 401) {
-          this.setState({ flashAlert: true })
-        }
-      })
-  }
+  // componentDidMount = async () => {
+  //   const currentUser = await store.get('currentUser')
+  //   if (!currentUser)
+  //     return this.setState({
+  //       userConnected: null
+  //     })
+  //   return this.setState({
+  //     reservations: currentUser.account.sessions,
+  //     userConnected: true
+  //   })
+  // }
 
   openRow = rowRef => {
     // Use an internal method to manually swipe the row open to whatever value you pass
@@ -83,39 +63,34 @@ export class Reservations extends Component {
 
   deleteReservation = sessionId => {
     console.log('Deleting session : ', sessionId)
-    console.log('User : ', currentUser)
-    // axios
-    //   .get(`${config.API_URL}/api/users/${currentUser._id}`, {
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       Authorization: `Bearer ${currentUser.token}`
-    //     }
-    //   })
-    //   .then(response => {
-    //     if (response.status === 200) {
-    //       this.setState({
-    //         reservations: response.data.account.sessions,
-    //         loading: false
-    //       })
-    //     }
-    //   })
-    //   .catch(e => {
-    //     console.log('Error when fetching sessions of the user :', e)
-    //     console.log('Response :', e.response)
-    //     if (e.response.status === 401) {
-    //       this.setState({ flashAlert: true })
-    //     }
-    //   })
+    const newAccount = { ...this.props.account }
+    newAccount.sessions = deleteWhere({ ...this.props.account }.sessions, {
+      _id: sessionId
+    })
+    this.props.updateAccountState(newAccount).then(acc => {
+      console.log('About to update storage')
+      store.update('account', acc).then(res => {
+        this.props.updateServerFromStorage(acc)
+      })
+    })
   }
 
   renderReservations = () => {
-    console.log('Reservations state : ', this.state.reservations)
-    let reservations = (
+    const reservations = this.props.account.sessions
+    console.log('Reservations state : ', reservations)
+    if (reservations.length === 0) {
+      return (
+        <MyText style={[styles.centerText]} key="noRes">
+          Vous n'avez pas encore de réservations
+        </MyText>
+      )
+    }
+    return (
       <SwipeListView
         useFlatList
         disableRightSwipe
-        keyExtractor={item => item._id}
-        data={this.state.reservations}
+        keyExtractor={(item, index) => item._id}
+        data={reservations}
         renderItem={(rowData, rowMap) => (
           <Reservation
             key={`${rowData.item._id}`}
@@ -140,7 +115,7 @@ export class Reservations extends Component {
                   [
                     {
                       text: 'Annuler',
-                      onPress: () => console.log('Cancel Pressed'),
+                      onPress: () => rowMap[rowData.item._id].closeRow(),
                       style: 'cancel'
                     },
                     {
@@ -160,25 +135,13 @@ export class Reservations extends Component {
         rightOpenValue={-deleteBtnWidth}
       />
     )
-    if (this.state.reservations.length === 0) {
-      reservations = (
-        <MyText style={[styles.centerText]} key="noRes">
-          Vous n'avez pas encore de réservations
-        </MyText>
-      )
-    }
-
-    return reservations
   }
 
   render() {
     console.log('Rendering reservation with state : ', this.state)
     return (
       <View key="view" style={this.props.style}>
-        {this.state.loading && (
-          <MyText style={styles.loading}>loading...</MyText>
-        )}
-        {this.state.userConnected && [
+        {this.props.userConnected && [
           <MyText key="title" style={[mainStyles.title]}>
             Mes réservations
           </MyText>,
@@ -308,6 +271,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     height: '100%'
-  },
-  loading: { textAlign: 'center', fontSize: 25, paddingTop: 30 }
+  }
 })
