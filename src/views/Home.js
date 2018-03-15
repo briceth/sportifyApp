@@ -45,14 +45,15 @@ export class Home extends Component {
         }
       )
       .then(response => {
-        console.log('USER FAVORITES UPDATED', response)
-        this.setState({
-          loading: false
-        })
-        console.log(
-          'updateServerFromStorage CurrentUser in storage : ',
-          currentUser
-        )
+        if (response.status === 200) {
+          this.setState({
+            loading: false,
+            userConnected: {
+              id: response.data._id,
+              token: response.data.token
+            }
+          })
+        }
       })
       .catch(e => {
         console.log('Error when updating user data on server :', e)
@@ -64,6 +65,8 @@ export class Home extends Component {
   }
 
   render() {
+    const { userConnected } = this.state
+
     return this.state.loading ? (
       <View style={[mainStyles.containerFlex, styles.centered]}>
         <ActivityIndicator />
@@ -76,7 +79,7 @@ export class Home extends Component {
           userConnected={this.state.userConnected}
           account={this.state.account}
         />
-        <Activities />
+        <Activities userConnected={userConnected} />
       </ScrollView>
     )
   }
