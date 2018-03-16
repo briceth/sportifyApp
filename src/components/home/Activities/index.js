@@ -80,7 +80,9 @@ export class Activities extends Component {
       })
       .catch(error => {
         console.log('ERROR', error)
-        this.setState({ favoritesLoad: true })
+        this.setState({ favoritesLoad: true }, () => {
+          this.sortActivities()
+        })
       })
   }
 
