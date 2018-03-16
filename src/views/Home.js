@@ -6,13 +6,27 @@ import { Activities } from '../components/home/Activities'
 import { mainStyles } from '../mainStyle'
 import store from 'react-native-simple-store'
 import axios from 'axios'
+import PropTypes from 'prop-types'
 
 export class Home extends Component {
+  static navigationOptions = {
+    title: 'Home'
+  }
+
+  static propTypes = {
+    navigation: PropTypes.object
+  }
+
   state = {
     loading: true,
     userConnected: {},
     currentUser: {}
   }
+
+  goToPlanning = activityId =>
+    this.props.navigation.navigate('Planning', {
+      activityId
+    })
 
   componentDidMount = async () => {
     const currentUser = await store.get('currentUser')
@@ -88,7 +102,10 @@ export class Home extends Component {
           userConnected={this.state.userConnected}
           currentUser={this.state.currentUser}
         />
-        <Activities userConnected={userConnected} />
+        <Activities
+          userConnected={userConnected}
+          goToPlanning={this.goToPlanning}
+        />
       </ScrollView>
     )
   }
