@@ -89,19 +89,11 @@ export class Activity extends Component {
         </TouchableOpacity>
 
         <View style={styles.textContainer}>
-<<<<<<< HEAD
-          <MyText style={styles.nameActivities}>{name}</MyText>
+          <MyText style={[styles.nameActivities]}>{name}</MyText>
           {sessions && (
             <View style={this.timeBeforeStartContainer()}>
-              <MyText style={styles.timeBeforeStart}>
-                Prochaine scéance dans {this.startsAt()}
-=======
-          <MyText style={[styles.nameActivities]}>{name}</MyText>
-          {this.state.start && (
-            <View style={this.timeBeforeStartContainer()}>
               <MyText style={[styles.timeBeforeStart]}>
-                Prochaine scéance dans {start}
->>>>>>> e52061e571f8f44833b29519357923878006e766
+                Prochaine scéance dans {this.startsAt()}
               </MyText>
             </View>
           )}
