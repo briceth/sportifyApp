@@ -6,8 +6,13 @@ import config from '../../../../config'
 import { mainStyles } from '../../../mainStyle'
 import axios from 'axios'
 import store from 'react-native-simple-store'
+import PropTypes from 'prop-types'
 
 export class Activities extends Component {
+  static propTypes = {
+    goToPlanning: PropTypes.func
+  }
+
   state = {
     activities: null,
     activitiesSorted: null,
@@ -167,6 +172,7 @@ export class Activities extends Component {
                 data={item}
                 isFavorite={favorites.indexOf(item._id) > -1 ? true : false}
                 updateFavorites={this.updateFavorites}
+                goToPlanning={this.props.goToPlanning}
               />
             )
           }}
