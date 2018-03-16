@@ -30,6 +30,13 @@ export class Activity extends Component {
     this.findFirstSession()
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.isFavorite !== this.props.isFavorite) {
+      return true
+    }
+    return false
+  }
+
   findFirstSession() {
     const session = this.props.data.sessions.sort(compare)[0]
     if (session) {
@@ -55,10 +62,10 @@ export class Activity extends Component {
 
   render() {
     const { image, name, center, _id } = this.props.data
+    console.log('render activity', _id)
     const { start } = this.state
 
     const star = this.props.isFavorite ? 'star' : 'star-o'
-    console.log('Data props in activity : ', this.props.data._id)
     return (
       <TouchableOpacity
         style={styles.lessonContainer}

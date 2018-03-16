@@ -140,8 +140,14 @@ export class Activities extends Component {
     const { activities, favoritesLoad, favorites } = this.state
 
     if (activities && favoritesLoad) {
-      let activitiesSorted = [...activities]
+      let activitiesSorted = []
       let favoriteActivities = []
+
+      activities.map(activity => {
+        activitiesSorted.push({ ...activity, key: activity._id })
+      })
+
+      console.log('activitiesSorted', activitiesSorted)
 
       for (let i = 0; i < favorites.length; i++) {
         const index = activitiesSorted.findIndex(x => x._id === favorites[i])
