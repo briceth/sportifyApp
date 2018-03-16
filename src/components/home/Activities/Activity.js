@@ -4,6 +4,7 @@ import { MyText } from '../../MyText'
 import { BLUE } from '../../../mainStyle'
 import { distanceInWords } from 'date-fns'
 import PropTypes from 'prop-types'
+import geolib from 'geolib'
 
 const frLocale = require('date-fns/locale/fr')
 
@@ -31,7 +32,11 @@ export class Activity extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.isFavorite !== this.props.isFavorite) {
+    if (
+      nextProps.geolocation !== this.props.geolocation ||
+      nextProps.isFavorite !== this.props.isFavorite ||
+      nextState.start != this.state.start
+    ) {
       return true
     }
     return false
@@ -60,10 +65,27 @@ export class Activity extends Component {
     }
   }
 
+  geolib() {
+    console.log(this.props.geolocation)
+    const distance = geolib.getDistanceSimple(
+      this.props.geolocation,
+      {
+        latitude: 48.8737157,
+        longitude: 2.36051359999999
+      },
+      100
+    )
+
+    if (distance < 1000) return '-1'
+    if (distance < 99000) return Math.round(distance / 1000)
+    return '+99'
+  }
+
   render() {
     const { image, name, center, _id } = this.props.data
-    console.log('render activity', _id)
     const { start } = this.state
+    const { geolocation } = this.props
+    console.log('render activity', _id, this.props.geolocation)
 
     const star = this.props.isFavorite ? 'star' : 'star-o'
     return (
@@ -103,9 +125,11 @@ export class Activity extends Component {
           )}
         </View>
 
-        <View style={styles.distanceContainer}>
-          <MyText style={[styles.distance]}>33 km</MyText>
-        </View>
+        {geolocation && (
+          <View style={styles.distanceContainer}>
+            <MyText style={[styles.distance]}>{this.geolib()} km</MyText>
+          </View>
+        )}
       </TouchableOpacity>
     )
   }
