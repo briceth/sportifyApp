@@ -15,7 +15,8 @@ export class Activity extends Component {
     isFavorite: PropTypes.bool,
     data: PropTypes.object,
     width: PropTypes.number,
-    goToPlanning: PropTypes.func
+    goToPlanning: PropTypes.func,
+    updateFavorites: PropTypes.func
   }
 
   constructor(props) {
@@ -85,10 +86,10 @@ export class Activity extends Component {
         </TouchableOpacity>
 
         <View style={styles.textContainer}>
-          <MyText style={styles.nameActivities}>{name}</MyText>
+          <MyText style={[styles.nameActivities]}>{name}</MyText>
           {this.state.start && (
             <View style={this.timeBeforeStartContainer()}>
-              <MyText style={styles.timeBeforeStart}>
+              <MyText style={[styles.timeBeforeStart]}>
                 Prochaine scéance dans {start}
               </MyText>
             </View>
