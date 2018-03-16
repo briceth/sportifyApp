@@ -60,7 +60,7 @@ export class Activities extends Component {
 
   getFavoritesFromServer(user) {
     axios
-      .get(`${config.API_URL}/api/users/${user.id}`, {
+      .get(`${config.API_URL}/api/users/${user._id}`, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${user.token}`
@@ -161,7 +161,7 @@ export class Activities extends Component {
 
     return activitiesSorted ? (
       <View>
-        <MyText style={mainStyles.title}>Les cours</MyText>
+        <MyText style={[mainStyles.title]}>Les cours</MyText>
         <FlatList
           data={activitiesSorted}
           extraData={this.state.favorites}

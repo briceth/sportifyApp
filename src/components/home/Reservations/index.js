@@ -64,11 +64,12 @@ export class Reservations extends Component {
 
   renderReservations = () => {
     const reservations = this.props.currentUser.account.sessions.map(
-      session => {
-        session.key = session._id
+      (session, index) => {
+        session.key = index.toString()
         return session
       }
     )
+    console.log('Reservation data', reservations)
     if (reservations.length === 0) {
       return (
         <MyText style={[styles.centerText]} key="noRes">
@@ -78,24 +79,22 @@ export class Reservations extends Component {
     }
     return (
       <SwipeListView
+        key="reservationsList"
         useFlatList
         disableRightSwipe
+        previewFirstRow
         data={reservations}
         renderItem={(rowData, rowMap) => (
           <Reservation
-            key={`${rowData.item._id}`}
             style={[styles.reservation, mainStyles.shadow]}
             session={rowData.item}
             toggleQrCode={this.toggleQrCode}
-            openRow={() => this.openRow(rowMap[rowData.item._id])}
+            openRow={() => this.openRow(rowMap[rowData.item.key])}
           />
         )}
         renderHiddenItem={(rowData, rowMap) => (
-          <View
-            style={styles.deleteBtnContainer}
-            key={`hidden${rowData.item._id}`}
-          >
-            <View style={styles.deleteBtnSpacer} />
+          <View style={styles.deleteBtnContainer}>
+            <View key="spacer" style={styles.deleteBtnSpacer} />
             <TouchableOpacity
               style={styles.deleteBtn}
               onPress={() =>
