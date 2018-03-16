@@ -17,12 +17,10 @@ export class Hours extends Component {
     // si l'id de l'heure (donné dans le mergeObject) correspond au jour cliqué,
     // tu affiches les heures
     return hours.map((hour, index) => {
-      //console.log(hour, dayId)
-
       if (hour._dayId === dayId) {
         return (
           <TouchableOpacity
-            onPress={() => selectHour(hour.hour, hour.id)}
+            onPress={() => selectHour(hour.hour, hour.id, hour.sessionId)}
             key={index}
             style={[
               styles.hourContainer,

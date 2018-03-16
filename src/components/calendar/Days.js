@@ -35,33 +35,31 @@ export class Days extends Component {
             hoursObject.push(...day.hours)
 
             return (
-              <View>
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => selectMonthAndDay(day.num, month, day.id)}
+              <TouchableOpacity
+                key={index}
+                onPress={() => selectMonthAndDay(day.num, month, day.id)}
+                style={[
+                  styles.containerDays,
+                  selectedDay == day.id && styles.selectedPan
+                ]}
+              >
+                <MyText
                   style={[
-                    styles.containerDays,
-                    selectedDay == day.id && styles.selectedPan
+                    styles.num,
+                    selectedDay == day.id && styles.selectedTextPan
                   ]}
                 >
-                  <MyText
-                    style={[
-                      styles.num,
-                      selectedDay == day.id && styles.selectedTextPan
-                    ]}
-                  >
-                    {day.num}
-                  </MyText>
-                  <MyText
-                    style={[
-                      styles.letter,
-                      selectedDay == day.id && styles.selectedTextPan
-                    ]}
-                  >
-                    {day.letter}
-                  </MyText>
-                </TouchableOpacity>
-              </View>
+                  {day.num}
+                </MyText>
+                <MyText
+                  style={[
+                    styles.letter,
+                    selectedDay == day.id && styles.selectedTextPan
+                  ]}
+                >
+                  {day.letter}
+                </MyText>
+              </TouchableOpacity>
             )
           })}
         </ScrollView>

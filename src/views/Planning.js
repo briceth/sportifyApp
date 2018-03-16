@@ -9,14 +9,13 @@ import {
 import axios from 'axios'
 import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { parse, format } from 'date-fns'
-import fr from 'date-fns/locale/fr'
+import store from 'react-native-simple-store'
 import { Calendar } from '../components/calendar/Index'
 import { mainStyles, DARKBLUE } from '../mainStyle'
 import { MyText } from '../components/MyText'
 import { CallToAction } from '../components/buttons/callToAction'
 import config from '../../config'
-import { rangeDateByMonth, generateId } from '../utils/utils'
+import { rangeDateByMonth, formatDate } from '../utils/utils'
 const log = console.log
 
 export class Planning extends Component {
@@ -30,40 +29,12 @@ export class Planning extends Component {
     name: '',
     address: '',
     center: '',
-    dates: [
-      // {
-      //   month: '',
-      //   days: [{ letter: '', num: '', id: '', hours: [{ hour: '', id: '' }] }]
-      // }
-    ],
+    dates: [],
     scaleValue: new Animated.Value(0),
-    isOpen: false
-  }
-
-  formatDate = dates => {
-    return dates.map(date => {
-      const dayId = generateId(date)
-
-      const dates = {
-        month: format(parse(date), 'MMMM', { locale: fr }), //March, April
-        days: [
-          {
-            letter: format(parse(date), 'ddd', { locale: fr }), //SUN, MON, TUE
-            num: format(parse(date), 'DD'), //07, 08, 09
-            id: dayId,
-            hours: [
-              {
-                hour: format(parse(date), 'HH:MM'),
-                id: generateId(date, true),
-                _dayId: dayId
-              }
-            ]
-          }
-        ]
-      }
-
-      return dates
-    })
+    isOpen: false,
+    selectedHour: null,
+    sessionId: null,
+    isHourSelected: false
   }
 
   makeImgBig = () => {
@@ -92,10 +63,7 @@ export class Planning extends Component {
         const center = response.data.center.name
         const sessions = response.data.sessions
 
-        const formatedDate = this.formatDate(
-          sessions.map(session => session.startsAt)
-        )
-        console.log('formatedDate', formatedDate)
+        const formatedDate = formatDate(sessions)
 
         const newDate = rangeDateByMonth(formatedDate)
         this.setState({ name, address, center, dates: [...newDate] }, () => {
@@ -105,29 +73,72 @@ export class Planning extends Component {
       .catch(e => log(e))
   }
 
+  selectHour = (hour, hourId, sessionId) => {
+    const selectHour = this.state.selectedHour
+
+    if (selectHour === hourId) {
+      // si il existe tu le supprimes
+      this.setState({ selectedHour: null, isHourSelected: false })
+    } else {
+      // sinon tu l'ajoutes
+      this.setState(
+        { isHourSelected: true, selectedHour: hourId, sessionId },
+        () => {
+          console.log('this state', this.state)
+        }
+      )
+    }
+  }
+
+  bookSession = async () => {
+    const currentUser = await store.get('currentUser')
+
+    console.log('currentUser', currentUser)
+
+    console.log('sessionId', this.state.sessionId)
+
+    console.log(`${config.API_URL}/api/sessions/${this.state.sessionId}/book`)
+    // need user id, session id
+    axios
+      .put(`${config.API_URL}/api/sessions/${this.state.sessionId}/book`, {
+        userId: currentUser._id
+      })
+      .then(response => {
+        console.log(response.data)
+      })
+      .catch(err => console.log(err))
+  }
+
+  renderButton = () => {
+    if (this.state.isHourSelected) {
+      return (
+        <CallToAction bookSession={this.bookSession}>Réserver</CallToAction>
+      )
+    }
+    return null
+  }
+
   render() {
     const { name, address, center, dates } = this.state
     console.log('Props in Planning :', this.props)
 
     return (
-      <Animated.ScrollView
-        scrollEventThrottle={1}
-        style={[styles.container]}
-        onScroll={this.makeImgBig}
-      >
-        <View>
-          <ImageBackground
-            resizeMode="cover"
-            source={{ uri: 'https://picsum.photos/400/500/?random' }}
-            style={[styles.img, this.state.imgWidth]}
-          >
-            <View style={styles.textImg}>
-              <MyText style={[mainStyles.paragraphe]}>{name} - 1H30</MyText>
-              <MyText style={[mainStyles.tagline]}>
-                Prochaine session dans 20 min
-              </MyText>
-            </View>
-          </ImageBackground>
+      <View style={styles.container}>
+        <View style={styles.imgContainer}>
+          <View style={styles.imgBorder}>
+            <ImageBackground
+              resizeMode="cover"
+              source={{ uri: 'https://picsum.photos/400/500/?random' }}
+              style={[styles.img, this.state.imgWidth]}
+            >
+              <View style={styles.textImg}>
+                <MyText style={[mainStyles.paragraphe]}>{name} - 1H30</MyText>
+                <MyText style={[mainStyles.tagline]}>
+                  Prochaine session dans 20 min
+                </MyText>
+              </View>
+            </ImageBackground>
+          </View>
         </View>
         <View style={styles.infosWrapper}>
           <MyText style={[styles.center]}>Le centre</MyText>
@@ -139,25 +150,45 @@ export class Planning extends Component {
             <Icon name="phone-square" size={40} color={DARKBLUE} />
           </View>
         </View>
+        <Animated.ScrollView
+          scrollEventThrottle={1}
+          style={[styles.calendarContainer]}
+          onScroll={this.makeImgBig}
+        >
+          <Calendar
+            dates={dates}
+            selectHour={this.selectHour}
+            selectedHour={this.state.selectedHour}
+          />
+        </Animated.ScrollView>
 
-        <Calendar dates={dates} />
-
-        <CallToAction>Réserver</CallToAction>
-
-        {/* <TouchableOpacity style={styles.panel} onPress={this.toggleTab}>
-          <MyText style={styles.titlePanel}>Aujourd'hui</MyText>
-          <Icon name="angle-right" size={30} color={'white'} />
-        </TouchableOpacity> */}
-        {/* {this.renderTab()} */}
-      </Animated.ScrollView>
+        {this.renderButton()}
+      </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     paddingHorizontal: 5,
-    marginTop: 5
+    marginTop: 5,
+    flex: 1
+  },
+  imgContainer: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2
+  },
+  imgBorder: {
+    borderRadius: 4,
+    overflow: 'hidden'
+  },
+  calendarContainer: {
+    paddingHorizontal: 5,
+    marginTop: 5,
+    flex: 1
   },
   img: {
     height: 200
@@ -168,7 +199,9 @@ const styles = StyleSheet.create({
     left: 10
   },
   infosWrapper: {
-    paddingVertical: 10
+    paddingVertical: 10,
+    borderBottomWidth: 0.5,
+    borderBottomColor: 'grey'
   },
   center: {
     textAlign: 'center',

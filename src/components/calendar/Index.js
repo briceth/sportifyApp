@@ -5,16 +5,19 @@ import { Months } from './Months'
 
 export class Calendar extends Component {
   static propTypes = {
-    dates: PropTypes.array
+    dates: PropTypes.array,
+    selectHour: PropTypes.func,
+    selectedHour: PropTypes.number
   }
 
   state = {
     isMonthSelected: null,
-    selectedDay: null,
-    selectedHour: null,
-    month: '',
-    day: '',
-    hour: ''
+    selectedDay: null
+    //month: ''
+    //day: ''
+    // selectedHour: null,
+    // sessionId: null,
+    // hour: '',
   }
 
   // le mois est selectioné en même temps que le jour
@@ -36,8 +39,8 @@ export class Calendar extends Component {
       //sinon tu l'ajoutes
       this.setState(
         {
-          month,
-          day,
+          //month,
+          //day,
           selectedDay: dayId
         },
         () => {
@@ -47,19 +50,19 @@ export class Calendar extends Component {
     }
   }
 
-  selectHour = (hour, hourId) => {
-    const selectHour = this.state.selectedHour
+  // selectHour = (hour, hourId, sessionId) => {
+  //   const selectHour = this.state.selectedHour
 
-    if (selectHour === hourId) {
-      // si il existe tu le supprimes
-      this.setState({ selectedHour: null })
-    } else {
-      // sinon tu l'ajoutes
-      this.setState({ hour, selectedHour: hourId }, () => {
-        console.log('this state', this.state)
-      })
-    }
-  }
+  //   if (selectHour === hourId) {
+  //     // si il existe tu le supprimes
+  //     this.setState({ selectedHour: null })
+  //   } else {
+  //     // sinon tu l'ajoutes
+  //     this.setState({ hour, selectedHour: hourId, sessionId }, () => {
+  //       console.log('this state', this.state)
+  //     })
+  //   }
+  // }
 
   render() {
     return (
@@ -67,9 +70,9 @@ export class Calendar extends Component {
         <Months
           months={this.props.dates}
           selectMonthAndDay={this.selectMonthAndDay}
-          selectHour={this.selectHour}
+          selectHour={this.props.selectHour}
           selectedDay={this.state.selectedDay}
-          selectedHour={this.state.selectedHour}
+          selectedHour={this.props.selectedHour}
         />
       </View>
     )
