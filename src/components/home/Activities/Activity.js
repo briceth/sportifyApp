@@ -4,7 +4,6 @@ import { MyText } from '../../MyText'
 import { BLUE } from '../../../mainStyle'
 import { distanceInWords } from 'date-fns'
 import PropTypes from 'prop-types'
-import geolib from 'geolib'
 
 const frLocale = require('date-fns/locale/fr')
 
@@ -27,10 +26,6 @@ export class Activity extends Component {
     }
   }
 
-  componentDidMount() {
-    this.findFirstSession()
-  }
-
   shouldComponentUpdate(nextProps, nextState) {
     if (
       nextProps.geolocation !== this.props.geolocation ||
@@ -42,21 +37,17 @@ export class Activity extends Component {
     return false
   }
 
-  findFirstSession() {
-    const session = this.props.data.sessions.sort(compare)[0]
-    if (session) {
-      this.setState({
-        start: distanceInWords(session.startsAt, new Date(), {
-          locale: frLocale
-        })
-      })
-    }
+  startsAt() {
+    return distanceInWords(this.props.data.sessions, new Date(), {
+      locale: frLocale
+    })
+  }
 
-    function compare(a, b) {
-      if (a.startsAt < b.startsAt) return -1
-      if (a.startsAt > b.startsAt) return 1
-      return 0
-    }
+  distance() {
+    const { distance } = this.props.data
+    if (distance < 1000) return '-1'
+    if (distance < 99000) return Math.round(distance / 1000)
+    return '+99'
   }
 
   timeBeforeStartContainer = function() {
@@ -65,27 +56,9 @@ export class Activity extends Component {
     }
   }
 
-  geolib() {
-    console.log(this.props.geolocation)
-    const distance = geolib.getDistanceSimple(
-      this.props.geolocation,
-      {
-        latitude: 48.8737157,
-        longitude: 2.36051359999999
-      },
-      100
-    )
-
-    if (distance < 1000) return '-1'
-    if (distance < 99000) return Math.round(distance / 1000)
-    return '+99'
-  }
-
   render() {
-    const { image, name, center, _id } = this.props.data
+    const { image, name, center, _id, sessions } = this.props.data
     const { start } = this.state
-    const { geolocation } = this.props
-    console.log('render activity', _id, this.props.geolocation)
 
     const star = this.props.isFavorite ? 'star' : 'star-o'
     return (
@@ -104,7 +77,7 @@ export class Activity extends Component {
         <View style={styles.blackfilter} />
 
         <View style={styles.centerContainer}>
-          <MyText style={[styles.centerText]}>{center.name}</MyText>
+          <MyText style={[styles.centerText]}>{center}</MyText>
         </View>
 
         <TouchableOpacity
@@ -116,18 +89,18 @@ export class Activity extends Component {
 
         <View style={styles.textContainer}>
           <MyText style={styles.nameActivities}>{name}</MyText>
-          {this.state.start && (
+          {sessions && (
             <View style={this.timeBeforeStartContainer()}>
               <MyText style={styles.timeBeforeStart}>
-                Prochaine scéance dans {start}
+                Prochaine scéance dans {this.startsAt()}
               </MyText>
             </View>
           )}
         </View>
 
-        {geolocation && (
+        {this.props.geolocation && (
           <View style={styles.distanceContainer}>
-            <MyText style={[styles.distance]}>{this.geolib()} km</MyText>
+            <MyText style={[styles.distance]}>{this.distance()} km</MyText>
           </View>
         )}
       </TouchableOpacity>

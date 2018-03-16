@@ -23,7 +23,7 @@ export class Activities extends Component {
   }
 
   componentDidMount() {
-    //store.delete('favoriteActivities')
+    store.delete('favoriteActivities')
     const { currentUser } = this.props
 
     this.getActivities() //Get Activitites
@@ -59,7 +59,7 @@ export class Activities extends Component {
 
   getFavoritesFromServer(user) {
     axios
-      .get(`${config.API_URL}/api/users/${user.id}`, {
+      .get(`${config.API_URL}/api/users/${user._id}`, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${user.token}`
@@ -80,6 +80,7 @@ export class Activities extends Component {
       })
       .catch(error => {
         console.log('ERROR', error)
+        this.setState({ favoritesLoad: true })
       })
   }
 
@@ -146,9 +147,7 @@ export class Activities extends Component {
         activitiesSorted.push({ ...activity, key: activity._id })
       })
 
-      console.log('activitiesSorted', activitiesSorted)
-
-      for (let i = 0; i < favorites.length; i++) {
+      for (let i = favorites.length; i > -1; i--) {
         const index = activitiesSorted.findIndex(x => x._id === favorites[i])
         if (index > -1) {
           favoriteActivities.push(activitiesSorted[index])
