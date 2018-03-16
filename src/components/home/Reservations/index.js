@@ -27,7 +27,6 @@ export class Reservations extends Component {
     children: PropTypes.node,
     style: PropTypes.array,
     currentUser: PropTypes.object,
-    userConnected: PropTypes.object,
     updateCurrentUserState: PropTypes.func,
     updateServerFromStorage: PropTypes.func
   }
@@ -131,7 +130,7 @@ export class Reservations extends Component {
   render() {
     return (
       <View key="view" style={this.props.style}>
-        {this.props.userConnected && [
+        {this.props.currentUser && [
           <MyText key="title" style={[mainStyles.title]}>
             Mes réservations
           </MyText>,

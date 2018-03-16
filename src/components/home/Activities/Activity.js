@@ -3,12 +3,21 @@ import { StyleSheet, View, Image, TouchableOpacity } from 'react-native'
 import { MyText } from '../../MyText'
 import { BLUE } from '../../../mainStyle'
 import { distanceInWords } from 'date-fns'
+import PropTypes from 'prop-types'
 
 const frLocale = require('date-fns/locale/fr')
 
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 export class Activity extends Component {
+  static propTypes = {
+    navigation: PropTypes.object,
+    isFavorite: PropTypes.bool,
+    data: PropTypes.object,
+    width: PropTypes.number,
+    goToPlanning: PropTypes.func
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -49,9 +58,11 @@ export class Activity extends Component {
     const { start } = this.state
 
     const star = this.props.isFavorite ? 'star' : 'star-o'
-
     return (
-      <TouchableOpacity style={styles.lessonContainer}>
+      <TouchableOpacity
+        style={styles.lessonContainer}
+        onPress={() => this.props.goToPlanning(_id)}
+      >
         <Image
           resizeMode="cover"
           style={{ height: 200 }}
