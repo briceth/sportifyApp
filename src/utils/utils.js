@@ -4,8 +4,10 @@ import fr from 'date-fns/locale/fr'
 
 export function formatDuration(numMin) {
   const hours = Math.floor(numMin / 60)
-  const minutes = numMin % 60
-  return `${hours && `${hours}h`}${minutes}${hours ? '' : 'min'}`
+  let minutes = numMin % 60
+  console.log('minutes: ', minutes, ' - type: ', typeof minutes)
+  if (minutes < 10) minutes = `0${minutes}`
+  return `${hours === 0 ? '' : `${hours}h`}${minutes}${hours ? '' : 'min'}`
 }
 
 export function deleteWhere(array, conditions = {}) {

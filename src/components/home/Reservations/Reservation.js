@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, TouchableHighlight } from 'react-native'
 import PropTypes from 'prop-types'
 import { mainStyles } from '../../../mainStyle'
 import { Actions } from './Actions'
@@ -20,7 +20,6 @@ export class Reservation extends Component {
 
   render() {
     const { session, style } = this.props
-    console.log('session', session)
     const sessionInfos = {
       sessionId: session._id,
       activity: session.activity.name,
@@ -31,28 +30,30 @@ export class Reservation extends Component {
     }
 
     return [
-      <View style={style}>
-        <ReservationInfos>
-          <MyText style={[mainStyles.boldText]}>{session.activity.name}</MyText>
-          <MyText>{session.activity.center.name}</MyText>
-          <MyText>
-            {format(session.startsAt, 'ddd DD MMM [à] HH:mm', { locale: fr })}
-          </MyText>
-        </ReservationInfos>
-        <Actions style={[styles.actions]}>
-          <Action
-            icon="qrcode"
-            style={[styles.action]}
-            handleTouch={this.props.toggleQrCode}
-            sessionInfos={sessionInfos}
-          />
-          <Action
-            icon="trash"
-            style={[styles.action]}
-            handleTouch={this.props.openRow}
-          />
-        </Actions>
-      </View>
+      <TouchableHighlight
+        key={session._id}
+        onPress={() => this.props.toggleQrCode(sessionInfos)}
+      >
+        <View style={style}>
+          <ReservationInfos>
+            <MyText style={[mainStyles.boldText]}>
+              {session.activity.name}
+            </MyText>
+            <MyText>{session.activity.center.name}</MyText>
+            <MyText>
+              {format(session.startsAt, 'ddd DD MMM [à] HH:mm', { locale: fr })}
+            </MyText>
+          </ReservationInfos>
+          <Actions style={[styles.actions]}>
+            <Action
+              icon="qrcode"
+              style={[styles.action]}
+              // handleTouch={this.props.toggleQrCode}
+              // sessionInfos={sessionInfos}
+            />
+          </Actions>
+        </View>
+      </TouchableHighlight>
     ]
   }
 }

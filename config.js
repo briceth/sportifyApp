@@ -1,4 +1,5 @@
-const env = process.env.NODE_ENV || 'development'
+let env = process.env.NODE_ENV || 'development'
+// env = 'production'
 
 const config = {
   ENV: env,
@@ -6,7 +7,7 @@ const config = {
 }
 
 if (env === 'production') {
-  config.API_URL = 'production url to provide'
+  config.API_URL = 'https://sportify-reacteur.herokuapp.com'
 }
 
 export default config

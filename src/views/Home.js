@@ -19,7 +19,7 @@ export class Home extends Component {
 
   state = {
     loading: true,
-    currentUser: {}
+    currentUser: null
   }
 
   goToPlanning = activityId =>
@@ -87,16 +87,20 @@ export class Home extends Component {
       </View>
     ) : (
       <ScrollView style={mainStyles.containerFlex}>
-        <Reservations
-          updateServerFromStorage={this.updateServerFromStorage}
-          updateCurrentUserState={this.updateCurrentUserState}
-          currentUser={currentUser}
-        />
-        <Activities
-          updateServerFromStorage={this.updateServerFromStorage}
-          currentUser={currentUser}
-          goToPlanning={this.goToPlanning}
-        />
+        {this.state.currentUser && (
+          <Reservations
+            updateServerFromStorage={this.updateServerFromStorage}
+            updateCurrentUserState={this.updateCurrentUserState}
+            currentUser={currentUser}
+          />
+        )}
+        {
+          <Activities
+            updateServerFromStorage={this.updateServerFromStorage}
+            currentUser={currentUser}
+            goToPlanning={this.goToPlanning}
+          />
+        }
       </ScrollView>
     )
   }
