@@ -23,7 +23,8 @@ export class Planning extends Component {
   static navigationOptions = { title: 'Planning' }
 
   static propTypes = {
-    activityId: PropTypes.string
+    activityId: PropTypes.string,
+    navigation: PropTypes.object
   }
   state = {
     name: '',
@@ -67,14 +68,16 @@ export class Planning extends Component {
   }
 
   componentDidMount() {
-    const { activityId } = this.props
+    const { activityId } = this.props.navigation.state.params
     axios
       .get(`${config.API_URL}/api/activities/${activityId}`)
       .then(response => {
-        const { name } = response.data[0]
-        const { address } = response.data[0].center_doc
-        const center = response.data[0].center_doc.name
-        const sessions = response.data[0].sessions_docs
+        console.log('Fetching Activity :', response.data)
+
+        const { name } = response.data
+        const { address } = response.data.center
+        const center = response.data.center.name
+        const sessions = response.data.sessions
 
         const formatedDate = this.formatDate(
           sessions.map(session => session.startsAt)
@@ -89,6 +92,8 @@ export class Planning extends Component {
 
   render() {
     const { name, address, center, dates } = this.state
+    console.log('Props in Planning :', this.props)
+
     return (
       <Animated.ScrollView
         scrollEventThrottle={1}

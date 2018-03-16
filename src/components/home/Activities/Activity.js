@@ -58,7 +58,6 @@ export class Activity extends Component {
     const { start } = this.state
 
     const star = this.props.isFavorite ? 'star' : 'star-o'
-    console.log('Data props in activity : ', this.props.data._id)
     return (
       <TouchableOpacity
         style={styles.lessonContainer}
