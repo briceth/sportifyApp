@@ -11,7 +11,7 @@ export class Days extends Component {
     days: PropTypes.array,
     selectMonthAndDay: PropTypes.func,
     selectHour: PropTypes.func,
-    isDaySelected: PropTypes.number,
+    selectedDays: PropTypes.array,
     month: PropTypes.string,
     isHourSelected: PropTypes.number
   }
@@ -20,7 +20,7 @@ export class Days extends Component {
     const {
       days,
       selectMonthAndDay,
-      isDaySelected,
+      selectedDays,
       month,
       selectHour,
       isHourSelected
@@ -41,13 +41,13 @@ export class Days extends Component {
                   onPress={() => selectMonthAndDay(day.num, month, index)}
                   style={[
                     styles.containerDays,
-                    index === isDaySelected && styles.selectedPan
+                    index === selectedDays && styles.selectedPan
                   ]}
                 >
                   <MyText
                     style={[
                       styles.num,
-                      index === isDaySelected && styles.selectedTextPan
+                      index === selectedDays && styles.selectedTextPan
                     ]}
                   >
                     {day.num}
@@ -55,7 +55,7 @@ export class Days extends Component {
                   <MyText
                     style={[
                       styles.letter,
-                      index === isDaySelected && styles.selectedTextPan
+                      index === selectedDays && styles.selectedTextPan
                     ]}
                   >
                     {day.letter}
@@ -68,7 +68,7 @@ export class Days extends Component {
         <Hours
           selectHour={selectHour}
           hours={hoursObject}
-          dayId={isDaySelected}
+          dayId={selectedDays}
           isHourSelected={isHourSelected}
         />
       </View>

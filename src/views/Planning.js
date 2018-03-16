@@ -9,8 +9,9 @@ import {
 import axios from 'axios'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { parse, format } from 'date-fns'
+import fr from 'date-fns/locale/fr'
+//import uid from 'uid2'
 import { Calendar } from '../components/calendar/Index'
-import { Title } from '../components/Title'
 import { mainStyles, DARKBLUE } from '../mainStyle'
 import { MyText } from '../components/MyText'
 import { CallToAction } from '../components/buttons/callToAction'
@@ -26,7 +27,10 @@ export class Planning extends Component {
     address: '',
     center: '',
     dates: [
-      { month: '', days: [{ letter: '', num: '', hours: [{ hour: '' }] }] }
+      {
+        month: '',
+        days: [{ letter: '', num: '', id: '', hours: [{ hour: '', id: '' }] }]
+      }
     ],
     scaleValue: new Animated.Value(0),
     isOpen: false
@@ -35,12 +39,13 @@ export class Planning extends Component {
   formatDate = dates => {
     return dates.map(date => {
       const dates = {
-        month: format(parse(date), 'MMMM'), //March, April
+        month: format(parse(date), 'MMMM', { locale: fr }), //March, April
         days: [
           {
-            letter: format(parse(date), 'ddd'), //SUN, MON, TUE
+            letter: format(parse(date), 'ddd', { locale: fr }), //SUN, MON, TUE
             num: format(parse(date), 'DD'), //07, 08, 09
-            hours: [{ hour: format(parse(date), 'HH:MM') }]
+            //id: uid(5),
+            hours: [{ hour: format(parse(date), 'HH:MM') }] //id: uid(5) }]
           }
         ]
       }

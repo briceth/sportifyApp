@@ -10,7 +10,7 @@ export class Calendar extends Component {
 
   state = {
     isMonthSelected: null,
-    isDaySelected: null,
+    selectedDays: [],
     isHourSelected: null,
     month: '',
     day: '',
@@ -19,9 +19,13 @@ export class Calendar extends Component {
 
   // le mois est selectioné en même temps que le jour
   // les heures apparaissent en fonction du jour cliqué
-  selectMonthAndDay = (day, month, index) => {
-    console.log('index', index)
-    this.setState({ month, day, isDaySelected: index })
+  selectMonthAndDay = (day, month, id) => {
+    console.log('id', id)
+    this.setState({
+      month,
+      day,
+      isDaySelected: [...this.state.selectedDays, id]
+    })
   }
 
   selectHour = (hour, index) => {
@@ -37,7 +41,7 @@ export class Calendar extends Component {
           months={this.props.dates}
           selectMonthAndDay={this.selectMonthAndDay}
           selectHour={this.selectHour}
-          isDaySelected={this.state.isDaySelected}
+          selectedDays={this.state.selectedDays}
           isHourSelected={this.state.isHourSelected}
         />
       </View>

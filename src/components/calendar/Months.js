@@ -9,7 +9,7 @@ export class Months extends Component {
     months: PropTypes.array,
     selectMonthAndDay: PropTypes.func,
     selectHour: PropTypes.func,
-    isDaySelected: PropTypes.number,
+    selectedDays: PropTypes.number,
     isHourSelected: PropTypes.number
   }
 
@@ -17,7 +17,7 @@ export class Months extends Component {
     const {
       months,
       selectMonthAndDay,
-      isDaySelected,
+      selectedDays,
       selectHour,
       isHourSelected
     } = this.props
@@ -41,7 +41,7 @@ export class Months extends Component {
             days={months.days}
             selectMonthAndDay={selectMonthAndDay}
             month={months.month}
-            isDaySelected={isDaySelected}
+            selectedDays={selectedDays}
             selectHour={selectHour}
             isHourSelected={isHourSelected}
           />
