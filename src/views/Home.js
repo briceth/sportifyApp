@@ -8,6 +8,10 @@ import store from 'react-native-simple-store'
 import axios from 'axios'
 
 export class Home extends Component {
+  static navigationOptions = {
+    title: 'Home'
+  }
+
   state = {
     loading: true,
     userConnected: {},
