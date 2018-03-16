@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {
   StyleSheet,
   ImageBackground,
+  TouchableOpacity,
   View,
   Animated,
   Easing
@@ -9,14 +10,13 @@ import {
 import axios from 'axios'
 import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { parse, format } from 'date-fns'
-import fr from 'date-fns/locale/fr'
+import store from 'react-native-simple-store'
 import { Calendar } from '../components/calendar/Index'
 import { mainStyles, DARKBLUE } from '../mainStyle'
 import { MyText } from '../components/MyText'
 import { CallToAction } from '../components/buttons/callToAction'
 import config from '../../config'
-import { rangeDateByMonth, generateId } from '../utils/utils'
+import { rangeDateByMonth, formatDate } from '../utils/utils'
 const log = console.log
 
 export class Planning extends Component {
@@ -30,40 +30,9 @@ export class Planning extends Component {
     name: '',
     address: '',
     center: '',
-    dates: [
-      // {
-      //   month: '',
-      //   days: [{ letter: '', num: '', id: '', hours: [{ hour: '', id: '' }] }]
-      // }
-    ],
+    dates: [],
     scaleValue: new Animated.Value(0),
     isOpen: false
-  }
-
-  formatDate = dates => {
-    return dates.map(date => {
-      const dayId = generateId(date)
-
-      const dates = {
-        month: format(parse(date), 'MMMM', { locale: fr }), //March, April
-        days: [
-          {
-            letter: format(parse(date), 'ddd', { locale: fr }), //SUN, MON, TUE
-            num: format(parse(date), 'DD'), //07, 08, 09
-            id: dayId,
-            hours: [
-              {
-                hour: format(parse(date), 'HH:MM'),
-                id: generateId(date, true),
-                _dayId: dayId
-              }
-            ]
-          }
-        ]
-      }
-
-      return dates
-    })
   }
 
   makeImgBig = () => {
@@ -92,7 +61,7 @@ export class Planning extends Component {
         const center = response.data.center.name
         const sessions = response.data.sessions
 
-        const formatedDate = this.formatDate(
+        const formatedDate = formatDate(
           sessions.map(session => session.startsAt)
         )
         console.log('formatedDate', formatedDate)
@@ -103,6 +72,18 @@ export class Planning extends Component {
         })
       })
       .catch(e => log(e))
+  }
+
+  bookSession = () => {
+    const currentUser = store.get('currentUser')
+    console.log('currentUser', currentUser)
+
+    axios
+      .post('', {}) //need user id, session id
+      .then(response => {
+        console.log(response.data)
+      })
+      .catch(err => console.log(err))
   }
 
   render() {
@@ -142,12 +123,12 @@ export class Planning extends Component {
 
         <Calendar dates={dates} />
 
-        <CallToAction>Réserver</CallToAction>
+        <CallToAction bookSession={this.bookSession}>Réserver</CallToAction>
 
-        {/* <TouchableOpacity style={styles.panel} onPress={this.toggleTab}>
+        <TouchableOpacity style={styles.panel} onPress={this.toggleTab}>
           <MyText style={styles.titlePanel}>Aujourd'hui</MyText>
           <Icon name="angle-right" size={30} color={'white'} />
-        </TouchableOpacity> */}
+        </TouchableOpacity>
         {/* {this.renderTab()} */}
       </Animated.ScrollView>
     )

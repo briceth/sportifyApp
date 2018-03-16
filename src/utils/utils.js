@@ -1,5 +1,6 @@
 import findIndex from 'lodash/findIndex'
-//import uniqid from 'uniqid'
+import { parse, format } from 'date-fns'
+import fr from 'date-fns/locale/fr'
 
 export function formatDuration(numMin) {
   const hours = Math.floor(numMin / 60)
@@ -37,7 +38,7 @@ export function mergeHoursAndIndex(array, index) {
   })
 }
 
-export function generateId(str, hour = false) {
+function generateId(str, hour = false) {
   let id
   if (hour) {
     id = parseInt(
@@ -60,4 +61,30 @@ export function generateId(str, hour = false) {
     )
     return id
   }
+}
+
+export function formatDate(dates) {
+  return dates.map(date => {
+    const dayId = generateId(date)
+
+    const dates = {
+      month: format(parse(date), 'MMMM', { locale: fr }), //March, April
+      days: [
+        {
+          letter: format(parse(date), 'ddd', { locale: fr }), //SUN, MON, TUE
+          num: format(parse(date), 'DD'), //07, 08, 09
+          id: dayId,
+          hours: [
+            {
+              hour: format(parse(date), 'HH:MM'),
+              id: generateId(date, true),
+              _dayId: dayId
+            }
+          ]
+        }
+      ]
+    }
+
+    return dates
+  })
 }
