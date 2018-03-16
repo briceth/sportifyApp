@@ -60,7 +60,7 @@ export class Activities extends Component {
 
   getFavoritesFromServer(user) {
     axios
-      .get(`${config.API_URL}/api/users/${user.id}`, {
+      .get(`${config.API_URL}/api/users/${user._id}`, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${user.token}`

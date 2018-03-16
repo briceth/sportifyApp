@@ -63,8 +63,9 @@ function generateId(str, hour = false) {
   }
 }
 
-export function formatDate(dates) {
-  return dates.map(date => {
+export function formatDate(sessions) {
+  return sessions.map(session => {
+    const date = session.startsAt
     const dayId = generateId(date)
 
     const dates = {
@@ -78,7 +79,8 @@ export function formatDate(dates) {
             {
               hour: format(parse(date), 'HH:MM'),
               id: generateId(date, true),
-              _dayId: dayId
+              _dayId: dayId,
+              sessionId: session._id
             }
           ]
         }

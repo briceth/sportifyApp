@@ -32,7 +32,10 @@ export class Planning extends Component {
     center: '',
     dates: [],
     scaleValue: new Animated.Value(0),
-    isOpen: false
+    isOpen: false,
+    selectedHour: null,
+    sessionId: null,
+    hour: ''
   }
 
   makeImgBig = () => {
@@ -61,9 +64,10 @@ export class Planning extends Component {
         const center = response.data.center.name
         const sessions = response.data.sessions
 
-        const formatedDate = formatDate(
-          sessions.map(session => session.startsAt)
-        )
+        console.log('sessions', sessions)
+
+        const formatedDate = formatDate(sessions)
+
         console.log('formatedDate', formatedDate)
 
         const newDate = rangeDateByMonth(formatedDate)
@@ -74,12 +78,33 @@ export class Planning extends Component {
       .catch(e => log(e))
   }
 
-  bookSession = () => {
-    const currentUser = store.get('currentUser')
+  selectHour = (hour, hourId, sessionId) => {
+    const selectHour = this.state.selectedHour
+
+    if (selectHour === hourId) {
+      // si il existe tu le supprimes
+      this.setState({ selectedHour: null })
+    } else {
+      // sinon tu l'ajoutes
+      this.setState({ hour, selectedHour: hourId, sessionId }, () => {
+        console.log('this state', this.state)
+      })
+    }
+  }
+
+  bookSession = async () => {
+    const currentUser = await store.get('currentUser')
+
     console.log('currentUser', currentUser)
 
+    console.log('sessionId', this.state.sessionId)
+
+    console.log(`${config.API_URL}/api/sessions/${this.state.sessionId}/book`)
+    // need user id, session id
     axios
-      .post('', {}) //need user id, session id
+      .put(`${config.API_URL}/api/sessions/${this.state.sessionId}/book`, {
+        userId: currentUser._id
+      })
       .then(response => {
         console.log(response.data)
       })
@@ -121,15 +146,13 @@ export class Planning extends Component {
           </View>
         </View>
 
-        <Calendar dates={dates} />
+        <Calendar
+          dates={dates}
+          selectHour={this.selectHour}
+          selectedHour={this.state.selectedHour}
+        />
 
         <CallToAction bookSession={this.bookSession}>Réserver</CallToAction>
-
-        <TouchableOpacity style={styles.panel} onPress={this.toggleTab}>
-          <MyText style={styles.titlePanel}>Aujourd'hui</MyText>
-          <Icon name="angle-right" size={30} color={'white'} />
-        </TouchableOpacity>
-        {/* {this.renderTab()} */}
       </Animated.ScrollView>
     )
   }
