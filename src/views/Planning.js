@@ -7,16 +7,16 @@ import {
   Easing
 } from 'react-native'
 import axios from 'axios'
+import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { parse, format } from 'date-fns'
+import fr from 'date-fns/locale/fr'
 import { Calendar } from '../components/calendar/Index'
-import { Title } from '../components/Title'
 import { mainStyles, DARKBLUE } from '../mainStyle'
 import { MyText } from '../components/MyText'
 import { CallToAction } from '../components/buttons/callToAction'
 import config from '../../config'
-import { rangeDateByMonth } from '../utils/utils'
-import PropTypes from 'prop-types'
+import { rangeDateByMonth, generateId } from '../utils/utils'
 const log = console.log
 
 export class Planning extends Component {
@@ -31,7 +31,10 @@ export class Planning extends Component {
     address: '',
     center: '',
     dates: [
-      { month: '', days: [{ letter: '', num: '', hours: [{ hour: '' }] }] }
+      // {
+      //   month: '',
+      //   days: [{ letter: '', num: '', id: '', hours: [{ hour: '', id: '' }] }]
+      // }
     ],
     scaleValue: new Animated.Value(0),
     isOpen: false
@@ -39,16 +42,26 @@ export class Planning extends Component {
 
   formatDate = dates => {
     return dates.map(date => {
+      const dayId = generateId(date)
+
       const dates = {
-        month: format(parse(date), 'MMMM'), //March, April
+        month: format(parse(date), 'MMMM', { locale: fr }), //March, April
         days: [
           {
-            letter: format(parse(date), 'ddd'), //SUN, MON, TUE
+            letter: format(parse(date), 'ddd', { locale: fr }), //SUN, MON, TUE
             num: format(parse(date), 'DD'), //07, 08, 09
-            hours: [{ hour: format(parse(date), 'HH:MM') }]
+            id: dayId,
+            hours: [
+              {
+                hour: format(parse(date), 'HH:MM'),
+                id: generateId(date, true),
+                _dayId: dayId
+              }
+            ]
           }
         ]
       }
+
       return dates
     })
   }
@@ -82,9 +95,11 @@ export class Planning extends Component {
         const formatedDate = this.formatDate(
           sessions.map(session => session.startsAt)
         )
+        console.log('formatedDate', formatedDate)
+
         const newDate = rangeDateByMonth(formatedDate)
         this.setState({ name, address, center, dates: [...newDate] }, () => {
-          console.log(this.state)
+          console.log('waza', this.state)
         })
       })
       .catch(e => log(e))

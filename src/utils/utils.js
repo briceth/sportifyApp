@@ -26,14 +26,38 @@ export function rangeDateByMonth(array) {
       finalArray[index].days.push(...element.days)
     }
   })
-  console.log('final array', finalArray)
 
   return finalArray
 }
 
 export function mergeHoursAndIndex(array, index) {
   return array.map(element => {
-    element.id = index
+    //element.id = index
     return element
   })
+}
+
+export function generateId(str, hour = false) {
+  let id
+  if (hour) {
+    id = parseInt(
+      str
+        .substr(0, 16)
+        .replace('T', '')
+        .split(/-/)
+        .join('')
+        .replace(':', '')
+    )
+    // console.log('hour', id)
+
+    return id
+  } else {
+    id = parseInt(
+      str
+        .substr(0, 10)
+        .split('-')
+        .join('')
+    )
+    return id
+  }
 }
