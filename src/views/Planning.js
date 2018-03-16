@@ -16,11 +16,15 @@ import { MyText } from '../components/MyText'
 import { CallToAction } from '../components/buttons/callToAction'
 import config from '../../config'
 import { rangeDateByMonth } from '../utils/utils'
+import PropTypes from 'prop-types'
 const log = console.log
 
 export class Planning extends Component {
   static navigationOptions = { title: 'Planning' }
 
+  static propTypes = {
+    activityId: PropTypes.string
+  }
   state = {
     name: '',
     address: '',
@@ -63,9 +67,9 @@ export class Planning extends Component {
   }
 
   componentDidMount() {
-    //const { activityId } = this.props
+    const { activityId } = this.props
     axios
-      .get(`${config.API_URL}/api/activities/5aaa31249b9759b460611a08`)
+      .get(`${config.API_URL}/api/activities/${activityId}`)
       .then(response => {
         const { name } = response.data[0]
         const { address } = response.data[0].center_doc
