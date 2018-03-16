@@ -19,7 +19,6 @@ export class Home extends Component {
 
   state = {
     loading: true,
-    userConnected: {},
     currentUser: {}
   }
 
@@ -40,11 +39,7 @@ export class Home extends Component {
       this.setState(
         {
           currentUser,
-          loading: false,
-          userConnected: {
-            token: currentUser.token,
-            id: currentUser._id
-          }
+          loading: false
         },
         () => {
           resolve(this.state.currentUser)
@@ -70,11 +65,7 @@ export class Home extends Component {
       .then(response => {
         if (response.status === 200) {
           this.setState({
-            loading: false,
-            userConnected: {
-              id: response.data._id,
-              token: response.data.token
-            }
+            loading: false
           })
         }
       })
@@ -88,7 +79,7 @@ export class Home extends Component {
   }
 
   render() {
-    const { userConnected } = this.state
+    const { currentUser } = this.state
 
     return this.state.loading ? (
       <View style={[mainStyles.containerFlex, styles.centered]}>
@@ -99,11 +90,11 @@ export class Home extends Component {
         <Reservations
           updateServerFromStorage={this.updateServerFromStorage}
           updateCurrentUserState={this.updateCurrentUserState}
-          userConnected={this.state.userConnected}
-          currentUser={this.state.currentUser}
+          currentUser={currentUser}
         />
         <Activities
-          userConnected={userConnected}
+          updateServerFromStorage={this.updateServerFromStorage}
+          currentUser={currentUser}
           goToPlanning={this.goToPlanning}
         />
       </ScrollView>
