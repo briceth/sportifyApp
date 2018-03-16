@@ -95,14 +95,8 @@ export class Home extends Component {
         <Activities
           updateServerFromStorage={this.updateServerFromStorage}
           currentUser={currentUser}
-        />
-<<<<<<< HEAD
-=======
-        <Activities
-          userConnected={userConnected}
           goToPlanning={this.goToPlanning}
         />
->>>>>>> 509723e329bc5b5bf04538f26bf18fc2e74c5be8
       </ScrollView>
     )
   }
