@@ -7,6 +7,7 @@ import {
   Easing
 } from 'react-native'
 import axios from 'axios'
+import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { parse, format } from 'date-fns'
 import fr from 'date-fns/locale/fr'
