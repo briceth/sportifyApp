@@ -1,67 +1,57 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
-import { MyText } from './MyText'
+import { StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
+import PropTypes from 'prop-types'
+import { MyText } from '../MyText'
+import { DARKBLUE } from '../../mainStyle'
 
 export class Hours extends Component {
-  state = {
-    isSelected: null,
-    hours: ''
+  static propTypes = {
+    hours: PropTypes.array,
+    dayId: PropTypes.number,
+    selectHour: PropTypes.func,
+    isHourSelected: PropTypes.number
   }
 
-  selectHour = (hour, index) => {
-    this.setState({ hour, isSelected: index }, () => {
-      console.log('this state', this.state)
+  renderHours = () => {
+    const { hours, dayId, selectHour, isHourSelected } = this.props
+    // si l'id de l'heure (donné dans le mergeObject) correspond au jour cliqué,
+    // tu affiches les heures
+    return hours.map((hours, index) => {
+      if (hours.id === dayId) {
+        return (
+          <TouchableOpacity
+            onPress={() => selectHour(hours.hour, index)}
+            key={index}
+            style={[
+              styles.hourContainer,
+              index === isHourSelected && styles.selected
+            ]}
+          >
+            <MyText>{hours.hour}</MyText>
+          </TouchableOpacity>
+        )
+      }
+      return null
     })
   }
 
   render() {
-    const { isSelected } = this.state
     return (
       <ScrollView horizontal contentContainerStyle={styles.content}>
-        <View style={styles.container}>
-          {['11h30', '14h00', '15h30', '17h30'].map((hour, index) => {
-            return (
-              <TouchableOpacity
-                key={index}
-                onPress={() => this.selectHour(hour, index)}
-              >
-                <MyText
-                  style={[
-                    styles.pan,
-                    index === isSelected && styles.selectedPan
-                  ]}
-                >
-                  {hour}
-                </MyText>
-              </TouchableOpacity>
-            )
-          })}
-        </View>
+        {this.renderHours()}
       </ScrollView>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  content: {
-    flex: 1
+  hourContainer: {
+    width: 80,
+    paddingVertical: 15,
+    paddingLeft: 15
   },
-  container: {
-    paddingVertical: 10,
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-around'
-  },
-  pan: {
-    fontSize: 16,
-    borderRadius: 4,
-    borderWidth: 0.5,
-    borderColor: '#d6d7da',
-    paddingHorizontal: 15,
-    paddingVertical: 10
-  },
-  selectedPan: {
-    borderColor: 'red',
-    borderWidth: 1
+  selected: {
+    borderBottomWidth: 1,
+    borderColor: DARKBLUE
   }
 })
