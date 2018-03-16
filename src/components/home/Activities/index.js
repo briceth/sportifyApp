@@ -185,7 +185,7 @@ export class Activities extends Component {
 
     return activitiesSorted ? (
       <View>
-        <MyText style={mainStyles.title}>Les cours</MyText>
+        <MyText style={[mainStyles.title]}>Les cours</MyText>
         <FlatList
           data={activitiesSorted}
           extraData={[this.state.favorites, this.state.geolocation]}

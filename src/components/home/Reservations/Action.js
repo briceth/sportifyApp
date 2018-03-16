@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
-import { LIGHTBLUE } from '../../../mainStyle'
+import { BLUE } from '../../../mainStyle'
 
 export class Action extends Component {
   static propTypes = {
@@ -15,12 +15,12 @@ export class Action extends Component {
   render() {
     const { style, icon, handleTouch } = this.props
     return (
-      <TouchableOpacity
-        style={style}
-        onPress={() => handleTouch(this.props.sessionInfos)}
-      >
-        <Icon name={icon} size={25} color={LIGHTBLUE} />
-      </TouchableOpacity>
+      // <TouchableOpacity
+      //   style={style}
+      //   onPress={() => handleTouch(this.props.sessionInfos)}
+      // >
+      <Icon name={icon} size={40} color={BLUE} />
+      // </TouchableOpacity>
     )
   }
 }

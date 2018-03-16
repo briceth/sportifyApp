@@ -9,25 +9,25 @@ export class Hours extends Component {
     hours: PropTypes.array,
     dayId: PropTypes.number,
     selectHour: PropTypes.func,
-    isHourSelected: PropTypes.number
+    selectedHour: PropTypes.number
   }
 
   renderHours = () => {
-    const { hours, dayId, selectHour, isHourSelected } = this.props
+    const { hours, dayId, selectHour, selectedHour } = this.props
     // si l'id de l'heure (donné dans le mergeObject) correspond au jour cliqué,
     // tu affiches les heures
-    return hours.map((hours, index) => {
-      if (hours.id === dayId) {
+    return hours.map((hour, index) => {
+      if (hour._dayId === dayId) {
         return (
           <TouchableOpacity
-            onPress={() => selectHour(hours.hour, index)}
+            onPress={() => selectHour(hour.hour, hour.id, hour.sessionId)}
             key={index}
             style={[
               styles.hourContainer,
-              index === isHourSelected && styles.selected
+              hour.id === selectedHour && styles.selected
             ]}
           >
-            <MyText>{hours.hour}</MyText>
+            <MyText>{hour.hour}</MyText>
           </TouchableOpacity>
         )
       }
