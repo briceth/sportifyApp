@@ -1,5 +1,5 @@
 import findIndex from 'lodash/findIndex'
-import uniqid from 'uniqid'
+//import uniqid from 'uniqid'
 
 export function formatDuration(numMin) {
   const hours = Math.floor(numMin / 60)
