@@ -6,7 +6,7 @@ export class Title extends Component {
   render() {
     const { fontSize } = this.props
     return (
-      <Text style={[styles.logo, fontSize]}>
+      <Text style={[styles.logo]}>
         Sporti<Text style={styles.subLogo}>fy</Text>
       </Text>
     )
@@ -16,7 +16,8 @@ export class Title extends Component {
 const styles = StyleSheet.create({
   logo: {
     fontSize: 70,
-    color: DARKBLUE
+    color: DARKBLUE,
+    textAlign: 'center'
   },
   subLogo: {
     color: LIGHTBLUE

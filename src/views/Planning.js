@@ -19,7 +19,7 @@ import { rangeDateByMonth } from '../utils/utils'
 const log = console.log
 
 export class Planning extends Component {
-  static navigationOptions = { header: null }
+  static navigationOptions = { title: 'Planning' }
 
   state = {
     name: '',
@@ -91,7 +91,6 @@ export class Planning extends Component {
         style={[styles.container]}
         onScroll={this.makeImgBig}
       >
-        <Title fontSize="10" />
         <View>
           <ImageBackground
             resizeMode="cover"
@@ -133,8 +132,8 @@ export class Planning extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
-    paddingHorizontal: 5
+    paddingHorizontal: 5,
+    marginTop: 5
   },
   img: {
     height: 200
