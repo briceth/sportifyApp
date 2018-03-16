@@ -4,26 +4,26 @@ import PropTypes from 'prop-types'
 import { MyText } from '../MyText'
 import { Hours } from './Hours'
 import { DARKBLUE } from '../../mainStyle'
-import { mergeHoursAndIndex } from '../../utils/utils'
+//import { mergeHoursAndIndex } from '../../utils/utils'
 
 export class Days extends Component {
   static propTypes = {
     days: PropTypes.array,
     selectMonthAndDay: PropTypes.func,
     selectHour: PropTypes.func,
-    selectedDays: PropTypes.array,
+    selectedDay: PropTypes.number,
     month: PropTypes.string,
-    isHourSelected: PropTypes.number
+    selectedHour: PropTypes.number
   }
 
   render() {
     const {
       days,
       selectMonthAndDay,
-      selectedDays,
+      selectedDay,
       month,
       selectHour,
-      isHourSelected
+      selectedHour
     } = this.props
 
     const hoursObject = []
@@ -32,22 +32,22 @@ export class Days extends Component {
       <View>
         <ScrollView horizontal contentContainerStyle={styles.content}>
           {days.map((day, index) => {
-            hoursObject.push(...mergeHoursAndIndex(day.hours, index))
+            hoursObject.push(...day.hours)
 
             return (
               <View>
                 <TouchableOpacity
                   key={index}
-                  onPress={() => selectMonthAndDay(day.num, month, index)}
+                  onPress={() => selectMonthAndDay(day.num, month, day.id)}
                   style={[
                     styles.containerDays,
-                    index === selectedDays && styles.selectedPan
+                    selectedDay == day.id && styles.selectedPan
                   ]}
                 >
                   <MyText
                     style={[
                       styles.num,
-                      index === selectedDays && styles.selectedTextPan
+                      selectedDay == day.id && styles.selectedTextPan
                     ]}
                   >
                     {day.num}
@@ -55,7 +55,7 @@ export class Days extends Component {
                   <MyText
                     style={[
                       styles.letter,
-                      index === selectedDays && styles.selectedTextPan
+                      selectedDay == day.id && styles.selectedTextPan
                     ]}
                   >
                     {day.letter}
@@ -68,8 +68,8 @@ export class Days extends Component {
         <Hours
           selectHour={selectHour}
           hours={hoursObject}
-          dayId={selectedDays}
-          isHourSelected={isHourSelected}
+          dayId={selectedDay}
+          selectedHour={selectedHour}
         />
       </View>
     )

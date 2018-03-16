@@ -9,17 +9,17 @@ export class Months extends Component {
     months: PropTypes.array,
     selectMonthAndDay: PropTypes.func,
     selectHour: PropTypes.func,
-    selectedDays: PropTypes.number,
-    isHourSelected: PropTypes.number
+    selectedDay: PropTypes.number,
+    selectedHour: PropTypes.number
   }
 
   render() {
     const {
       months,
       selectMonthAndDay,
-      selectedDays,
+      selectedDay,
       selectHour,
-      isHourSelected
+      selectedHour
     } = this.props
 
     return months.map((months, index) => {
@@ -41,9 +41,9 @@ export class Months extends Component {
             days={months.days}
             selectMonthAndDay={selectMonthAndDay}
             month={months.month}
-            selectedDays={selectedDays}
             selectHour={selectHour}
-            isHourSelected={isHourSelected}
+            selectedDay={selectedDay}
+            selectedHour={selectedHour}
           />
         </View>
       )
