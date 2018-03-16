@@ -18,18 +18,17 @@ export class Activities extends Component {
     activitiesSorted: null,
     favoritesLoad: false,
     favorites: [],
-    width: Dimensions.get('window').width
+    width: Dimensions.get('window').width,
+    geolocation: null
   }
 
   componentDidMount() {
-    //store.delete('favoriteActivities')
+    store.delete('favoriteActivities')
     const { currentUser } = this.props
 
-    //Get Activitites
-    this.getActivities()
-
-    // Get Favorites
-    this.getFavorites(currentUser ? currentUser : false)
+    this.getActivities() //Get Activitites
+    this.getFavorites(currentUser ? currentUser : false) // Get Favorites
+    this.geoLocation()
   }
 
   getFavorites(user) {
@@ -81,6 +80,7 @@ export class Activities extends Component {
       })
       .catch(error => {
         console.log('ERROR', error)
+        this.setState({ favoritesLoad: true })
       })
   }
 
@@ -140,10 +140,14 @@ export class Activities extends Component {
     const { activities, favoritesLoad, favorites } = this.state
 
     if (activities && favoritesLoad) {
-      let activitiesSorted = [...activities]
+      let activitiesSorted = []
       let favoriteActivities = []
 
-      for (let i = 0; i < favorites.length; i++) {
+      activities.map(activity => {
+        activitiesSorted.push({ ...activity, key: activity._id })
+      })
+
+      for (let i = favorites.length; i > -1; i--) {
         const index = activitiesSorted.findIndex(x => x._id === favorites[i])
         if (index > -1) {
           favoriteActivities.push(activitiesSorted[index])
@@ -156,6 +160,26 @@ export class Activities extends Component {
     }
   }
 
+  geoLocation() {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        this.setState(
+          {
+            geolocation: {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude
+            }
+          },
+          () => {
+            console.log(this.state.geolocation)
+          }
+        )
+      },
+      error => console.log(error.message),
+      { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 }
+    )
+  }
+
   render() {
     const { activitiesSorted, favorites } = this.state
 
@@ -164,10 +188,11 @@ export class Activities extends Component {
         <MyText style={[mainStyles.title]}>Les cours</MyText>
         <FlatList
           data={activitiesSorted}
-          extraData={this.state.favorites}
+          extraData={[this.state.favorites, this.state.geolocation]}
           renderItem={({ item }) => {
             return (
               <Activity
+                geolocation={this.state.geolocation}
                 width={this.state.width}
                 data={item}
                 isFavorite={favorites.indexOf(item._id) > -1 ? true : false}
