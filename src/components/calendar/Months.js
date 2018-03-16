@@ -24,16 +24,9 @@ export class Months extends Component {
 
     return months.map((months, index) => {
       return (
-        <View>
+        <View key={index}>
           <ScrollView horizontal contentContainerStyle={styles.calendar}>
-            <TouchableOpacity
-              //onPress={() => selectMonth(months.month, index)}
-              key={index}
-              style={[
-                styles.hourContainer
-                //index === ismonthSelected && styles.selected
-              ]}
-            >
+            <TouchableOpacity style={styles.hourContainer}>
               <MyText style={[styles.text]}>{months.month}</MyText>
             </TouchableOpacity>
           </ScrollView>

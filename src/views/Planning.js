@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import {
   StyleSheet,
   ImageBackground,
-  TouchableOpacity,
   View,
   Animated,
   Easing
@@ -35,7 +34,7 @@ export class Planning extends Component {
     isOpen: false,
     selectedHour: null,
     sessionId: null,
-    hour: ''
+    isHourSelected: false
   }
 
   makeImgBig = () => {
@@ -64,11 +63,7 @@ export class Planning extends Component {
         const center = response.data.center.name
         const sessions = response.data.sessions
 
-        console.log('sessions', sessions)
-
         const formatedDate = formatDate(sessions)
-
-        console.log('formatedDate', formatedDate)
 
         const newDate = rangeDateByMonth(formatedDate)
         this.setState({ name, address, center, dates: [...newDate] }, () => {
@@ -83,12 +78,15 @@ export class Planning extends Component {
 
     if (selectHour === hourId) {
       // si il existe tu le supprimes
-      this.setState({ selectedHour: null })
+      this.setState({ selectedHour: null, isHourSelected: false })
     } else {
       // sinon tu l'ajoutes
-      this.setState({ hour, selectedHour: hourId, sessionId }, () => {
-        console.log('this state', this.state)
-      })
+      this.setState(
+        { isHourSelected: true, selectedHour: hourId, sessionId },
+        () => {
+          console.log('this state', this.state)
+        }
+      )
     }
   }
 
@@ -111,29 +109,36 @@ export class Planning extends Component {
       .catch(err => console.log(err))
   }
 
+  renderButton = () => {
+    if (this.state.isHourSelected) {
+      return (
+        <CallToAction bookSession={this.bookSession}>Réserver</CallToAction>
+      )
+    }
+    return null
+  }
+
   render() {
     const { name, address, center, dates } = this.state
     console.log('Props in Planning :', this.props)
 
     return (
-      <Animated.ScrollView
-        scrollEventThrottle={1}
-        style={[styles.container]}
-        onScroll={this.makeImgBig}
-      >
-        <View>
-          <ImageBackground
-            resizeMode="cover"
-            source={{ uri: 'https://picsum.photos/400/500/?random' }}
-            style={[styles.img, this.state.imgWidth]}
-          >
-            <View style={styles.textImg}>
-              <MyText style={[mainStyles.paragraphe]}>{name} - 1H30</MyText>
-              <MyText style={[mainStyles.tagline]}>
-                Prochaine session dans 20 min
-              </MyText>
-            </View>
-          </ImageBackground>
+      <View style={styles.container}>
+        <View style={styles.imgContainer}>
+          <View style={styles.imgBorder}>
+            <ImageBackground
+              resizeMode="cover"
+              source={{ uri: 'https://picsum.photos/400/500/?random' }}
+              style={[styles.img, this.state.imgWidth]}
+            >
+              <View style={styles.textImg}>
+                <MyText style={[mainStyles.paragraphe]}>{name} - 1H30</MyText>
+                <MyText style={[mainStyles.tagline]}>
+                  Prochaine session dans 20 min
+                </MyText>
+              </View>
+            </ImageBackground>
+          </View>
         </View>
         <View style={styles.infosWrapper}>
           <MyText style={[styles.center]}>Le centre</MyText>
@@ -145,23 +150,45 @@ export class Planning extends Component {
             <Icon name="phone-square" size={40} color={DARKBLUE} />
           </View>
         </View>
+        <Animated.ScrollView
+          scrollEventThrottle={1}
+          style={[styles.calendarContainer]}
+          onScroll={this.makeImgBig}
+        >
+          <Calendar
+            dates={dates}
+            selectHour={this.selectHour}
+            selectedHour={this.state.selectedHour}
+          />
+        </Animated.ScrollView>
 
-        <Calendar
-          dates={dates}
-          selectHour={this.selectHour}
-          selectedHour={this.state.selectedHour}
-        />
-
-        <CallToAction bookSession={this.bookSession}>Réserver</CallToAction>
-      </Animated.ScrollView>
+        {this.renderButton()}
+      </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     paddingHorizontal: 5,
-    marginTop: 5
+    marginTop: 5,
+    flex: 1
+  },
+  imgContainer: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2
+  },
+  imgBorder: {
+    borderRadius: 4,
+    overflow: 'hidden'
+  },
+  calendarContainer: {
+    paddingHorizontal: 5,
+    marginTop: 5,
+    flex: 1
   },
   img: {
     height: 200
@@ -172,7 +199,9 @@ const styles = StyleSheet.create({
     left: 10
   },
   infosWrapper: {
-    paddingVertical: 10
+    paddingVertical: 10,
+    borderBottomWidth: 0.5,
+    borderBottomColor: 'grey'
   },
   center: {
     textAlign: 'center',
