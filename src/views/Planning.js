@@ -33,7 +33,7 @@ export class Planning extends Component {
     scaleValue: new Animated.Value(0),
     isOpen: false,
     selectedHour: null,
-    sessionId: null,
+    session: null,
     isHourSelected: false
   }
 
@@ -62,6 +62,7 @@ export class Planning extends Component {
         const { address } = response.data.center
         const center = response.data.center.name
         const sessions = response.data.sessions
+        console.log(sessions)
 
         const formatedDate = formatDate(sessions)
 
@@ -73,16 +74,20 @@ export class Planning extends Component {
       .catch(e => log(e))
   }
 
-  selectHour = (hour, hourId, sessionId) => {
+  selectHour = (hour, hourId, session) => {
     const selectHour = this.state.selectedHour
 
     if (selectHour === hourId) {
       // si il existe tu le supprimes
-      this.setState({ selectedHour: null, isHourSelected: false })
+      this.setState({
+        selectedHour: null,
+        isHourSelected: false,
+        session: null
+      })
     } else {
       // sinon tu l'ajoutes
       this.setState(
-        { isHourSelected: true, selectedHour: hourId, sessionId },
+        { isHourSelected: true, selectedHour: hourId, session },
         () => {
           console.log('this state', this.state)
         }
@@ -92,21 +97,29 @@ export class Planning extends Component {
 
   bookSession = async () => {
     const currentUser = await store.get('currentUser')
+    console.log('current user : ', currentUser.account.sessions)
+    currentUser.account.sessions.push(this.state.session)
+    console.log('current user updated : ', currentUser.account.sessions)
 
     console.log('currentUser', currentUser)
 
-    console.log('sessionId', this.state.sessionId)
+    console.log('sessionId', this.state.session)
 
-    console.log(`${config.API_URL}/api/sessions/${this.state.sessionId}/book`)
+    console.log(`${config.API_URL}/api/sessions/${this.state.session._id}/book`)
     // need user id, session id
-    axios
-      .put(`${config.API_URL}/api/sessions/${this.state.sessionId}/book`, {
-        userId: currentUser._id
+    store.update('currentUser', currentUser).then(res => {
+      this.props.navigation.navigate('Home', {
+        newCurrentUser: currentUser
       })
-      .then(response => {
-        console.log(response.data)
-      })
-      .catch(err => console.log(err))
+      axios
+        .put(`${config.API_URL}/api/sessions/${this.state.session._id}/book`, {
+          userId: currentUser._id
+        })
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(err => console.log(err))
+    })
   }
 
   renderButton = () => {
