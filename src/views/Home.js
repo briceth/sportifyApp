@@ -28,6 +28,26 @@ export class Home extends Component {
     })
 
   componentDidMount = async () => {
+    if (this.props.navigation.state.params) {
+      console.log(
+        'navigation state params in home :',
+        this.props.navigation.state
+      )
+      const { newCurrentUser } = this.props.navigation.state.params
+      console.log('newCurrentUser : ', newCurrentUser)
+      console.log('CurrentUser in state : ', this.state.currentUser)
+      if (
+        !this.state.currentUser ||
+        (newCurrentUser &&
+          newCurrentUser.account.sessions.length >
+            this.state.currentUser.account.sessions.length)
+      ) {
+        console.log('Update state')
+
+        this.updateCurrentUserState(newCurrentUser)
+      }
+    }
+
     const currentUser = await store.get('currentUser')
     if (!currentUser) return this.setState({ loading: false })
     this.updateCurrentUserState(currentUser)

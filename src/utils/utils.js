@@ -82,7 +82,7 @@ export function formatDate(sessions) {
               hour: format(parse(date), 'HH:MM'),
               id: generateId(date, true),
               _dayId: dayId,
-              sessionId: session._id
+              session: session
             }
           ]
         }
