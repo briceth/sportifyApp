@@ -158,7 +158,7 @@ export class Activities extends Component {
 
   render() {
     const { activitiesSorted, favorites } = this.state
-
+    console.tron.log('activity', activitiesSorted)
     return activitiesSorted ? (
       <View>
         <MyText style={mainStyles.title}>Les cours</MyText>
