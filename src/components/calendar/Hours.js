@@ -20,7 +20,7 @@ export class Hours extends Component {
       if (hour._dayId === dayId) {
         return (
           <TouchableOpacity
-            onPress={() => selectHour(hour.hour, hour.id, hour.sessionId)}
+            onPress={() => selectHour(hour.hour, hour.id, hour.session)}
             key={index}
             style={[
               styles.hourContainer,
