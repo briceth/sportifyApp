@@ -20,7 +20,7 @@ import { SwipeListView } from 'react-native-swipe-list-view'
 import QRCode from 'react-native-qrcode'
 
 const { width } = Dimensions.get('window')
-const deleteBtnWidth = 150
+const deleteBtnWidth = 120
 
 export class Reservations extends Component {
   static propTypes = {
@@ -48,15 +48,30 @@ export class Reservations extends Component {
     rowRef.manuallySwipeRow(-deleteBtnWidth)
   }
 
-  deleteReservation = sessionId => {
+  deleteReservation = (session, rowMap) => {
+    rowMap[session.key].closeRow()
+    const sessionId = session._id
     const newCurrentUser = { ...this.props.currentUser }
     const newAccount = { ...newCurrentUser.account }
     newAccount.sessions = deleteWhere(newAccount.sessions, {
       _id: sessionId
     })
+    console.log(
+      'currentUser sessions before deleting',
+      newCurrentUser.account.sessions
+    )
     newCurrentUser.account = newAccount
+    console.log(
+      'currentUser sessions about to be saved : ',
+      newCurrentUser.account.sessions
+    )
     this.props.updateCurrentUserState(newCurrentUser).then(user => {
-      store.update('currentUser', newCurrentUser).then(res => {
+      store.save('currentUser', newCurrentUser).then(async res => {
+        const userStored = await store.get('currentUser')
+        console.log(
+          'currentUser sessions after deleting',
+          userStored.account.sessions
+        )
         this.props.updateServerFromStorage(newCurrentUser)
       })
     })
@@ -82,7 +97,8 @@ export class Reservations extends Component {
         key="reservationsList"
         useFlatList
         disableRightSwipe
-        previewFirstRow
+        previewRowKey={'0'}
+        previewOpenValue={-50}
         data={reservations}
         renderItem={(rowData, rowMap) => (
           <Reservation
@@ -104,12 +120,13 @@ export class Reservations extends Component {
                   [
                     {
                       text: 'Annuler',
-                      onPress: () => rowMap[rowData.item._id].closeRow(),
+                      onPress: () => rowMap[rowData.item.key].closeRow(),
                       style: 'cancel'
                     },
                     {
                       text: 'Supprimer',
-                      onPress: () => this.deleteReservation(rowData.item._id),
+                      onPress: () =>
+                        this.deleteReservation(rowData.item, rowMap),
                       style: 'destructive'
                     }
                   ],
@@ -224,7 +241,7 @@ const styles = StyleSheet.create({
   reservation: {
     backgroundColor: 'white',
     paddingVertical: 8,
-    paddingHorizontal: 20,
+    paddingLeft: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
     position: 'relative',

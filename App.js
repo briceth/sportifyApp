@@ -1,3 +1,4 @@
+import './ReactotronConfig'
 import { StackNavigator } from 'react-navigation'
 import { Login } from './src/views/Login'
 import { Home } from './src/views/Home'
@@ -14,6 +15,6 @@ export const App = StackNavigator(
     Planning: { screen: Planning }
   },
   {
-    initialRouteName: 'Login'
+    initialRouteName: 'Home'
   }
 )
