@@ -29,13 +29,7 @@ export class Home extends Component {
 
   componentDidMount = async () => {
     if (this.props.navigation.state.params) {
-      console.log(
-        'navigation state params in home :',
-        this.props.navigation.state
-      )
       const { newCurrentUser } = this.props.navigation.state.params
-      console.log('newCurrentUser : ', newCurrentUser)
-      console.log('CurrentUser in state : ', this.state.currentUser)
       if (
         !this.state.currentUser ||
         (newCurrentUser &&
@@ -49,6 +43,11 @@ export class Home extends Component {
     }
 
     const currentUser = await store.get('currentUser')
+    console.log(
+      'Current User in STATE before update : ',
+      this.state.currentUser
+    )
+    console.log('Current User in STORE : ', currentUser)
     if (!currentUser) return this.setState({ loading: false })
     this.updateCurrentUserState(currentUser)
     // this.updateServerFromStorage(currentUser)

@@ -98,6 +98,7 @@ export class Planning extends Component {
 
   bookSession = async () => {
     const currentUser = await store.get('currentUser')
+<<<<<<< HEAD
     console.log('current user : ', currentUser.account.sessions)
     currentUser.account.sessions.push(this.state.session)
     console.log('current user updated : ', currentUser.account.sessions)
@@ -107,6 +108,9 @@ export class Planning extends Component {
     console.log('sessionId', this.state.session)
 
     console.log(`${config.API_URL}/api/sessions/${this.state.session._id}/book`)
+=======
+    currentUser.account.sessions.push(this.state.session)
+>>>>>>> f856ba9579cb1652445f895f744231d124463bf6
     // need user id, session id
     store.update('currentUser', currentUser).then(res => {
       this.props.navigation.navigate('Home', {
