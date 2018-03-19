@@ -42,7 +42,7 @@ export class Activities extends Component {
         return this.updateFavoritesOnServer(res)
       }
       // Favoris sur le serveur (donc user connecté)
-      if (!res && user) {
+      if (user) {
         return this.getFavoritesFromServer(user)
       }
       // Pas de favoris
