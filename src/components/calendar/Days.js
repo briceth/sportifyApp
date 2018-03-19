@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import { MyText } from '../MyText'
 import { Hours } from './Hours'
 import { DARKBLUE } from '../../mainStyle'
-//import { mergeHoursAndIndex } from '../../utils/utils'
 
 export class Days extends Component {
   static propTypes = {
