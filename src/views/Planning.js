@@ -27,6 +27,7 @@ export class Planning extends Component {
   }
   state = {
     name: '',
+    image: '',
     address: '',
     center: '',
     dates: [],
@@ -59,6 +60,7 @@ export class Planning extends Component {
         console.log('Fetching Activity :', response.data)
 
         const { name } = response.data
+        const { image } = response.data
         const { address } = response.data.center
         const center = response.data.center.name
         const sessions = response.data.sessions
@@ -67,9 +69,12 @@ export class Planning extends Component {
         const formatedDate = formatDate(sessions)
 
         const newDate = rangeDateByMonth(formatedDate)
-        this.setState({ name, address, center, dates: [...newDate] }, () => {
-          console.log('waza', this.state)
-        })
+        this.setState(
+          { name, image, address, center, dates: [...newDate] },
+          () => {
+            console.log('waza', this.state)
+          }
+        )
       })
       .catch(e => log(e))
   }
@@ -97,6 +102,8 @@ export class Planning extends Component {
 
   bookSession = async () => {
     const currentUser = await store.get('currentUser')
+<<<<<<< HEAD
+=======
     console.log('current user : ', currentUser.account.sessions)
     currentUser.account.sessions.push(this.state.session)
     console.log('current user updated : ', currentUser.account.sessions)
@@ -106,6 +113,7 @@ export class Planning extends Component {
     console.log('sessionId', this.state.session)
 
     console.log(`${config.API_URL}/api/sessions/${this.state.session._id}/book`)
+>>>>>>> 1e822cb30f990afd7ffa2e9e5bcc0b9e9807ab2a
     // need user id, session id
     store.update('currentUser', currentUser).then(res => {
       this.props.navigation.navigate('Home', {
@@ -132,7 +140,7 @@ export class Planning extends Component {
   }
 
   render() {
-    const { name, address, center, dates } = this.state
+    const { name, address, center, dates, image } = this.state
     console.log('Props in Planning :', this.props)
 
     return (
@@ -141,7 +149,7 @@ export class Planning extends Component {
           <View style={styles.imgBorder}>
             <ImageBackground
               resizeMode="cover"
-              source={{ uri: 'https://picsum.photos/400/500/?random' }}
+              source={{ uri: image }}
               style={[styles.img, this.state.imgWidth]}
             >
               <View style={styles.textImg}>
