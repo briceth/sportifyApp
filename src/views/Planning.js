@@ -27,6 +27,7 @@ export class Planning extends Component {
   }
   state = {
     name: '',
+    image: '',
     address: '',
     center: '',
     dates: [],
@@ -59,6 +60,7 @@ export class Planning extends Component {
         console.log('Fetching Activity :', response.data)
 
         const { name } = response.data
+        const { image } = response.data
         const { address } = response.data.center
         const center = response.data.center.name
         const sessions = response.data.sessions
@@ -66,9 +68,12 @@ export class Planning extends Component {
         const formatedDate = formatDate(sessions)
 
         const newDate = rangeDateByMonth(formatedDate)
-        this.setState({ name, address, center, dates: [...newDate] }, () => {
-          console.log('waza', this.state)
-        })
+        this.setState(
+          { name, image, address, center, dates: [...newDate] },
+          () => {
+            console.log('waza', this.state)
+          }
+        )
       })
       .catch(e => log(e))
   }
@@ -92,12 +97,6 @@ export class Planning extends Component {
 
   bookSession = async () => {
     const currentUser = await store.get('currentUser')
-
-    console.log('currentUser', currentUser)
-
-    console.log('sessionId', this.state.sessionId)
-
-    console.log(`${config.API_URL}/api/sessions/${this.state.sessionId}/book`)
     // need user id, session id
     axios
       .put(`${config.API_URL}/api/sessions/${this.state.sessionId}/book`, {
@@ -119,7 +118,7 @@ export class Planning extends Component {
   }
 
   render() {
-    const { name, address, center, dates } = this.state
+    const { name, address, center, dates, image } = this.state
     console.log('Props in Planning :', this.props)
 
     return (
@@ -128,7 +127,7 @@ export class Planning extends Component {
           <View style={styles.imgBorder}>
             <ImageBackground
               resizeMode="cover"
-              source={{ uri: 'https://picsum.photos/400/500/?random' }}
+              source={{ uri: image }}
               style={[styles.img, this.state.imgWidth]}
             >
               <View style={styles.textImg}>
