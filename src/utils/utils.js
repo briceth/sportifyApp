@@ -17,26 +17,40 @@ export function deleteWhere(array, conditions = {}) {
   return newArray
 }
 
-export function rangeDateByMonth(array) {
+function rangeHoursByDays(days) {
   const finalArray = []
 
-  array.forEach(element => {
-    const index = findIndex(finalArray, { month: element.month })
+  days.forEach(day => {
+    const index = findIndex(finalArray, { num: day.num })
 
     if (index === -1) {
-      finalArray.push(element)
+      finalArray.push(day)
     } else {
-      finalArray[index].days.push(...element.days)
+      finalArray[index].hours.push(...day.hours)
     }
   })
-
   return finalArray
 }
 
-export function mergeHoursAndIndex(array, index) {
-  return array.map(element => {
-    //element.id = index
-    return element
+export function rangeDateByMonth(array) {
+  const finalArray = []
+
+  array.forEach(month => {
+    const index = findIndex(finalArray, { month: month.month })
+
+    if (index === -1) {
+      finalArray.push(month) //si le mois n'est pas présent tu l'ajoutes
+    } else {
+      finalArray[index].days.push(...month.days) // sinon ajoute les jours au mois déjà présent
+    }
+  })
+
+  // je me demande si c'est pas un peu moche... mais ça fonctionne
+  return finalArray.map(month => {
+    const rangedHours = rangeHoursByDays(month.days)
+    month.days = []
+    month.days.push(...rangedHours)
+    return month
   })
 }
 
@@ -66,7 +80,8 @@ function generateId(str, hour = false) {
 }
 
 export function formatDate(sessions) {
-  return sessions.map(session => {
+  const finalArray = []
+  sessions.forEach(session => {
     const date = session.startsAt
     const dayId = generateId(date)
 
@@ -88,7 +103,8 @@ export function formatDate(sessions) {
         }
       ]
     }
-
-    return dates
+    //console.log('dates', dates)
+    finalArray.push(dates)
   })
+  return finalArray
 }
