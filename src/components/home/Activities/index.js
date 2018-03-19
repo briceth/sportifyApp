@@ -135,7 +135,6 @@ export class Activities extends Component {
           },
           () => {
             this.getActivities() //Get Activitites
-            console.log(this.state.geolocation)
           }
         )
       },

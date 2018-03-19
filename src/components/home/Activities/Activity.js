@@ -46,12 +46,7 @@ export class Activity extends Component {
 
   distance() {
     const { distance } = this.props.data
-    console.tron.display({
-      name: 'Kévin',
-      preview: 'COUCOU',
-      value: distance,
-      important: true
-    })
+
     if (distance < 1000) return '-1 km'
     if (distance < 99000) return `${Math.round(distance / 1000)} km`
     return ''
