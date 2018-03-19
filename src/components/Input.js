@@ -23,13 +23,15 @@ export class Input extends Component {
       text,
       handleInputs,
       secureTextEntry,
-      noCapitalize
+      noCapitalize,
+      autoCorrect
     } = this.props
 
     const border = noBorderBottom ? {} : styles.border
 
     return (
       <TextInput
+        autoCorrect={autoCorrect}
         autoCapitalize={noCapitalize && 'none'}
         secureTextEntry={secureTextEntry}
         style={[styles.input, border]}
@@ -42,8 +44,8 @@ export class Input extends Component {
 }
 const styles = StyleSheet.create({
   input: {
-    fontSize: 18,
-    height: 55,
+    fontSize: 16,
+    height: 45,
     paddingVertical: 10,
     paddingHorizontal: 15,
     color: BLACK

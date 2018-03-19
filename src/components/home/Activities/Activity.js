@@ -46,9 +46,15 @@ export class Activity extends Component {
 
   distance() {
     const { distance } = this.props.data
-    if (distance < 1000) return '-1'
-    if (distance < 99000) return Math.round(distance / 1000)
-    return '+99'
+    console.tron.display({
+      name: 'Kévin',
+      preview: 'COUCOU',
+      value: distance,
+      important: true
+    })
+    if (distance < 1000) return '-1 km'
+    if (distance < 99000) return `${Math.round(distance / 1000)} km`
+    return ''
   }
 
   timeBeforeStartContainer = function() {
@@ -101,7 +107,7 @@ export class Activity extends Component {
 
         {this.props.geolocation && (
           <View style={styles.distanceContainer}>
-            <MyText style={[styles.distance]}>{this.distance()} km</MyText>
+            <MyText style={[styles.distance]}>{this.distance()}</MyText>
           </View>
         )}
       </TouchableOpacity>

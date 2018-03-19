@@ -11,7 +11,7 @@ import PropTypes from 'prop-types'
 
 export class Home extends Component {
   static navigationOptions = {
-    title: 'Home'
+    title: 'Sportify'
   }
 
   static propTypes = {
@@ -106,7 +106,7 @@ export class Home extends Component {
         <ActivityIndicator />
       </View>
     ) : (
-      <ScrollView style={mainStyles.containerFlex}>
+      <ScrollView style={[mainStyles.containerFlex, styles.mainContainer]}>
         {this.state.currentUser && (
           <Reservations
             updateServerFromStorage={this.updateServerFromStorage}
