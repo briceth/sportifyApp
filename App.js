@@ -1,3 +1,4 @@
+import './ReactotronConfig'
 import { StackNavigator } from 'react-navigation'
 import { Login } from './src/views/Login'
 import { Home } from './src/views/Home'
