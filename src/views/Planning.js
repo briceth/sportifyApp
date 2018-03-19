@@ -102,9 +102,7 @@ export class Planning extends Component {
 
   bookSession = async () => {
     const currentUser = await store.get('currentUser')
-
     currentUser.account.sessions.push(this.state.session)
-
     // need user id, session id
     store.update('currentUser', currentUser).then(res => {
       this.props.navigation.navigate('Home', {
