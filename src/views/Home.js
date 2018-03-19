@@ -1,5 +1,6 @@
 import config from '../../config'
 import React, { Component } from 'react'
+import Reactotron from 'reactotron-react-native'
 import { ScrollView, ActivityIndicator, View, StyleSheet } from 'react-native'
 import { Reservations } from '../components/home/Reservations'
 import { Activities } from '../components/home/Activities'
@@ -19,7 +20,7 @@ export class Home extends Component {
 
   state = {
     loading: true,
-    currentUser: {}
+    currentUser: null
   }
 
   goToPlanning = activityId =>
@@ -28,7 +29,26 @@ export class Home extends Component {
     })
 
   componentDidMount = async () => {
+    if (this.props.navigation.state.params) {
+      const { newCurrentUser } = this.props.navigation.state.params
+      if (
+        !this.state.currentUser ||
+        (newCurrentUser &&
+          newCurrentUser.account.sessions.length >
+            this.state.currentUser.account.sessions.length)
+      ) {
+        console.log('Update state')
+
+        this.updateCurrentUserState(newCurrentUser)
+      }
+    }
+
     const currentUser = await store.get('currentUser')
+    console.log(
+      'Current User in STATE before update : ',
+      this.state.currentUser
+    )
+    console.log('Current User in STORE : ', currentUser)
     if (!currentUser) return this.setState({ loading: false })
     this.updateCurrentUserState(currentUser)
     // this.updateServerFromStorage(currentUser)
@@ -87,16 +107,20 @@ export class Home extends Component {
       </View>
     ) : (
       <ScrollView style={mainStyles.containerFlex}>
-        <Reservations
-          updateServerFromStorage={this.updateServerFromStorage}
-          updateCurrentUserState={this.updateCurrentUserState}
-          currentUser={currentUser}
-        />
-        <Activities
-          updateServerFromStorage={this.updateServerFromStorage}
-          currentUser={currentUser}
-          goToPlanning={this.goToPlanning}
-        />
+        {this.state.currentUser && (
+          <Reservations
+            updateServerFromStorage={this.updateServerFromStorage}
+            updateCurrentUserState={this.updateCurrentUserState}
+            currentUser={currentUser}
+          />
+        )}
+        {
+          <Activities
+            updateServerFromStorage={this.updateServerFromStorage}
+            currentUser={currentUser}
+            goToPlanning={this.goToPlanning}
+          />
+        }
       </ScrollView>
     )
   }

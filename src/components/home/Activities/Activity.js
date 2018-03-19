@@ -15,7 +15,8 @@ export class Activity extends Component {
     isFavorite: PropTypes.bool,
     data: PropTypes.object,
     width: PropTypes.number,
-    goToPlanning: PropTypes.func
+    goToPlanning: PropTypes.func,
+    updateFavorites: PropTypes.func
   }
 
   constructor(props) {
@@ -26,25 +27,28 @@ export class Activity extends Component {
     }
   }
 
-  componentDidMount() {
-    this.findFirstSession()
+  shouldComponentUpdate(nextProps, nextState) {
+    if (
+      nextProps.geolocation !== this.props.geolocation ||
+      nextProps.isFavorite !== this.props.isFavorite ||
+      nextState.start != this.state.start
+    ) {
+      return true
+    }
+    return false
   }
 
-  findFirstSession() {
-    const session = this.props.data.sessions.sort(compare)[0]
-    if (session) {
-      this.setState({
-        start: distanceInWords(session.startsAt, new Date(), {
-          locale: frLocale
-        })
-      })
-    }
+  startsAt() {
+    return distanceInWords(this.props.data.sessions, new Date(), {
+      locale: frLocale
+    })
+  }
 
-    function compare(a, b) {
-      if (a.startsAt < b.startsAt) return -1
-      if (a.startsAt > b.startsAt) return 1
-      return 0
-    }
+  distance() {
+    const { distance } = this.props.data
+    if (distance < 1000) return '-1'
+    if (distance < 99000) return Math.round(distance / 1000)
+    return '+99'
   }
 
   timeBeforeStartContainer = function() {
@@ -54,11 +58,10 @@ export class Activity extends Component {
   }
 
   render() {
-    const { image, name, center, _id } = this.props.data
+    const { image, name, center, _id, sessions } = this.props.data
     const { start } = this.state
 
     const star = this.props.isFavorite ? 'star' : 'star-o'
-    console.log('Data props in activity : ', this.props.data._id)
     return (
       <TouchableOpacity
         style={styles.lessonContainer}
@@ -75,7 +78,7 @@ export class Activity extends Component {
         <View style={styles.blackfilter} />
 
         <View style={styles.centerContainer}>
-          <MyText style={[styles.centerText]}>{center.name}</MyText>
+          <MyText style={[styles.centerText]}>{center}</MyText>
         </View>
 
         <TouchableOpacity
@@ -86,19 +89,21 @@ export class Activity extends Component {
         </TouchableOpacity>
 
         <View style={styles.textContainer}>
-          <MyText style={styles.nameActivities}>{name}</MyText>
-          {this.state.start && (
+          <MyText style={[styles.nameActivities]}>{name}</MyText>
+          {sessions && (
             <View style={this.timeBeforeStartContainer()}>
-              <MyText style={styles.timeBeforeStart}>
-                Prochaine scéance dans {start}
+              <MyText style={[styles.timeBeforeStart]}>
+                Prochaine scéance dans {this.startsAt()}
               </MyText>
             </View>
           )}
         </View>
 
-        <View style={styles.distanceContainer}>
-          <MyText style={[styles.distance]}>33 km</MyText>
-        </View>
+        {this.props.geolocation && (
+          <View style={styles.distanceContainer}>
+            <MyText style={[styles.distance]}>{this.distance()} km</MyText>
+          </View>
+        )}
       </TouchableOpacity>
     )
   }

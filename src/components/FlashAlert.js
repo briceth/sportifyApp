@@ -29,12 +29,12 @@ export class FlashAlert extends Component {
     const { moveToCenter } = this.state
     return (
       <Animated.View style={[styles.container, { right: moveToCenter }]}>
-        <MyText style={styles.text}>{this.props.message}</MyText>
+        <MyText style={[styles.text]}>{this.props.message}</MyText>
         <TouchableOpacity
           onPress={this.props.removeFlashAlert}
           style={styles.button}
         >
-          <MyText style={styles.textInput}>Ré-essayer</MyText>
+          <MyText style={[styles.textInput]}>Ré-essayer</MyText>
         </TouchableOpacity>
       </Animated.View>
     )

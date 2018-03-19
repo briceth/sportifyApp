@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, TouchableHighlight } from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
-import { mainStyles } from '../../../mainStyle'
+import { mainStyles, BLUE } from '../../../mainStyle'
 import { Actions } from './Actions'
-import { Action } from './Action'
 import { MyText } from '../../MyText'
 import { format } from 'date-fns'
 import fr from 'date-fns/locale/fr'
@@ -20,7 +20,6 @@ export class Reservation extends Component {
 
   render() {
     const { session, style } = this.props
-    console.log('session', session)
     const sessionInfos = {
       sessionId: session._id,
       activity: session.activity.name,
@@ -30,40 +29,33 @@ export class Reservation extends Component {
       // teacher: session.teacher.account.firstName
     }
 
-    return [
+    return (
       <View style={style}>
         <ReservationInfos>
           <MyText style={[mainStyles.boldText]}>{session.activity.name}</MyText>
-          <MyText>{/* session.activity.center.name */}</MyText>
+          <MyText>{/* session.activity.center.name */}The center</MyText>
           <MyText>
             {format(session.startsAt, 'ddd DD MMM [à] HH:mm', { locale: fr })}
           </MyText>
         </ReservationInfos>
-        <Actions style={[styles.actions]}>
-          <Action
-            icon="qrcode"
-            style={[styles.action]}
-            handleTouch={this.props.toggleQrCode}
-            sessionInfos={sessionInfos}
-          />
-          <Action
-            icon="trash"
-            style={[styles.action]}
-            handleTouch={this.props.openRow}
-          />
-        </Actions>
+        <TouchableHighlight
+          underlayColor="#EFEFF4"
+          onPress={() => this.props.toggleQrCode(sessionInfos)}
+        >
+          <Actions style={[styles.actions]}>
+            <Icon name="qrcode" size={40} color={BLUE} />
+          </Actions>
+        </TouchableHighlight>
       </View>
-    ]
+    )
   }
 }
 
 const styles = StyleSheet.create({
   actions: {
-    // backgroundColor: 'red',
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  action: {
-    marginLeft: 20
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 20
   }
 })

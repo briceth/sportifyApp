@@ -4,26 +4,26 @@ import PropTypes from 'prop-types'
 import { MyText } from '../MyText'
 import { Hours } from './Hours'
 import { DARKBLUE } from '../../mainStyle'
-import { mergeHoursAndIndex } from '../../utils/utils'
+//import { mergeHoursAndIndex } from '../../utils/utils'
 
 export class Days extends Component {
   static propTypes = {
     days: PropTypes.array,
     selectMonthAndDay: PropTypes.func,
     selectHour: PropTypes.func,
-    isDaySelected: PropTypes.number,
+    selectedDay: PropTypes.number,
     month: PropTypes.string,
-    isHourSelected: PropTypes.number
+    selectedHour: PropTypes.number
   }
 
   render() {
     const {
       days,
       selectMonthAndDay,
-      isDaySelected,
+      selectedDay,
       month,
       selectHour,
-      isHourSelected
+      selectedHour
     } = this.props
 
     const hoursObject = []
@@ -32,44 +32,42 @@ export class Days extends Component {
       <View>
         <ScrollView horizontal contentContainerStyle={styles.content}>
           {days.map((day, index) => {
-            hoursObject.push(...mergeHoursAndIndex(day.hours, index))
+            hoursObject.push(...day.hours)
 
             return (
-              <View>
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => selectMonthAndDay(day.num, month, index)}
+              <TouchableOpacity
+                key={index}
+                onPress={() => selectMonthAndDay(day.num, month, day.id)}
+                style={[
+                  styles.containerDays,
+                  selectedDay == day.id && styles.selectedPan
+                ]}
+              >
+                <MyText
                   style={[
-                    styles.containerDays,
-                    index === isDaySelected && styles.selectedPan
+                    styles.num,
+                    selectedDay == day.id && styles.selectedTextPan
                   ]}
                 >
-                  <MyText
-                    style={[
-                      styles.num,
-                      index === isDaySelected && styles.selectedTextPan
-                    ]}
-                  >
-                    {day.num}
-                  </MyText>
-                  <MyText
-                    style={[
-                      styles.letter,
-                      index === isDaySelected && styles.selectedTextPan
-                    ]}
-                  >
-                    {day.letter}
-                  </MyText>
-                </TouchableOpacity>
-              </View>
+                  {day.num}
+                </MyText>
+                <MyText
+                  style={[
+                    styles.letter,
+                    selectedDay == day.id && styles.selectedTextPan
+                  ]}
+                >
+                  {day.letter}
+                </MyText>
+              </TouchableOpacity>
             )
           })}
         </ScrollView>
         <Hours
           selectHour={selectHour}
           hours={hoursObject}
-          dayId={isDaySelected}
-          isHourSelected={isHourSelected}
+          dayId={selectedDay}
+          selectedHour={selectedHour}
         />
       </View>
     )

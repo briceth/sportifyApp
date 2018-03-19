@@ -9,31 +9,24 @@ export class Months extends Component {
     months: PropTypes.array,
     selectMonthAndDay: PropTypes.func,
     selectHour: PropTypes.func,
-    isDaySelected: PropTypes.number,
-    isHourSelected: PropTypes.number
+    selectedDay: PropTypes.number,
+    selectedHour: PropTypes.number
   }
 
   render() {
     const {
       months,
       selectMonthAndDay,
-      isDaySelected,
+      selectedDay,
       selectHour,
-      isHourSelected
+      selectedHour
     } = this.props
 
     return months.map((months, index) => {
       return (
-        <View>
+        <View key={index}>
           <ScrollView horizontal contentContainerStyle={styles.calendar}>
-            <TouchableOpacity
-              //onPress={() => selectMonth(months.month, index)}
-              key={index}
-              style={[
-                styles.hourContainer
-                //index === ismonthSelected && styles.selected
-              ]}
-            >
+            <TouchableOpacity style={styles.hourContainer}>
               <MyText style={[styles.text]}>{months.month}</MyText>
             </TouchableOpacity>
           </ScrollView>
@@ -41,9 +34,9 @@ export class Months extends Component {
             days={months.days}
             selectMonthAndDay={selectMonthAndDay}
             month={months.month}
-            isDaySelected={isDaySelected}
             selectHour={selectHour}
-            isHourSelected={isHourSelected}
+            selectedDay={selectedDay}
+            selectedHour={selectedHour}
           />
         </View>
       )
