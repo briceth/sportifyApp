@@ -64,17 +64,13 @@ export class Planning extends Component {
         const { address } = response.data.center
         const center = response.data.center.name
         const sessions = response.data.sessions
-        console.log(sessions)
+        //console.log(sessions)
 
         const formatedDate = formatDate(sessions)
 
         const newDate = rangeDateByMonth(formatedDate)
-        this.setState(
-          { name, image, address, center, dates: [...newDate] },
-          () => {
-            console.log('waza', this.state)
-          }
-        )
+
+        this.setState({ name, image, address, center, dates: [...newDate] })
       })
       .catch(e => log(e))
   }
@@ -102,15 +98,8 @@ export class Planning extends Component {
 
   bookSession = async () => {
     const currentUser = await store.get('currentUser')
-    console.log('current user : ', currentUser.account.sessions)
     currentUser.account.sessions.push(this.state.session)
-    console.log('current user updated : ', currentUser.account.sessions)
 
-    console.log('currentUser', currentUser)
-
-    console.log('sessionId', this.state.session)
-
-    console.log(`${config.API_URL}/api/sessions/${this.state.session._id}/book`)
     // need user id, session id
     store.update('currentUser', currentUser).then(res => {
       this.props.navigation.navigate('Home', {

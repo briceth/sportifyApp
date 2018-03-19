@@ -22,18 +22,20 @@ export class Months extends Component {
       selectedHour
     } = this.props
 
-    return months.map((months, index) => {
+    console.log('this props in months.js', this.props)
+
+    return months.map((month, index) => {
       return (
         <View key={index}>
           <ScrollView horizontal contentContainerStyle={styles.calendar}>
             <TouchableOpacity style={styles.hourContainer}>
-              <MyText style={[styles.text]}>{months.month}</MyText>
+              <MyText style={[styles.text]}>{month.month}</MyText>
             </TouchableOpacity>
           </ScrollView>
           <Days
-            days={months.days}
+            days={month.days}
             selectMonthAndDay={selectMonthAndDay}
-            month={months.month}
+            month={month.month}
             selectHour={selectHour}
             selectedDay={selectedDay}
             selectedHour={selectedHour}

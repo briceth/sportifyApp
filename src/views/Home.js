@@ -1,6 +1,5 @@
 import config from '../../config'
 import React, { Component } from 'react'
-import Reactotron from 'reactotron-react-native'
 import { ScrollView, ActivityIndicator, View, StyleSheet } from 'react-native'
 import { Reservations } from '../components/home/Reservations'
 import { Activities } from '../components/home/Activities'
