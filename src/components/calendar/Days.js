@@ -31,6 +31,8 @@ export class Days extends Component {
       <View>
         <ScrollView horizontal contentContainerStyle={styles.content}>
           {days.map((day, index) => {
+            // console.log('day hours', day)
+
             hoursObject.push(...day.hours)
 
             return (
@@ -39,13 +41,13 @@ export class Days extends Component {
                 onPress={() => selectMonthAndDay(day.num, month, day.id)}
                 style={[
                   styles.containerDays,
-                  selectedDay == day.id && styles.selectedPan
+                  selectedDay === day.id && styles.selectedPan
                 ]}
               >
                 <MyText
                   style={[
                     styles.num,
-                    selectedDay == day.id && styles.selectedTextPan
+                    selectedDay === day.id && styles.selectedTextPan
                   ]}
                 >
                   {day.num}
@@ -53,7 +55,7 @@ export class Days extends Component {
                 <MyText
                   style={[
                     styles.letter,
-                    selectedDay == day.id && styles.selectedTextPan
+                    selectedDay === day.id && styles.selectedTextPan
                   ]}
                 >
                   {day.letter}
@@ -75,21 +77,21 @@ export class Days extends Component {
 
 const styles = StyleSheet.create({
   content: {
-    flex: 1
-    //flexDirection: 'row'
-  },
-  container: {
-    paddingVertical: 10,
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-around'
+    marginVertical: 5
   },
+
   selectedPan: {
     borderColor: 'red',
     borderWidth: 1
   },
   containerDays: {
     width: 70,
+    borderWidth: 0.5,
+    marginRight: 5,
+    borderRadius: 4,
+    paddingVertical: 5,
+    borderColor: 'grey',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center'
@@ -102,7 +104,11 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   selectedPan: {
-    backgroundColor: DARKBLUE
+    backgroundColor: DARKBLUE,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2
   },
   selectedTextPan: {
     color: 'white'
