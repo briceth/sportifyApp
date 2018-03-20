@@ -125,11 +125,11 @@ export class Home extends Component {
     const { currentUser } = this.state
 
     return this.state.loading ? (
-      <View style={[mainStyles.containerFlex, styles.centered]}>
+      <View style={[mainStyles.containerFlex, mainStyles.centered]}>
         <ActivityIndicator />
       </View>
     ) : (
-      <ScrollView style={[mainStyles.containerFlex, styles.mainContainer]}>
+      <ScrollView style={[mainStyles.containerFlex]}>
         {this.state.currentUser && (
           <Reservations
             updateServerFromStorage={this.updateServerFromStorage}
@@ -148,13 +148,6 @@ export class Home extends Component {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  centered: {
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-})
 
 function renderRight(params) {
   const { user } = params || 0
