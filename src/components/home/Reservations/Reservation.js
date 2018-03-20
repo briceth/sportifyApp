@@ -20,13 +20,19 @@ export class Reservation extends Component {
 
   render() {
     const { session, style } = this.props
+    console.tron.display({
+      name: 'Jerome Debug',
+      preview: 'session',
+      value: session,
+      important: true
+    })
     const sessionInfos = {
       sessionId: session._id,
       activity: session.activity.name,
       // center: session.activity.center.name,
       startsAt: session.startsAt,
-      duration: session.duration
-      // teacher: session.teacher.account.firstName
+      duration: session.duration,
+      teacher: session.teacher.firstName
     }
 
     return (
