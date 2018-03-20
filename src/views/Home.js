@@ -37,7 +37,6 @@ export class Home extends Component {
   }
 
   state = {
-    test: false,
     loading: true,
     currentUser: null
   }
