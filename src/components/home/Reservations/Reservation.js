@@ -20,16 +20,10 @@ export class Reservation extends Component {
 
   render() {
     const { session, style } = this.props
-    console.tron.display({
-      name: 'Jerome Debug',
-      preview: 'session',
-      value: session,
-      important: true
-    })
     const sessionInfos = {
       sessionId: session._id,
       activity: session.activity.name,
-      // center: session.activity.center.name,
+      center: session.activity.center.name,
       startsAt: session.startsAt,
       duration: session.duration,
       teacher: session.teacher.firstName
@@ -39,7 +33,7 @@ export class Reservation extends Component {
       <View style={style}>
         <ReservationInfos>
           <MyText style={[mainStyles.boldText]}>{session.activity.name}</MyText>
-          <MyText>{/* session.activity.center.name */}The center</MyText>
+          <MyText>{session.activity.center.name}</MyText>
           <MyText>
             {format(session.startsAt, 'ddd DD MMM [à] HH:mm', { locale: fr })}
           </MyText>

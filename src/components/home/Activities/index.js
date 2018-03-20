@@ -10,7 +10,9 @@ import PropTypes from 'prop-types'
 
 export class Activities extends Component {
   static propTypes = {
-    goToPlanning: PropTypes.func
+    goToPlanning: PropTypes.func,
+    updateServerFromStorage: PropTypes.func,
+    currentUser: PropTypes.object
   }
 
   state = {
@@ -25,7 +27,6 @@ export class Activities extends Component {
   componentDidMount() {
     //store.delete('favoriteActivities')
     const { currentUser } = this.props
-
     this.geoLocation()
     this.getFavorites(currentUser ? currentUser : false) // Get Favorites
   }
@@ -38,7 +39,10 @@ export class Activities extends Component {
           favoritesLoad: true,
           favorites: res
         })
-        return this.updateFavoritesOnServer(res)
+        if (this.props.currentUser)
+          return this.props.updateServerFromStorage(this.props.currentUser, {
+            dataToAdd: { favoriteActivities: res }
+          })
       }
       // Favoris sur le serveur (donc user connecté)
       if (user) return this.getFavoritesFromServer(user)
@@ -96,7 +100,13 @@ export class Activities extends Component {
 
         store.save('favoriteActivities', favorites).then(() => {
           store.get('favoriteActivities').then(res => {
-            this.updateFavoritesOnServer(res)
+            if (this.props.currentUser)
+              return this.props.updateServerFromStorage(
+                this.props.currentUser,
+                {
+                  dataToRemove: { favoriteActivities: [id] }
+                }
+              )
           })
         })
       })
@@ -108,17 +118,12 @@ export class Activities extends Component {
 
       store.push('favoriteActivities', id).then(() => {
         store.get('favoriteActivities').then(res => {
-          this.updateFavoritesOnServer(res)
+          if (this.props.currentUser)
+            return this.props.updateServerFromStorage(this.props.currentUser, {
+              dataToAdd: { favoriteActivities: [id] }
+            })
         })
       })
-    }
-  }
-
-  updateFavoritesOnServer(favorites) {
-    const { currentUser } = this.props
-    if (currentUser) {
-      currentUser.account.favoriteActivities = favorites
-      this.props.updateServerFromStorage(currentUser)
     }
   }
 

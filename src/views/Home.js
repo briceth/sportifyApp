@@ -44,36 +44,15 @@ export class Home extends Component {
   componentDidMount = async () => {
     //setParams to navbar to dertermine right icon
 
-    if (this.props.navigation.state.params) {
-      const { newCurrentUser } = this.props.navigation.state.params
-      if (
-        !this.state.currentUser ||
-        (newCurrentUser &&
-          newCurrentUser.account.sessions.length >
-            this.state.currentUser.account.sessions.length)
-      ) {
-        console.log('Update state')
-
-        this.updateCurrentUserState(newCurrentUser)
-      }
-    }
-
+    // Recupération du user du store:
     const currentUser = await store.get('currentUser')
-    console.log(
-      'Current User in STATE before update : ',
-      this.state.currentUser
-    )
-    console.log('Current User in STORE : ', currentUser)
-
     this.props.navigation.setParams({
       user: currentUser ? 'connected' : 'disconnected',
       handleHeaderRight: this._handleHeaderRight.bind(this)
     })
-
     if (!currentUser) return this.setState({ loading: false })
-
+    // mise dans le state :
     this.updateCurrentUserState(currentUser)
-    // this.updateServerFromStorage(currentUser)
   }
 
   _handleHeaderRight() {
@@ -108,26 +87,23 @@ export class Home extends Component {
       activityId
     })
 
-  updateCurrentUserState = currentUser => {
-    return new Promise((resolve, reject) => {
-      this.setState(
-        {
-          currentUser,
-          loading: false
-        },
-        () => {
-          resolve(this.state.currentUser)
-        }
-      )
+  updateCurrentUserState = async currentUser =>
+    this.setState({
+      currentUser,
+      loading: false
     })
-  }
 
-  updateServerFromStorage = currentUser => {
+  // format: data = {dataToAdd: {sessions: [ids]}}
+  updateServerFromStorage = (currentUser, data) => {
+    console.tron.log('IN UPDATE SERVER')
+    if (!data) throw Error('No data given')
+    const key = Object.keys(data)[0]
+    const dataToUpdate = data[key]
     axios
       .post(
-        `${config.API_URL}/api/users/${currentUser._id}`,
+        `${config.API_URL}/api/users/improved/${currentUser._id}`,
         {
-          account: currentUser.account
+          [key]: dataToUpdate
         },
         {
           headers: {
@@ -137,30 +113,23 @@ export class Home extends Component {
         }
       )
       .then(response => {
-        if (response.status === 200) {
-          this.setState({
-            loading: false
-          })
-        }
-      })
-      .catch(e => {
-        console.log('Error when updating user data on server :', e)
-        console.log('Response :', e.response)
+        console.tron.log(response)
         this.setState({
           loading: false
         })
       })
+      .catch(err => console.tron.log(err))
   }
 
   render() {
     const { currentUser } = this.state
 
     return this.state.loading ? (
-      <View style={[mainStyles.containerFlex, styles.centered]}>
+      <View style={[mainStyles.containerFlex, mainStyles.centered]}>
         <ActivityIndicator />
       </View>
     ) : (
-      <ScrollView style={[mainStyles.containerFlex, styles.mainContainer]}>
+      <ScrollView style={[mainStyles.containerFlex]}>
         {this.state.currentUser && (
           <Reservations
             updateServerFromStorage={this.updateServerFromStorage}
@@ -179,13 +148,6 @@ export class Home extends Component {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  centered: {
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-})
 
 function renderRight(params) {
   const { user } = params || 0
