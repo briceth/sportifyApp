@@ -15,7 +15,6 @@ console.tron = Reactotron
 //       preview: "Who's there?",
 //       value: 'Orange.'
 //     })
-
 //     console.tron.display({
 //       name: 'CurrentUser',
 //       preview: 'The preview',
