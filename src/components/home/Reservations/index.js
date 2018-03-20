@@ -52,14 +52,17 @@ export class Reservations extends Component {
     rowMap[session.key].closeRow()
     const sessionId = session._id
     const newCurrentUser = { ...this.props.currentUser }
-    const newAccount = { ...newCurrentUser.account }
-    newAccount.sessions = deleteWhere(newAccount.sessions, {
-      _id: sessionId
-    })
-    newCurrentUser.account = newAccount
+    newCurrentUser.account.sessions = deleteWhere(
+      newCurrentUser.account.sessions,
+      {
+        _id: sessionId
+      }
+    )
     this.props.updateCurrentUserState(newCurrentUser).then(user => {
       store.save('currentUser', newCurrentUser).then(async res => {
-        this.props.updateServerFromStorage(newCurrentUser)
+        this.props.updateServerFromStorage(newCurrentUser, {
+          dataToRemove: { sessions: [sessionId] }
+        })
       })
     })
   }

@@ -59,12 +59,45 @@ export class Home extends Component {
       loading: false
     })
 
-  updateServerFromStorage = currentUser => {
+  // updateServerFromStorage = currentUser => {
+  //   axios
+  //     .post(
+  //       `${config.API_URL}/api/users/${currentUser._id}`,
+  //       {
+  //         account: currentUser.account
+  //       },
+  //       {
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           Authorization: `Bearer ${currentUser.token}`
+  //         }
+  //       }
+  //     )
+  //     .then(response => {
+  //       this.setState({
+  //         loading: false
+  //       })
+  //     })
+  //     .catch(e => {
+  //       console.log('Error when updating user data on server :', e)
+  //       console.log('Response :', e.response)
+  //       this.setState({
+  //         loading: false
+  //       })
+  //     })
+  // }
+
+  // format: data = {dataToAdd: {sessions: [ids]}}
+  updateServerFromStorage = (currentUser, data) => {
+    console.tron.log('IN UPDATE SERVER')
+    if (!data) throw Error('No data given')
+    const key = Object.keys(data)[0]
+    const dataToUpdate = data[key]
     axios
       .post(
-        `${config.API_URL}/api/users/${currentUser._id}`,
+        `${config.API_URL}/api/users/improved/${currentUser._id}`,
         {
-          account: currentUser.account
+          [key]: dataToUpdate
         },
         {
           headers: {
@@ -74,19 +107,12 @@ export class Home extends Component {
         }
       )
       .then(response => {
-        if (response.status === 200) {
-          this.setState({
-            loading: false
-          })
-        }
-      })
-      .catch(e => {
-        console.log('Error when updating user data on server :', e)
-        console.log('Response :', e.response)
+        console.tron.log(response)
         this.setState({
           loading: false
         })
       })
+      .catch(err => console.tron.log(err))
   }
 
   render() {
