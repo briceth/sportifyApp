@@ -1,20 +1,39 @@
 import config from '../../config'
 import React, { Component } from 'react'
-import { ScrollView, ActivityIndicator, View, StyleSheet } from 'react-native'
+import {
+  ScrollView,
+  ActivityIndicator,
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Alert
+} from 'react-native'
 import { Reservations } from '../components/home/Reservations'
 import { Activities } from '../components/home/Activities'
 import { mainStyles } from '../mainStyle'
 import store from 'react-native-simple-store'
 import axios from 'axios'
 import PropTypes from 'prop-types'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import { BLUE } from '../mainStyle'
 
 export class Home extends Component {
-  static navigationOptions = {
-    title: 'Home'
-  }
-
   static propTypes = {
     navigation: PropTypes.object
+  }
+
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state
+    return {
+      headerTitle: (
+        <Image
+          style={{ width: 150, height: 30 }}
+          source={require('../images/logo.png')}
+        />
+      ),
+      headerRight: renderRight(params)
+    }
   }
 
   state = {
@@ -22,12 +41,9 @@ export class Home extends Component {
     currentUser: null
   }
 
-  goToPlanning = activityId =>
-    this.props.navigation.navigate('Planning', {
-      activityId
-    })
-
   componentDidMount = async () => {
+    //setParams to navbar to dertermine right icon
+
     if (this.props.navigation.state.params) {
       const { newCurrentUser } = this.props.navigation.state.params
       if (
@@ -48,10 +64,49 @@ export class Home extends Component {
       this.state.currentUser
     )
     console.log('Current User in STORE : ', currentUser)
+
+    this.props.navigation.setParams({
+      user: currentUser ? 'connected' : 'disconnected',
+      handleHeaderRight: this._handleHeaderRight.bind(this)
+    })
+
     if (!currentUser) return this.setState({ loading: false })
+
     this.updateCurrentUserState(currentUser)
     // this.updateServerFromStorage(currentUser)
   }
+
+  _handleHeaderRight() {
+    if (this.state.currentUser) {
+      Alert.alert(
+        'Confirmation',
+        'Etes vous sûr de vouloir vous déconnectez ?',
+        [
+          {
+            text: 'Annuler',
+            style: 'cancel'
+          },
+          {
+            text: 'Se déconnecter',
+            onPress: () => {
+              store.delete('currentUser')
+              this.setState({ currentUser: null })
+              this.props.navigation.setParams({ user: 'disconnected' })
+            },
+            style: 'destructive'
+          }
+        ],
+        { cancelable: false }
+      )
+    } else {
+      this.props.navigation.navigate('Signup')
+    }
+  }
+
+  goToPlanning = activityId =>
+    this.props.navigation.navigate('Planning', {
+      activityId
+    })
 
   updateCurrentUserState = currentUser => {
     return new Promise((resolve, reject) => {
@@ -105,7 +160,7 @@ export class Home extends Component {
         <ActivityIndicator />
       </View>
     ) : (
-      <ScrollView style={mainStyles.containerFlex}>
+      <ScrollView style={[mainStyles.containerFlex, styles.mainContainer]}>
         {this.state.currentUser && (
           <Reservations
             updateServerFromStorage={this.updateServerFromStorage}
@@ -131,3 +186,21 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   }
 })
+
+function renderRight(params) {
+  const { user } = params || 0
+  console.tron.log(user)
+  if (!user) return
+  return (
+    <TouchableOpacity
+      onPress={() => params.handleHeaderRight()}
+      style={{ paddingHorizontal: 15, paddingVertical: 5 }}
+    >
+      <Icon
+        name={user === 'connected' ? 'sign-out' : 'user'}
+        size={30}
+        color={BLUE}
+      />
+    </TouchableOpacity>
+  )
+}

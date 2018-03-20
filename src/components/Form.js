@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: LINEGREY,
     width: '80%',
-    borderRadius: 15,
+    borderRadius: 10,
     overflow: 'hidden'
   }
 })
