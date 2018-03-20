@@ -44,36 +44,15 @@ export class Home extends Component {
   componentDidMount = async () => {
     //setParams to navbar to dertermine right icon
 
-    if (this.props.navigation.state.params) {
-      const { newCurrentUser } = this.props.navigation.state.params
-      if (
-        !this.state.currentUser ||
-        (newCurrentUser &&
-          newCurrentUser.account.sessions.length >
-            this.state.currentUser.account.sessions.length)
-      ) {
-        console.log('Update state')
-
-        this.updateCurrentUserState(newCurrentUser)
-      }
-    }
-
+    // Recupération du user du store:
     const currentUser = await store.get('currentUser')
-    console.log(
-      'Current User in STATE before update : ',
-      this.state.currentUser
-    )
-    console.log('Current User in STORE : ', currentUser)
-
     this.props.navigation.setParams({
       user: currentUser ? 'connected' : 'disconnected',
       handleHeaderRight: this._handleHeaderRight.bind(this)
     })
-
     if (!currentUser) return this.setState({ loading: false })
-
+    // mise dans le state :
     this.updateCurrentUserState(currentUser)
-    // this.updateServerFromStorage(currentUser)
   }
 
   _handleHeaderRight() {
