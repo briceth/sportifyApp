@@ -4,7 +4,8 @@ import {
   ImageBackground,
   View,
   Animated,
-  Easing
+  Easing,
+  Image
 } from 'react-native'
 import axios from 'axios'
 import PropTypes from 'prop-types'
@@ -24,7 +25,14 @@ import {
 const log = console.log
 
 export class Planning extends Component {
-  static navigationOptions = { title: 'Planning' }
+  static navigationOptions = {
+    headerTitle: (
+      <Image
+        style={{ width: 150, height: 30 }}
+        source={require('../images/logo.png')}
+      />
+    )
+  }
 
   static propTypes = {
     activityId: PropTypes.string,

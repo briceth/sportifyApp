@@ -25,11 +25,10 @@ export class Activities extends Component {
   }
 
   componentDidMount() {
-    store.delete('favoriteActivities')
+    //store.delete('favoriteActivities')
     const { currentUser } = this.props
-    this.getActivities() //Get Activitites
-    this.getFavorites(currentUser ? currentUser : false) // Get Favorites
     this.geoLocation()
+    this.getFavorites(currentUser ? currentUser : false) // Get Favorites
   }
 
   getFavorites(user) {
@@ -46,9 +45,8 @@ export class Activities extends Component {
           })
       }
       // Favoris sur le serveur (donc user connecté)
-      if (!res && user) {
-        return this.getFavoritesFromServer(user)
-      }
+      if (user) return this.getFavoritesFromServer(user)
+
       // Pas de favoris
       this.setState(
         {
@@ -129,9 +127,47 @@ export class Activities extends Component {
     }
   }
 
+<<<<<<< HEAD
+=======
+  updateFavoritesOnServer(favorites) {
+    const { currentUser } = this.props
+    if (currentUser) {
+      currentUser.account.favoriteActivities = favorites
+      this.props.updateServerFromStorage(currentUser)
+    }
+  }
+
+  geoLocation() {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        this.setState(
+          {
+            geolocation: {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude
+            }
+          },
+          () => {
+            this.getActivities() //Get Activitites
+          }
+        )
+      },
+      error => {
+        this.getActivities()
+        console.log(error.message)
+      },
+      { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 }
+    )
+  }
+
+>>>>>>> b5c492d32a86d56981145834243fd2deac0e0d1b
   getActivities() {
+    const { geolocation } = this.state
+    const long = geolocation ? geolocation.longitude : 0
+    const lat = geolocation ? geolocation.latitude : 0
+
     axios
-      .get(`${config.API_URL}/api/activities`)
+      .get(`${config.API_URL}/api/activities?long=${long}&lat=${lat}`)
       .then(response => {
         this.setState({
           activities: response.data
@@ -165,26 +201,6 @@ export class Activities extends Component {
       activitiesSorted = favoriteActivities.concat(activitiesSorted)
       this.setState({ activitiesSorted })
     }
-  }
-
-  geoLocation() {
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        this.setState(
-          {
-            geolocation: {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude
-            }
-          },
-          () => {
-            console.log(this.state.geolocation)
-          }
-        )
-      },
-      error => console.log(error.message),
-      { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 }
-    )
   }
 
   render() {
