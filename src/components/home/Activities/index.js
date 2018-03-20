@@ -24,12 +24,10 @@ export class Activities extends Component {
   }
 
   componentDidMount() {
-    store.delete('favoriteActivities')
+    //store.delete('favoriteActivities')
     const { currentUser } = this.props
-
-    this.getActivities() //Get Activitites
-    this.getFavorites(currentUser ? currentUser : false) // Get Favorites
     this.geoLocation()
+    this.getFavorites(currentUser ? currentUser : false) // Get Favorites
   }
 
   getFavorites(user) {
@@ -40,12 +38,14 @@ export class Activities extends Component {
           favoritesLoad: true,
           favorites: res
         })
-        return this.updateFavoritesOnServer(res)
+        if (this.props.currentUser)
+          return this.props.updateServerFromStorage(this.props.currentUser, {
+            dataToAdd: { favoriteActivities: res }
+          })
       }
       // Favoris sur le serveur (donc user connecté)
-      if (!res && user) {
-        return this.getFavoritesFromServer(user)
-      }
+      if (user) return this.getFavoritesFromServer(user)
+
       // Pas de favoris
       this.setState(
         {
@@ -99,7 +99,13 @@ export class Activities extends Component {
 
         store.save('favoriteActivities', favorites).then(() => {
           store.get('favoriteActivities').then(res => {
-            this.updateFavoritesOnServer(res)
+            if (this.props.currentUser)
+              return this.props.updateServerFromStorage(
+                this.props.currentUser,
+                {
+                  dataToRemove: { favoriteActivities: [id] }
+                }
+              )
           })
         })
       })
@@ -111,23 +117,45 @@ export class Activities extends Component {
 
       store.push('favoriteActivities', id).then(() => {
         store.get('favoriteActivities').then(res => {
-          this.updateFavoritesOnServer(res)
+          if (this.props.currentUser)
+            return this.props.updateServerFromStorage(this.props.currentUser, {
+              dataToAdd: { favoriteActivities: [id] }
+            })
         })
       })
     }
   }
 
-  updateFavoritesOnServer(favorites) {
-    const { currentUser } = this.props
-    if (currentUser) {
-      currentUser.account.favoriteActivities = favorites
-      this.props.updateServerFromStorage(currentUser)
-    }
+  geoLocation() {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        this.setState(
+          {
+            geolocation: {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude
+            }
+          },
+          () => {
+            this.getActivities() //Get Activitites
+          }
+        )
+      },
+      error => {
+        this.getActivities()
+        console.log(error.message)
+      },
+      { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 }
+    )
   }
 
   getActivities() {
+    const { geolocation } = this.state
+    const long = geolocation ? geolocation.longitude : 0
+    const lat = geolocation ? geolocation.latitude : 0
+
     axios
-      .get(`${config.API_URL}/api/activities`)
+      .get(`${config.API_URL}/api/activities?long=${long}&lat=${lat}`)
       .then(response => {
         this.setState({
           activities: response.data
@@ -163,29 +191,8 @@ export class Activities extends Component {
     }
   }
 
-  geoLocation() {
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        this.setState(
-          {
-            geolocation: {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude
-            }
-          },
-          () => {
-            console.log(this.state.geolocation)
-          }
-        )
-      },
-      error => console.log(error.message),
-      { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 }
-    )
-  }
-
   render() {
     const { activitiesSorted, favorites } = this.state
-
     return activitiesSorted ? (
       <View>
         <MyText style={[mainStyles.title]}>Les cours</MyText>

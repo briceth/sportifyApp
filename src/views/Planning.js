@@ -2,9 +2,11 @@ import React, { Component } from 'react'
 import {
   StyleSheet,
   ImageBackground,
+  ActivityIndicator,
   View,
   Animated,
-  Easing
+  Easing,
+  Image
 } from 'react-native'
 import axios from 'axios'
 import PropTypes from 'prop-types'
@@ -24,13 +26,21 @@ import {
 const log = console.log
 
 export class Planning extends Component {
-  static navigationOptions = { title: 'Planning' }
+  static navigationOptions = {
+    headerTitle: (
+      <Image
+        style={{ width: 150, height: 30 }}
+        source={require('../images/logo.png')}
+      />
+    )
+  }
 
   static propTypes = {
     activityId: PropTypes.string,
     navigation: PropTypes.object
   }
   state = {
+    loading: true,
     name: '',
     image: '',
     address: '',
@@ -78,6 +88,7 @@ export class Planning extends Component {
         const newDate = rangeDateByMonth(formatedDate)
 
         this.setState({
+          loading: false,
           name,
           image,
           address,
@@ -113,14 +124,14 @@ export class Planning extends Component {
 
   bookSession = async () => {
     const currentUser = await store.get('currentUser')
+    if (!currentUser) return this.props.navigation.navigate('Signup')
     currentUser.account.sessions.push(this.state.session)
-    // need user id, session id
     store.update('currentUser', currentUser).then(res => {
       this.props.navigation.navigate('Home', {
         newCurrentUser: currentUser
       })
       axios
-        .put(`${config.API_URL}/api/sessions/${this.state.session._id}/book`, {
+        .put(`${config.API_URL}/api/sessions/${this.state.session._id}`, {
           userId: currentUser._id
         })
         .then(response => {
@@ -140,10 +151,14 @@ export class Planning extends Component {
   }
 
   render() {
-    const { name, address, center, dates, image } = this.state
+    const { name, address, center, dates, image, loading } = this.state
     console.log('Props in Planning :', this.props)
 
-    return (
+    return loading ? (
+      <View style={[mainStyles.containerFlex, mainStyles.centered]}>
+        <ActivityIndicator />
+      </View>
+    ) : (
       <View style={styles.container}>
         <View style={styles.imgContainer}>
           <View style={styles.imgBorder}>

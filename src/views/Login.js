@@ -1,14 +1,20 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, TouchableOpacity } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Animated,
+  Keyboard
+} from 'react-native'
 import PropTypes from 'prop-types'
 import axios from 'axios'
-import { BLACK, mainStyles } from '../mainStyle'
+import { mainStyles } from '../mainStyle'
 import { MyText } from '../components/MyText'
 import { Input } from '../components/Input'
 import { Form } from '../components/Form'
 import { Button } from '../components/Button'
 import { FlashAlert } from '../components/FlashAlert'
-import { Title } from '../components/Title'
 import config from '../../config'
 import store from 'react-native-simple-store'
 
@@ -19,10 +25,49 @@ export class Login extends Component {
     navigate: PropTypes.func
   }
 
-  state = {
-    flashAlert: false,
-    email: '',
-    password: ''
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      flashAlert: false,
+      email: '',
+      password: ''
+    }
+
+    this.imageHeight = new Animated.Value(55)
+  }
+
+  componentWillMount() {
+    this.keyboardWillShowSub = Keyboard.addListener(
+      'keyboardWillShow',
+      this.keyboardWillShow
+    )
+    this.keyboardWillHideSub = Keyboard.addListener(
+      'keyboardWillHide',
+      this.keyboardWillHide
+    )
+  }
+
+  componentWillUnmount() {
+    this.keyboardWillShowSub.remove()
+    this.keyboardWillHideSub.remove()
+  }
+
+  keyboardWillShow = event => {
+    this.setState({ keyboardShow: true })
+    Animated.timing(this.imageHeight, {
+      duration: event.duration,
+      toValue: 40
+    }).start()
+  }
+
+  keyboardWillHide = event => {
+    Animated.timing(this.imageHeight, {
+      duration: event.duration,
+      toValue: 55
+    }).start(() => {
+      this.setState({ keyboardShow: false })
+    })
   }
 
   handleInputs = (text, key) => {
@@ -65,43 +110,48 @@ export class Login extends Component {
 
   render() {
     return (
-      <View style={mainStyles.container}>
-        <View style={styles.logoContainer}>
-          {this.renderFlashAlert()}
-          <Title />
-          {/* <Text style={styles.logo}>
-            Sporti<Text style={styles.subLogo}>fy</Text>
-          </Text> */}
-          <MyText style={[styles.tagline]}>Renseignez vos identifiants</MyText>
-        </View>
-        <View style={styles.subContainer}>
-          <Form>
-            <Input
-              noCapitalize
-              handleInputs={this.handleInputs}
-              data="email" //to receive key arg in handleInput
-              placeholder="Email"
-              text={this.state.email}
+      <View style={[mainStyles.containerFlex, styles.container]}>
+        <KeyboardAvoidingView
+          behavior="padding"
+          style={styles.keyboardAvoidingView}
+        >
+          <View style={styles.subContainer}>
+            {this.renderFlashAlert()}
+            <Animated.Image
+              style={{ height: this.imageHeight }}
+              resizeMode="contain"
+              source={require('../images/logo.png')}
             />
-            <Input
-              handleInputs={this.handleInputs}
-              data="password" //to receive key arg in handleInput
-              noBorderBottom
-              placeholder="Mot de passe"
-              secureTextEntry
-              text={this.state.password}
-            />
-          </Form>
-        </View>
-        <View style={styles.subContainer}>
-          <Button handleSubmit={this.handleSubmit}>Se connecter</Button>
-        </View>
+          </View>
+          <View style={styles.subContainer}>
+            <Form>
+              <Input
+                noCapitalize
+                handleInputs={this.handleInputs}
+                data="email" //to receive key arg in handleInput
+                placeholder="Email"
+                autoCorrect={false}
+                text={this.state.email}
+              />
+              <Input
+                handleInputs={this.handleInputs}
+                data="password" //to receive key arg in handleInput
+                noBorderBottom
+                placeholder="Mot de passe"
+                secureTextEntry
+                autoCorrect={false}
+                text={this.state.password}
+              />
+            </Form>
+          </View>
+          <View style={[styles.subContainer, styles.buttonContainer]}>
+            <Button handleSubmit={this.handleSubmit}>Se connecter</Button>
+          </View>
+        </KeyboardAvoidingView>
 
         <View style={[styles.subContainer, styles.footer]}>
           <MyText>Pas de compte ?</MyText>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Signup')}
-          >
+          <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
             <MyText style={[mainStyles.lightblueText]}>S'inscrire</MyText>
           </TouchableOpacity>
         </View>
@@ -111,21 +161,26 @@ export class Login extends Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    paddingTop: 25
+  },
   subContainer: {
     alignItems: 'center'
   },
-  logoContainer: {
-    marginTop: 80,
-    justifyContent: 'center',
-    alignItems: 'center'
+  keyboardAvoidingView: {
+    flex: 1,
+    marginBottom: 55,
+    justifyContent: 'space-around'
   },
-  tagline: {
-    marginTop: 20,
-    textAlign: 'center',
-    fontSize: 17,
-    color: BLACK
+  buttonContainer: {
+    marginTop: 5
   },
   footer: {
-    marginBottom: 20
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    marginBottom: 10
   }
 })

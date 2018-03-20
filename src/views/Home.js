@@ -1,20 +1,39 @@
 import config from '../../config'
 import React, { Component } from 'react'
-import { ScrollView, ActivityIndicator, View, StyleSheet } from 'react-native'
+import {
+  ScrollView,
+  ActivityIndicator,
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Alert
+} from 'react-native'
 import { Reservations } from '../components/home/Reservations'
 import { Activities } from '../components/home/Activities'
 import { mainStyles } from '../mainStyle'
 import store from 'react-native-simple-store'
 import axios from 'axios'
 import PropTypes from 'prop-types'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import { BLUE } from '../mainStyle'
 
 export class Home extends Component {
-  static navigationOptions = {
-    title: 'Home'
-  }
-
   static propTypes = {
     navigation: PropTypes.object
+  }
+
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state
+    return {
+      headerTitle: (
+        <Image
+          style={{ width: 150, height: 30 }}
+          source={require('../images/logo.png')}
+        />
+      ),
+      headerRight: renderRight(params)
+    }
   }
 
   state = {
@@ -22,58 +41,69 @@ export class Home extends Component {
     currentUser: null
   }
 
+  componentDidMount = async () => {
+    //setParams to navbar to dertermine right icon
+
+    // Recupération du user du store:
+    const currentUser = await store.get('currentUser')
+    this.props.navigation.setParams({
+      user: currentUser ? 'connected' : 'disconnected',
+      handleHeaderRight: this._handleHeaderRight.bind(this)
+    })
+    if (!currentUser) return this.setState({ loading: false })
+    // mise dans le state :
+    this.updateCurrentUserState(currentUser)
+  }
+
+  _handleHeaderRight() {
+    if (this.state.currentUser) {
+      Alert.alert(
+        'Confirmation',
+        'Etes vous sûr de vouloir vous déconnectez ?',
+        [
+          {
+            text: 'Annuler',
+            style: 'cancel'
+          },
+          {
+            text: 'Se déconnecter',
+            onPress: () => {
+              store.delete('currentUser')
+              this.setState({ currentUser: null })
+              this.props.navigation.setParams({ user: 'disconnected' })
+            },
+            style: 'destructive'
+          }
+        ],
+        { cancelable: false }
+      )
+    } else {
+      this.props.navigation.navigate('Signup')
+    }
+  }
+
   goToPlanning = activityId =>
     this.props.navigation.navigate('Planning', {
       activityId
     })
 
-  componentDidMount = async () => {
-    if (this.props.navigation.state.params) {
-      const { newCurrentUser } = this.props.navigation.state.params
-      console.log('newCurrentUser', this.props.navigation.state)
-      if (
-        !this.state.currentUser ||
-        (newCurrentUser &&
-          newCurrentUser.account.sessions.length >
-            this.state.currentUser.account.sessions.length)
-      ) {
-        console.log('Update state')
-
-        this.updateCurrentUserState(newCurrentUser)
-      }
-    }
-
-    const currentUser = await store.get('currentUser')
-    console.log(
-      'Current User in STATE before update : ',
-      this.state.currentUser
-    )
-    console.log('Current User in STORE : ', currentUser)
-    if (!currentUser) return this.setState({ loading: false })
-    this.updateCurrentUserState(currentUser)
-    // this.updateServerFromStorage(currentUser)
-  }
-
-  updateCurrentUserState = currentUser => {
-    return new Promise((resolve, reject) => {
-      this.setState(
-        {
-          currentUser,
-          loading: false
-        },
-        () => {
-          resolve(this.state.currentUser)
-        }
-      )
+  updateCurrentUserState = async currentUser =>
+    this.setState({
+      currentUser,
+      loading: false
     })
-  }
 
-  updateServerFromStorage = currentUser => {
+  // format: data = {dataToAdd: {sessions: [ids]}}
+  updateServerFromStorage = (currentUser, data) => {
+    console.tron.log('IN UPDATE SERVER')
+    if (!data) throw Error('No data given')
+    const key = Object.keys(data)[0]
+    const dataToUpdate = data[key]
     axios
       .post(
-        `${config.API_URL}/api/users/${currentUser._id}`,
+        `${config.API_URL}/api/users/improved/${currentUser._id}`,
         {
-          account: currentUser.account
+          [key]: dataToUpdate
         },
         {
           headers: {
@@ -83,25 +113,19 @@ export class Home extends Component {
         }
       )
       .then(response => {
-        if (response.status === 200) {
-          this.setState({
-            loading: false
-          })
-        }
-      })
-      .catch(e => {
-        console.log('Error when updating user data on server :', e)
-        console.log('Response :', e.response)
+        console.tron.log(response)
         this.setState({
           loading: false
         })
       })
+      .catch(err => console.tron.log(err))
   }
 
   render() {
     const { currentUser, loading } = this.state
     const { navigation } = this.props
 
+<<<<<<< HEAD
     return loading ? (
       <View style={[mainStyles.containerFlex, styles.centered]}>
         <ActivityIndicator />
@@ -109,6 +133,15 @@ export class Home extends Component {
     ) : (
       <ScrollView style={mainStyles.containerFlex}>
         {currentUser && (
+=======
+    return this.state.loading ? (
+      <View style={[mainStyles.containerFlex, mainStyles.centered]}>
+        <ActivityIndicator />
+      </View>
+    ) : (
+      <ScrollView style={[mainStyles.containerFlex]}>
+        {this.state.currentUser && (
+>>>>>>> 79713376a37b37605b922c8febd0f64491a8c7f4
           <Reservations
             navigation={navigation}
             updateServerFromStorage={this.updateServerFromStorage}
@@ -128,9 +161,20 @@ export class Home extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  centered: {
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-})
+function renderRight(params) {
+  const { user } = params || 0
+  console.tron.log(user)
+  if (!user) return
+  return (
+    <TouchableOpacity
+      onPress={() => params.handleHeaderRight()}
+      style={{ paddingHorizontal: 15, paddingVertical: 5 }}
+    >
+      <Icon
+        name={user === 'connected' ? 'sign-out' : 'user'}
+        size={30}
+        color={BLUE}
+      />
+    </TouchableOpacity>
+  )
+}

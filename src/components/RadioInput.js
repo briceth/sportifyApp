@@ -32,7 +32,7 @@ export class RadioInput extends Component {
 
 const styles = StyleSheet.create({
   input: {
-    height: 55,
+    height: 45,
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: LINEGREY
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   radioText: {
     color: GREY,
     textAlign: 'center',
-    fontSize: 18
+    fontSize: 16
   },
   textActive: {
     color: 'white'
