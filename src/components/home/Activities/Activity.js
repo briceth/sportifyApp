@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, Image, TouchableOpacity } from 'react-native'
+import PropTypes from 'prop-types'
+import Icon from 'react-native-vector-icons/FontAwesome'
 import { MyText } from '../../MyText'
 import { BLUE } from '../../../mainStyle'
-import { distanceInWords } from 'date-fns'
-import PropTypes from 'prop-types'
-
-const frLocale = require('date-fns/locale/fr')
-
-import Icon from 'react-native-vector-icons/FontAwesome'
+import { startsAt } from '../../../utils/utils'
+// import { distanceInWords } from 'date-fns'
+// import Fr from 'date-fns/locale/fr'
 
 export class Activity extends Component {
   static propTypes = {
@@ -38,11 +37,11 @@ export class Activity extends Component {
     return false
   }
 
-  startsAt() {
-    return distanceInWords(this.props.data.sessions, new Date(), {
-      locale: frLocale
-    })
-  }
+  // startsAt() {
+  //   return distanceInWords(this.props.data.sessions, new Date(), {
+  //     locale: frLocale
+  //   })
+  // }
 
   distance() {
     const { distance } = this.props.data
@@ -94,7 +93,7 @@ export class Activity extends Component {
           {sessions && (
             <View style={this.timeBeforeStartContainer()}>
               <MyText style={[styles.timeBeforeStart]}>
-                Prochaine scéance dans {this.startsAt()}
+                Prochaine scéance dans {startsAt(this.props.data.sessions)}
               </MyText>
             </View>
           )}

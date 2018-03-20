@@ -1,11 +1,10 @@
 import findIndex from 'lodash/findIndex'
-import { parse, format } from 'date-fns'
+import { parse, format, distanceInWords } from 'date-fns'
 import fr from 'date-fns/locale/fr'
 
 export function formatDuration(numMin) {
   const hours = Math.floor(numMin / 60)
   let minutes = numMin % 60
-  console.log('minutes: ', minutes, ' - type: ', typeof minutes)
   if (minutes < 10) minutes = `0${minutes}`
   return `${hours === 0 ? '' : `${hours}h`}${minutes}${hours ? '' : 'min'}`
 }
@@ -103,8 +102,13 @@ export function formatDate(sessions) {
         }
       ]
     }
-    //console.log('dates', dates)
     finalArray.push(dates)
   })
   return finalArray
+}
+
+export function startsAt(dateToCompare) {
+  return distanceInWords(dateToCompare, new Date(), {
+    locale: fr
+  })
 }
