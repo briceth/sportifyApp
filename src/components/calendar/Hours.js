@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import PropTypes from 'prop-types'
 import { MyText } from '../MyText'
-import { DARKBLUE } from '../../mainStyle'
+import { mainStyles, DARKBLUE } from '../../mainStyle'
 
 export class Hours extends Component {
   static propTypes = {
@@ -27,7 +27,14 @@ export class Hours extends Component {
               hour.id === selectedHour && styles.selected
             ]}
           >
-            <MyText>{hour.hour}</MyText>
+            <MyText
+              style={[
+                styles.text,
+                hour.id === selectedHour && mainStyles.textSelected
+              ]}
+            >
+              {hour.hour}
+            </MyText>
           </TouchableOpacity>
         )
       }
@@ -45,13 +52,29 @@ export class Hours extends Component {
 }
 
 const styles = StyleSheet.create({
+  content: {
+    marginVertical: 15
+  },
+  text: {
+    fontSize: 15
+  },
   hourContainer: {
-    width: 80,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    borderColor: 'grey',
+    borderWidth: 1,
     paddingVertical: 15,
-    paddingLeft: 15
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginRight: 15
   },
   selected: {
-    borderBottomWidth: 1,
-    borderColor: DARKBLUE
+    borderWidth: 0,
+    backgroundColor: DARKBLUE,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2
   }
 })

@@ -1,23 +1,22 @@
 import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
 import PropTypes from 'prop-types'
-import { Months } from './Months'
+import Swiper from 'react-native-swiper'
+import { View, StyleSheet } from 'react-native'
+import { Days } from './Days'
+import { MyText } from '../MyText'
+import { capitalize } from 'lodash'
 
 export class Calendar extends Component {
   static propTypes = {
     dates: PropTypes.array,
     selectHour: PropTypes.func,
-    selectedHour: PropTypes.number
+    selectedHour: PropTypes.number,
+    selectedDay: PropTypes.number
   }
 
   state = {
     isMonthSelected: null,
     selectedDay: null
-    //month: ''
-    //day: ''
-    // selectedHour: null,
-    // sessionId: null,
-    // hour: '',
   }
 
   // le mois est selectioné en même temps que le jour
@@ -39,8 +38,6 @@ export class Calendar extends Component {
       //sinon tu l'ajoutes
       this.setState(
         {
-          //month,
-          //day,
           selectedDay: dayId
         },
         () => {
@@ -50,40 +47,36 @@ export class Calendar extends Component {
     }
   }
 
-  // selectHour = (hour, hourId, sessionId) => {
-  //   const selectHour = this.state.selectedHour
+  renderMonths = () => {
+    const { dates, selectHour, selectedHour } = this.props
+    const { selectedDay } = this.state
 
-  //   if (selectHour === hourId) {
-  //     // si il existe tu le supprimes
-  //     this.setState({ selectedHour: null })
-  //   } else {
-  //     // sinon tu l'ajoutes
-  //     this.setState({ hour, selectedHour: hourId, sessionId }, () => {
-  //       console.log('this state', this.state)
-  //     })
-  //   }
-  // }
+    return dates.map((month, index) => {
+      return (
+        <View key={index}>
+          <MyText style={[styles.text]}>{capitalize(month.month)}</MyText>
+          <Days
+            days={month.days}
+            selectMonthAndDay={this.selectMonthAndDay}
+            month={month.month}
+            selectHour={selectHour}
+            selectedDay={selectedDay}
+            selectedHour={selectedHour}
+          />
+        </View>
+      )
+    })
+  }
 
   render() {
-    return (
-      <View>
-        <Months
-          months={this.props.dates}
-          selectMonthAndDay={this.selectMonthAndDay}
-          selectHour={this.props.selectHour}
-          selectedDay={this.state.selectedDay}
-          selectedHour={this.props.selectedHour}
-        />
-      </View>
-    )
+    return <Swiper>{this.renderMonths()}</Swiper>
   }
 }
 
 const styles = StyleSheet.create({
-  calendar: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    borderColor: '#ddd',
-    borderBottomWidth: 1
+  text: {
+    width: 300,
+    fontSize: 40,
+    marginVertical: 10
   }
 })

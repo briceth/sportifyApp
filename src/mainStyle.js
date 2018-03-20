@@ -60,5 +60,14 @@ export const mainStyles = StyleSheet.create({
     color: BLACK,
     fontWeight: 'bold',
     fontSize: 16
+  },
+  textSelected: {
+    color: 'white'
+  },
+  shaddowSelected: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2
   }
 })

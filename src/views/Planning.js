@@ -15,7 +15,12 @@ import { mainStyles, DARKBLUE } from '../mainStyle'
 import { MyText } from '../components/MyText'
 import { CallToAction } from '../components/buttons/callToAction'
 import config from '../../config'
-import { rangeDateByMonth, formatDate } from '../utils/utils'
+import {
+  rangeDateByMonth,
+  formatDate,
+  startsAt,
+  formatDuration
+} from '../utils/utils'
 const log = console.log
 
 export class Planning extends Component {
@@ -31,6 +36,8 @@ export class Planning extends Component {
     address: '',
     center: '',
     dates: [],
+    firstSessionDate: '',
+    duration: 0,
     scaleValue: new Animated.Value(0),
     isOpen: false,
     selectedHour: null,
@@ -64,13 +71,21 @@ export class Planning extends Component {
         const { address } = response.data.center
         const center = response.data.center.name
         const sessions = response.data.sessions
-        //console.log(sessions)
+        console.log(sessions)
 
         const formatedDate = formatDate(sessions)
 
         const newDate = rangeDateByMonth(formatedDate)
 
-        this.setState({ name, image, address, center, dates: [...newDate] })
+        this.setState({
+          name,
+          image,
+          address,
+          center,
+          dates: [...newDate],
+          firstSessionDate: sessions[0].startsAt, // the first session
+          duration: sessions[0].duration // the first session
+        })
       })
       .catch(e => log(e))
   }
@@ -98,19 +113,7 @@ export class Planning extends Component {
 
   bookSession = async () => {
     const currentUser = await store.get('currentUser')
-<<<<<<< HEAD
-    console.log('current user : ', currentUser.account.sessions)
     currentUser.account.sessions.push(this.state.session)
-    console.log('current user updated : ', currentUser.account.sessions)
-
-    console.log('currentUser', currentUser)
-
-    console.log('sessionId', this.state.session)
-
-    console.log(`${config.API_URL}/api/sessions/${this.state.session._id}/book`)
-=======
-    currentUser.account.sessions.push(this.state.session)
->>>>>>> f856ba9579cb1652445f895f744231d124463bf6
     // need user id, session id
     store.update('currentUser', currentUser).then(res => {
       this.props.navigation.navigate('Home', {
@@ -150,9 +153,11 @@ export class Planning extends Component {
               style={[styles.img, this.state.imgWidth]}
             >
               <View style={styles.textImg}>
-                <MyText style={[mainStyles.paragraphe]}>{name} - 1H30</MyText>
+                <MyText style={[mainStyles.paragraphe]}>
+                  {name} - {formatDuration(this.state.duration)}
+                </MyText>
                 <MyText style={[mainStyles.tagline]}>
-                  Prochaine session dans 20 min
+                  Prochaine session dans {startsAt(this.state.firstSessionDate)}
                 </MyText>
               </View>
             </ImageBackground>
