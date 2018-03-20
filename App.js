@@ -15,6 +15,6 @@ export const App = StackNavigator(
     Planning: { screen: Planning }
   },
   {
-    initialRouteName: 'Login'
+    initialRouteName: 'Home'
   }
 )

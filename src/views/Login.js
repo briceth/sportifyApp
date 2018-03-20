@@ -151,9 +151,7 @@ export class Login extends Component {
 
         <View style={[styles.subContainer, styles.footer]}>
           <MyText>Pas de compte ?</MyText>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Signup')}
-          >
+          <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
             <MyText style={[mainStyles.lightblueText]}>S'inscrire</MyText>
           </TouchableOpacity>
         </View>

@@ -140,7 +140,9 @@ export class Signup extends Component {
         {!this.state.keyboardShow && (
           <View style={[styles.subContainer, styles.footer]}>
             <MyText>Déjà inscrit ?</MyText>
-            <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('Login')}
+            >
               <MyText style={[mainStyles.lightblueText]}>Se connecter</MyText>
             </TouchableOpacity>
           </View>

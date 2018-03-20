@@ -41,9 +41,8 @@ export class Activities extends Component {
         return this.updateFavoritesOnServer(res)
       }
       // Favoris sur le serveur (donc user connecté)
-      if (user) {
-        return this.getFavoritesFromServer(user)
-      }
+      return user && this.getFavoritesFromServer(user)
+
       // Pas de favoris
       this.setState(
         {
@@ -147,17 +146,12 @@ export class Activities extends Component {
   }
 
   getActivities() {
-    let url = null
-    if (this.state.geolocation) {
-      url = `${config.API_URL}/api/activities?long=${
-        this.state.geolocation.longitude
-      }&lat=${this.state.geolocation.latitude}`
-    } else {
-      url = `${config.API_URL}/api/activities`
-    }
+    const { geolocation } = this.state
+    const long = geolocation ? geolocation.longitude : 0
+    const lat = geolocation ? geolocation.latitude : 0
 
     axios
-      .get(url)
+      .get(`${config.API_URL}/api/activities?long=${long}&lat=${lat}`)
       .then(response => {
         this.setState({
           activities: response.data
