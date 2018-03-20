@@ -6,7 +6,8 @@ import {
   View,
   StyleSheet,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert
 } from 'react-native'
 import { Reservations } from '../components/home/Reservations'
 import { Activities } from '../components/home/Activities'
@@ -78,9 +79,26 @@ export class Home extends Component {
 
   _handleHeaderRight() {
     if (this.state.currentUser) {
-      store.delete('currentUser')
-      this.setState({ currentUser: null })
-      this.props.navigation.setParams({ user: 'disconnected' })
+      Alert.alert(
+        'Confirmation',
+        'Etes vous sûr de vouloir vous déconnectez ?',
+        [
+          {
+            text: 'Annuler',
+            style: 'cancel'
+          },
+          {
+            text: 'Se déconnecter',
+            onPress: () => {
+              store.delete('currentUser')
+              this.setState({ currentUser: null })
+              this.props.navigation.setParams({ user: 'disconnected' })
+            },
+            style: 'destructive'
+          }
+        ],
+        { cancelable: false }
+      )
     } else {
       this.props.navigation.navigate('Signup')
     }

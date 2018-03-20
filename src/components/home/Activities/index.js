@@ -23,7 +23,7 @@ export class Activities extends Component {
   }
 
   componentDidMount() {
-    store.delete('favoriteActivities')
+    //store.delete('favoriteActivities')
     const { currentUser } = this.props
 
     this.geoLocation()
@@ -41,7 +41,7 @@ export class Activities extends Component {
         return this.updateFavoritesOnServer(res)
       }
       // Favoris sur le serveur (donc user connecté)
-      return user && this.getFavoritesFromServer(user)
+      if (user) return this.getFavoritesFromServer(user)
 
       // Pas de favoris
       this.setState(
