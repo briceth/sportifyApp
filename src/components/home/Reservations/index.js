@@ -56,22 +56,9 @@ export class Reservations extends Component {
     newAccount.sessions = deleteWhere(newAccount.sessions, {
       _id: sessionId
     })
-    console.log(
-      'currentUser sessions before deleting',
-      newCurrentUser.account.sessions
-    )
     newCurrentUser.account = newAccount
-    console.log(
-      'currentUser sessions about to be saved : ',
-      newCurrentUser.account.sessions
-    )
     this.props.updateCurrentUserState(newCurrentUser).then(user => {
       store.save('currentUser', newCurrentUser).then(async res => {
-        const userStored = await store.get('currentUser')
-        console.log(
-          'currentUser sessions after deleting',
-          userStored.account.sessions
-        )
         this.props.updateServerFromStorage(newCurrentUser)
       })
     })

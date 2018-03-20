@@ -120,7 +120,7 @@ export class Planning extends Component {
         newCurrentUser: currentUser
       })
       axios
-        .put(`${config.API_URL}/api/sessions/${this.state.session._id}/book`, {
+        .put(`${config.API_URL}/api/sessions/${this.state.session._id}`, {
           userId: currentUser._id
         })
         .then(response => {

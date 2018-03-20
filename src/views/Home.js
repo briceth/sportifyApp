@@ -53,19 +53,11 @@ export class Home extends Component {
     // this.updateServerFromStorage(currentUser)
   }
 
-  updateCurrentUserState = currentUser => {
-    return new Promise((resolve, reject) => {
-      this.setState(
-        {
-          currentUser,
-          loading: false
-        },
-        () => {
-          resolve(this.state.currentUser)
-        }
-      )
+  updateCurrentUserState = async currentUser =>
+    this.setState({
+      currentUser,
+      loading: false
     })
-  }
 
   updateServerFromStorage = currentUser => {
     axios
