@@ -127,16 +127,6 @@ export class Activities extends Component {
     }
   }
 
-<<<<<<< HEAD
-=======
-  updateFavoritesOnServer(favorites) {
-    const { currentUser } = this.props
-    if (currentUser) {
-      currentUser.account.favoriteActivities = favorites
-      this.props.updateServerFromStorage(currentUser)
-    }
-  }
-
   geoLocation() {
     navigator.geolocation.getCurrentPosition(
       position => {
@@ -160,7 +150,6 @@ export class Activities extends Component {
     )
   }
 
->>>>>>> b5c492d32a86d56981145834243fd2deac0e0d1b
   getActivities() {
     const { geolocation } = this.state
     const long = geolocation ? geolocation.longitude : 0
