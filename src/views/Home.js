@@ -30,6 +30,7 @@ export class Home extends Component {
   componentDidMount = async () => {
     if (this.props.navigation.state.params) {
       const { newCurrentUser } = this.props.navigation.state.params
+      console.log('newCurrentUser', this.props.navigation.state)
       if (
         !this.state.currentUser ||
         (newCurrentUser &&
@@ -98,28 +99,30 @@ export class Home extends Component {
   }
 
   render() {
-    const { currentUser } = this.state
+    const { currentUser, loading } = this.state
+    const { navigation } = this.props
 
-    return this.state.loading ? (
+    return loading ? (
       <View style={[mainStyles.containerFlex, styles.centered]}>
         <ActivityIndicator />
       </View>
     ) : (
       <ScrollView style={mainStyles.containerFlex}>
-        {this.state.currentUser && (
+        {currentUser && (
           <Reservations
+            navigation={navigation}
             updateServerFromStorage={this.updateServerFromStorage}
             updateCurrentUserState={this.updateCurrentUserState}
             currentUser={currentUser}
           />
         )}
-        {
+        {currentUser.account.role === 'user' && (
           <Activities
             updateServerFromStorage={this.updateServerFromStorage}
             currentUser={currentUser}
             goToPlanning={this.goToPlanning}
           />
-        }
+        )}
       </ScrollView>
     )
   }
