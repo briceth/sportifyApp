@@ -75,5 +75,11 @@ export const mainStyles = StyleSheet.create({
   centered: {
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  blueShaddow: {
+    shadowColor: '#59A5FE',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.7,
+    shadowRadius: 2
   }
 })
