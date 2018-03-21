@@ -74,7 +74,6 @@ export class Signup extends Component {
   }
 
   signup = () => {
-    console.tron.log(this.state)
     axios
       .post(`${config.API_URL}/auth/sign_up`, this.state)
       .then(response => {
