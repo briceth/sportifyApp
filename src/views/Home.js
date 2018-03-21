@@ -125,23 +125,13 @@ export class Home extends Component {
     const { currentUser, loading } = this.state
     const { navigation } = this.props
 
-<<<<<<< HEAD
     return loading ? (
-      <View style={[mainStyles.containerFlex, styles.centered]}>
+      <View style={[mainStyles.containerFlex, mainStyles.centered]}>
         <ActivityIndicator />
       </View>
     ) : (
       <ScrollView style={mainStyles.containerFlex}>
         {currentUser && (
-=======
-    return this.state.loading ? (
-      <View style={[mainStyles.containerFlex, mainStyles.centered]}>
-        <ActivityIndicator />
-      </View>
-    ) : (
-      <ScrollView style={[mainStyles.containerFlex]}>
-        {this.state.currentUser && (
->>>>>>> 79713376a37b37605b922c8febd0f64491a8c7f4
           <Reservations
             navigation={navigation}
             updateServerFromStorage={this.updateServerFromStorage}

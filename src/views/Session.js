@@ -3,9 +3,12 @@ import { View, StyleSheet } from 'react-native'
 import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import axios from 'axios'
+import { parse, format } from 'date-fns'
+import fr from 'date-fns/locale/fr'
 import config from '../../config'
 import { MyText } from '../components/MyText'
 import { mainStyles, BLUE } from '../mainStyle'
+import { formatStartsAt, calcDuration } from '../utils/utils.js'
 
 export class Session extends Component {
   static propTypes = {
@@ -31,12 +34,21 @@ export class Session extends Component {
 
   renderSession = () => {
     if (this.state.session != null) {
-      const activityName = this.state.session.activity.name
-      const { name, address } = this.state.session.activity.center
+      const { session } = this.state
+      const { startsAt, duration } = session
+      const activityName = session.activity.name
+      const { name, address } = session.activity.center
+      console.log(this.state)
+      console.log(format(parse(startsAt), 'h', { locale: fr }))
 
       return (
         <View>
           <MyText style={[styles.title]}>{activityName}</MyText>
+          <View>
+            <Icon name="clock-o" size={30} color={BLUE} />
+            <MyText>{formatStartsAt(startsAt)}</MyText>
+            <MyText>{calcDuration(startsAt, duration)}</MyText>
+          </View>
           <View>
             <Icon name="map-marker" size={30} color={BLUE} />
             <MyText>{name}</MyText>
