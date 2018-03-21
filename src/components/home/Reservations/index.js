@@ -17,7 +17,6 @@ import { format } from 'date-fns'
 import fr from 'date-fns/locale/fr'
 import { formatDuration, deleteWhere } from '../../../utils/utils'
 import { SwipeListView } from 'react-native-swipe-list-view'
-// import QRCode from 'react-native-qrcode'
 import QRCode from 'react-native-qrcode-svg'
 
 const { width } = Dimensions.get('window')
@@ -39,14 +38,6 @@ export class Reservations extends Component {
   }
 
   toggleQrCode = (sessionInfos = {}) => {
-    console.tron.log('in toggleQrCode')
-    console.tron.display({
-      name: 'Jerome Debug',
-      preview: 'sessionInfos',
-      value: sessionInfos,
-      important: true
-    })
-    console.tron.log(this.state.isQrCodeVisible)
     return this.setState({
       isQrCodeVisible: !this.state.isQrCodeVisible,
       qrData: sessionInfos
