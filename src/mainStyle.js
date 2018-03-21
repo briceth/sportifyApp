@@ -6,6 +6,7 @@ export const BLUE = '#0389FF'
 export const BLACK = '#171717'
 export const GREY = '#BBBBC3'
 export const LINEGREY = '#D5D5D5'
+export const ZEBLUE = '#59A5FE'
 
 export const mainStyles = StyleSheet.create({
   container: {
@@ -59,7 +60,8 @@ export const mainStyles = StyleSheet.create({
   boldText: {
     color: BLACK,
     fontWeight: 'bold',
-    fontSize: 16
+    fontSize: 16,
+    lineHeight: 30
   },
   textSelected: {
     color: 'white'

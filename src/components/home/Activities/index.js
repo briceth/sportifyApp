@@ -11,7 +11,6 @@ import PropTypes from 'prop-types'
 export class Activities extends Component {
   static propTypes = {
     goToPlanning: PropTypes.func,
-    updateServerFromStorage: PropTypes.func,
     currentUser: PropTypes.object
   }
 

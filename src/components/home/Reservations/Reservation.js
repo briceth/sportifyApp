@@ -14,12 +14,16 @@ export class Reservation extends Component {
     children: PropTypes.node,
     style: PropTypes.array,
     session: PropTypes.object,
+    currentUser: PropTypes.object,
     toggleQrCode: PropTypes.func,
-    openRow: PropTypes.func
+    openRow: PropTypes.func,
+    navigation: PropTypes.object
   }
 
-  render() {
-    const { session, style } = this.props
+  renderActions = () => {
+    const { session, currentUser, navigation } = this.props
+    const { role } = currentUser.account
+
     const sessionInfos = {
       sessionId: session._id,
       activity: session.activity.name,
@@ -28,6 +32,33 @@ export class Reservation extends Component {
       duration: session.duration,
       teacher: session.teacher.firstName
     }
+
+    return role === 'teacher' ? (
+      <TouchableHighlight
+        style={styles.link}
+        onPress={() =>
+          navigation.navigate('Session', {
+            teacher: currentUser._id,
+            session: session._id
+          })
+        }
+      >
+        <Icon name="arrow-right" size={30} color={'white'} />
+      </TouchableHighlight>
+    ) : (
+      <TouchableHighlight
+        underlayColor="#EFEFF4"
+        onPress={() => this.props.toggleQrCode(sessionInfos)}
+      >
+        <Actions style={[styles.actions]}>
+          <Icon name="qrcode" size={40} color={BLUE} />
+        </Actions>
+      </TouchableHighlight>
+    )
+  }
+
+  render() {
+    const { session, style } = this.props
 
     return (
       <View style={style}>
@@ -38,14 +69,7 @@ export class Reservation extends Component {
             {format(session.startsAt, 'ddd DD MMM [à] HH:mm', { locale: fr })}
           </MyText>
         </ReservationInfos>
-        <TouchableHighlight
-          underlayColor="#EFEFF4"
-          onPress={() => this.props.toggleQrCode(sessionInfos)}
-        >
-          <Actions style={[styles.actions]}>
-            <Icon name="qrcode" size={40} color={BLUE} />
-          </Actions>
-        </TouchableHighlight>
+        {this.renderActions()}
       </View>
     )
   }
@@ -57,5 +81,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20
+  },
+  link: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50,
+    width: 50,
+    borderRadius: 25,
+    backgroundColor: '#59A5FE',
+    shadowColor: '#59A5FE',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2
   }
 })

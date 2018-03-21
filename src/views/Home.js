@@ -122,28 +122,30 @@ export class Home extends Component {
   }
 
   render() {
-    const { currentUser } = this.state
+    const { currentUser, loading } = this.state
+    const { navigation } = this.props
 
-    return this.state.loading ? (
+    return loading ? (
       <View style={[mainStyles.containerFlex, mainStyles.centered]}>
         <ActivityIndicator />
       </View>
     ) : (
-      <ScrollView style={[mainStyles.containerFlex]}>
-        {this.state.currentUser && (
+      <ScrollView style={mainStyles.containerFlex}>
+        {currentUser && (
           <Reservations
+            navigation={navigation}
             updateServerFromStorage={this.updateServerFromStorage}
             updateCurrentUserState={this.updateCurrentUserState}
             currentUser={currentUser}
           />
         )}
-        {
+        {currentUser.account.role === 'user' && (
           <Activities
             updateServerFromStorage={this.updateServerFromStorage}
             currentUser={currentUser}
             goToPlanning={this.goToPlanning}
           />
-        }
+        )}
       </ScrollView>
     )
   }
