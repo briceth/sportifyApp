@@ -17,7 +17,7 @@ import { format } from 'date-fns'
 import fr from 'date-fns/locale/fr'
 import { formatDuration, deleteWhere } from '../../../utils/utils'
 import { SwipeListView } from 'react-native-swipe-list-view'
-import QRCode from 'react-native-qrcode'
+import QRCode from 'react-native-qrcode-svg'
 
 const { width } = Dimensions.get('window')
 const deleteBtnWidth = 120
@@ -37,11 +37,12 @@ export class Reservations extends Component {
     qrData: {}
   }
 
-  toggleQrCode = (sessionInfos = {}) =>
-    this.setState({
+  toggleQrCode = (sessionInfos = {}) => {
+    return this.setState({
       isQrCodeVisible: !this.state.isQrCodeVisible,
       qrData: sessionInfos
     })
+  }
 
   openRow = rowRef => {
     // Use an internal method to manually swipe the row open to whatever value you pass
@@ -165,7 +166,6 @@ export class Reservations extends Component {
 
   renderQrModal = () => {
     const {
-      isQrCodeVisible,
       activity,
       center,
       teacher,
@@ -173,7 +173,7 @@ export class Reservations extends Component {
       duration,
       sessionId
     } = this.state.qrData
-
+    const { isQrCodeVisible } = this.state
     return (
       <Modal
         key="qrModal"
@@ -213,12 +213,7 @@ export class Reservations extends Component {
             </View>
           </View>
 
-          <QRCode
-            value={sessionId}
-            size={width * 0.75}
-            bgColor="white"
-            fgColor="black"
-          />
+          <QRCode value={sessionId} size={width * 0.75} color="black" />
         </View>
       </Modal>
     )

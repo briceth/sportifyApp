@@ -27,7 +27,7 @@ export class Reservation extends Component {
     const sessionInfos = {
       sessionId: session._id,
       activity: session.activity.name,
-      center: session.activity.center.name,
+      // center: session.activity.center.name,
       startsAt: session.startsAt,
       duration: session.duration,
       teacher: session.teacher.firstName
@@ -64,7 +64,7 @@ export class Reservation extends Component {
       <View style={style}>
         <ReservationInfos>
           <MyText style={[mainStyles.boldText]}>{session.activity.name}</MyText>
-          <MyText>{session.activity.center.name}</MyText>
+          <MyText>{/* session.activity.center.name */}Le centre</MyText>
           <MyText>
             {format(session.startsAt, 'ddd DD MMM [à] HH:mm', { locale: fr })}
           </MyText>
