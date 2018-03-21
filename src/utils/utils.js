@@ -44,7 +44,7 @@ export function rangeDateByMonth(array) {
     }
   })
 
-  // je me demande si c'est pas un peu moche... mais ça fonctionne
+  //je refactorais plus tard
   return finalArray.map(month => {
     const rangedHours = rangeHoursByDays(month.days)
     month.days = []
@@ -111,4 +111,27 @@ export function startsAt(dateToCompare) {
   return distanceInWords(dateToCompare, new Date(), {
     locale: fr
   })
+}
+
+export function formatStartsAt(date) {
+  return format(parse(date), 'dddd D MMMM', { locale: fr })
+}
+
+export function calcDuration(startsAt, duration) {
+  const date = new Date(startsAt)
+  const hour = date.getUTCHours()
+  const minutes = date.getUTCMinutes()
+  console.log('hour', hour, typeof hour)
+
+  const durationHours = Math.floor(duration / 60)
+  const durationMinutes = duration % 60
+
+  const sumHour = hour + durationHours
+  const sumMin = minutes + durationMinutes
+
+  console.log('sumHour', sumHour, typeof sumHour)
+  console.log('sumMin', sumMin, typeof sumMin)
+
+  return `De ${hour}:${minutes} à ${sumHour}:${sumMin}`
+  console.log(`De ${hour}:${minutes} à ${sumHour}:${sumMin}`)
 }

@@ -28,11 +28,11 @@ export class Reservations extends Component {
     style: PropTypes.array,
     currentUser: PropTypes.object,
     updateCurrentUserState: PropTypes.func,
-    updateServerFromStorage: PropTypes.func
+    updateServerFromStorage: PropTypes.func,
+    navigation: PropTypes.object
   }
 
   state = {
-    // reservations: [],
     isQrCodeVisible: false,
     qrData: {}
   }
@@ -58,6 +58,7 @@ export class Reservations extends Component {
         _id: sessionId
       }
     )
+
     this.props.updateCurrentUserState(newCurrentUser).then(user => {
       store.save('currentUser', newCurrentUser).then(async res => {
         this.props.updateServerFromStorage(newCurrentUser, {
@@ -67,14 +68,16 @@ export class Reservations extends Component {
     })
   }
 
-  renderReservations = () => {
-    const reservations = this.props.currentUser.account.sessions.map(
-      (session, index) => {
-        session.key = index.toString()
-        return session
-      }
-    )
-    console.log('Reservation data', reservations)
+  renderSessions = () => {
+    const { currentUser, navigation } = this.props
+    const { sessions } = currentUser.account
+
+    const reservations = sessions.map((session, index) => {
+      session.key = index.toString()
+      return session
+    })
+
+    console.log('Reservations data', reservations)
     if (reservations.length === 0) {
       return (
         <MyText style={[styles.centerText]} key="noRes">
@@ -92,8 +95,10 @@ export class Reservations extends Component {
         data={reservations}
         renderItem={(rowData, rowMap) => (
           <Reservation
+            navigation={navigation}
             style={[styles.reservation, mainStyles.shadow]}
             session={rowData.item}
+            currentUser={currentUser}
             toggleQrCode={this.toggleQrCode}
             openRow={() => this.openRow(rowMap[rowData.item.key])}
           />
@@ -133,25 +138,46 @@ export class Reservations extends Component {
     )
   }
 
+  renderTitle = () => {
+    const { role } = this.props.currentUser.account
+
+    return role === 'teacher' ? (
+      <MyText key="title" style={[mainStyles.title]}>
+        Mes cours à venir
+      </MyText>
+    ) : (
+      <MyText key="title" style={[mainStyles.title]}>
+        Mes réservations
+      </MyText>
+    )
+  }
+
   render() {
+    const { currentUser, style } = this.props
+
     return (
-      <View key="view" style={this.props.style}>
-        {this.props.currentUser && [
-          <MyText key="title" style={[mainStyles.title]}>
-            Mes réservations
-          </MyText>,
-          this.renderReservations()
-        ]}
+      <View key="view" style={style}>
+        {currentUser && [this.renderTitle(), this.renderSessions()]}
         {this.renderQrModal()}
       </View>
     )
   }
 
   renderQrModal = () => {
+    const {
+      isQrCodeVisible,
+      activity,
+      center,
+      teacher,
+      startsAt,
+      duration,
+      sessionId
+    } = this.state.qrData
+
     return (
       <Modal
         key="qrModal"
-        isVisible={this.state.isQrCodeVisible}
+        isVisible={isQrCodeVisible}
         onBackdropPress={() => this.setState({ isQrCodeVisible: false })}
         onSwipe={() => this.setState({ isQrCodeVisible: false })}
         swipeDirection="down"
@@ -159,20 +185,16 @@ export class Reservations extends Component {
       >
         <View style={[styles.modalContent]}>
           <View style={styles.infos}>
-            <MyText style={[mainStyles.boldText]}>
-              {this.state.qrData.activity}
-            </MyText>
-            <MyText style={[mainStyles.boldText]}>
-              {this.state.qrData.center}
-            </MyText>
+            <MyText style={[mainStyles.boldText]}>{activity}</MyText>
+            <MyText style={[mainStyles.boldText]}>{center}</MyText>
             <View style={[styles.infoLine, { paddingTop: 20 }]}>
               <Text style={styles.label}>Prof : </Text>
-              <MyText>{this.state.qrData.teacher}</MyText>
+              <MyText>{teacher}</MyText>
             </View>
             <View style={styles.infoLine}>
               <Text style={styles.label}>Date : </Text>
               <MyText>
-                {format(this.state.qrData.startsAt, 'ddd DD MMM', {
+                {format(startsAt, 'ddd DD MMM', {
                   locale: fr
                 })}
               </MyText>
@@ -180,19 +202,19 @@ export class Reservations extends Component {
             <View style={styles.infoLine}>
               <Text style={styles.label}>Heure : </Text>
               <MyText>
-                {format(this.state.qrData.startsAt, 'HH:mm', {
+                {format(startsAt, 'HH:mm', {
                   locale: fr
                 })}
               </MyText>
             </View>
             <View style={styles.infoLine}>
               <Text style={styles.label}>Durée : </Text>
-              <MyText>{formatDuration(this.state.qrData.duration)}</MyText>
+              <MyText>{formatDuration(duration)}</MyText>
             </View>
           </View>
 
           <QRCode
-            value={this.state.qrData.sessionId}
+            value={sessionId}
             size={width * 0.75}
             bgColor="white"
             fgColor="black"
@@ -218,7 +240,6 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(0, 0, 0, 0.1)'
   },
   infos: {
-    // backgroundColor: 'blue',
     width: width * 0.75,
     marginBottom: 20
   },
@@ -229,9 +250,10 @@ const styles = StyleSheet.create({
     width: 60
   },
   reservation: {
+    marginBottom: 10,
     backgroundColor: 'white',
-    paddingVertical: 8,
-    paddingLeft: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
     position: 'relative',
@@ -245,9 +267,9 @@ const styles = StyleSheet.create({
     paddingBottom: 20
   },
   deleteBtn: {
+    marginBottom: 10,
     alignItems: 'center',
     backgroundColor: 'red',
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'flex-end'
   },
@@ -259,7 +281,6 @@ const styles = StyleSheet.create({
     width: deleteBtnWidth
   },
   deleteBtnSpacer: {
-    backgroundColor: 'white',
     flex: 1
   },
   deleteBtnContainer: {
