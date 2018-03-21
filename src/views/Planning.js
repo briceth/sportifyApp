@@ -188,17 +188,13 @@ export class Planning extends Component {
             <Icon name="phone-square" size={40} color={DARKBLUE} />
           </View>
         </View>
-        <Animated.ScrollView
-          scrollEventThrottle={1}
-          style={[styles.calendarContainer]}
-          onScroll={this.makeImgBig}
-        >
+        <View style={[styles.calendarContainer]}>
           <Calendar
             dates={dates}
             selectHour={this.selectHour}
             selectedHour={this.state.selectedHour}
           />
-        </Animated.ScrollView>
+        </View>
 
         {this.renderButton()}
       </View>
@@ -210,8 +206,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 5,
-    marginTop: 5,
-    flex: 1
+    marginTop: 5
   },
   imgContainer: {
     shadowColor: '#000',
@@ -225,7 +220,7 @@ const styles = StyleSheet.create({
   },
   calendarContainer: {
     paddingHorizontal: 5,
-    marginTop: 5,
+    marginTop: 15,
     flex: 1
   },
   img: {

@@ -16,7 +16,8 @@ export class Calendar extends Component {
 
   state = {
     isMonthSelected: null,
-    selectedDay: null
+    selectedDay: null,
+    monthIndex: 0
   }
 
   // le mois est selectioné en même temps que le jour
@@ -47,33 +48,64 @@ export class Calendar extends Component {
     }
   }
 
-  renderMonths = () => {
+  onSwipe = index => {
+    console.log(this.props)
+    console.log('index swipe', index)
+    this.setState({ monthIndex: index })
+  }
+
+  renderDays = () => {
     const { dates, selectHour, selectedHour } = this.props
     const { selectedDay } = this.state
+
+    const month = dates[this.state.monthIndex]
+    // console.log('dates[this.state.monthIndex]', dates[this.state.monthIndex])
+    return (
+      <Days
+        key="days"
+        days={month.days}
+        selectMonthAndDay={this.selectMonthAndDay}
+        month={month.month}
+        selectHour={selectHour}
+        selectedDay={selectedDay}
+        selectedHour={selectedHour}
+      />
+    )
+  }
+
+  renderMonths = () => {
+    const { dates } = this.props
 
     return dates.map((month, index) => {
       return (
         <View key={index}>
           <MyText style={[styles.text]}>{capitalize(month.month)}</MyText>
-          <Days
-            days={month.days}
-            selectMonthAndDay={this.selectMonthAndDay}
-            month={month.month}
-            selectHour={selectHour}
-            selectedDay={selectedDay}
-            selectedHour={selectedHour}
-          />
         </View>
       )
     })
   }
 
   render() {
-    return <Swiper>{this.renderMonths()}</Swiper>
+    return [
+      <Swiper
+        style={styles.wrapper}
+        key="swip"
+        showsButtons={false}
+        showsPagination={false}
+        onIndexChanged={this.onSwipe}
+      >
+        {this.renderMonths()}
+      </Swiper>,
+      this.renderDays()
+    ]
   }
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    //backgroundColor: 'green'
+  },
+
   text: {
     width: 300,
     fontSize: 40,
