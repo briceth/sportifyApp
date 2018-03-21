@@ -141,15 +141,6 @@ export class Planning extends Component {
     })
   }
 
-  renderButton = () => {
-    if (this.state.isHourSelected) {
-      return (
-        <CallToAction bookSession={this.bookSession}>Réserver</CallToAction>
-      )
-    }
-    return null
-  }
-
   render() {
     const { name, address, center, dates, image, loading } = this.state
     console.log('Props in Planning :', this.props)
@@ -195,8 +186,7 @@ export class Planning extends Component {
             selectedHour={this.state.selectedHour}
           />
         </View>
-
-        {this.renderButton()}
+        <CallToAction bookSession={this.bookSession}>Réserver</CallToAction>
       </View>
     )
   }

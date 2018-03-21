@@ -20,6 +20,12 @@ export class Calendar extends Component {
     monthIndex: 0
   }
 
+  componentDidMount() {
+    const { dates } = this.props
+    //mettre par défaut le premier jour du premier mois
+    this.setState({ selectedDay: dates[0].days[0].id })
+  }
+
   // le mois est selectioné en même temps que le jour
   // les heures apparaissent en fonction du jour cliqué
   selectMonthAndDay = (day, month, dayId) => {
@@ -49,17 +55,19 @@ export class Calendar extends Component {
   }
 
   onSwipe = index => {
-    console.log(this.props)
-    console.log('index swipe', index)
-    this.setState({ monthIndex: index })
+    const { dates } = this.props
+    this.setState({
+      monthIndex: index,
+      selectedDay: dates[index].days[0].id //mettre par défaut le premier jour du mois suivant
+    })
   }
 
   renderDays = () => {
     const { dates, selectHour, selectedHour } = this.props
     const { selectedDay } = this.state
-
     const month = dates[this.state.monthIndex]
-    // console.log('dates[this.state.monthIndex]', dates[this.state.monthIndex])
+    console.log('select day', this.props)
+
     return (
       <Days
         key="days"
@@ -103,9 +111,8 @@ export class Calendar extends Component {
 
 const styles = StyleSheet.create({
   wrapper: {
-    //backgroundColor: 'green'
+    height: 10
   },
-
   text: {
     width: 300,
     fontSize: 40,
