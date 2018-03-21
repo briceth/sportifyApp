@@ -13,9 +13,16 @@ import { Input } from '../components/Input'
 import { Form } from '../components/Form'
 import { Button } from '../components/Button'
 import { RadioInput } from '../components/RadioInput'
+import config from '../../config'
+import store from 'react-native-simple-store'
 import axios from 'axios'
+import PropTypes from 'prop-types'
 
 export class Signup extends Component {
+  static propTypes = {
+    navigation: PropTypes.object
+  }
+
   static navigationOptions = { header: null }
 
   constructor(props) {
@@ -67,11 +74,12 @@ export class Signup extends Component {
   }
 
   signup = () => {
-    console.log('STATE', this.state)
+    console.tron.log(this.state)
     axios
-      .post('http://localhost:3100/auth/sign_up', this.state)
+      .post(`${config.API_URL}/auth/sign_up`, this.state)
       .then(response => {
-        this.props.navigation.navigate('Planning')
+        store.save('currentUser', response.data.user)
+        this.props.navigation.navigate('Home')
       })
       .catch(error => {
         console.log('ERROR', error.response)
@@ -79,7 +87,6 @@ export class Signup extends Component {
   }
 
   render() {
-    console.tron.log(parseInt(this.imageHeight))
     return (
       <View style={[mainStyles.containerFlex, styles.container]}>
         <KeyboardAvoidingView

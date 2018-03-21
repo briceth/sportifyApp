@@ -124,7 +124,6 @@ export class Home extends Component {
   render() {
     const { currentUser, loading } = this.state
     const { navigation } = this.props
-
     return loading ? (
       <View style={[mainStyles.containerFlex, mainStyles.centered]}>
         <ActivityIndicator />
