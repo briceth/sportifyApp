@@ -79,12 +79,15 @@ export class Login extends Component {
     axios
       .post(`${config.API_URL}/auth/log_in`, { email, password })
       .then(response => {
+        console.log('response in login : ', response)
         if (response.status === 200) {
           store.save('currentUser', response.data.user)
           return this.props.navigation.navigate('Home')
         }
       })
       .catch(e => {
+        console.log('error in login : ', e)
+        console.log('error in login : ', e.response)
         if (e.response.status === 401) {
           this.setState({ flashAlert: true })
         }

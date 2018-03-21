@@ -37,11 +37,20 @@ export class Reservations extends Component {
     qrData: {}
   }
 
-  toggleQrCode = (sessionInfos = {}) =>
-    this.setState({
+  toggleQrCode = (sessionInfos = {}) => {
+    console.tron.log('in toggleQrCode')
+    console.tron.display({
+      name: 'Jerome Debug',
+      preview: 'sessionInfos',
+      value: sessionInfos,
+      important: true
+    })
+    console.tron.log(this.state.isQrCodeVisible)
+    return this.setState({
       isQrCodeVisible: !this.state.isQrCodeVisible,
       qrData: sessionInfos
     })
+  }
 
   openRow = rowRef => {
     // Use an internal method to manually swipe the row open to whatever value you pass
@@ -165,7 +174,6 @@ export class Reservations extends Component {
 
   renderQrModal = () => {
     const {
-      isQrCodeVisible,
       activity,
       center,
       teacher,
@@ -173,7 +181,7 @@ export class Reservations extends Component {
       duration,
       sessionId
     } = this.state.qrData
-
+    const { isQrCodeVisible } = this.state
     return (
       <Modal
         key="qrModal"

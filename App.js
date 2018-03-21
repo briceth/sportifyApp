@@ -17,6 +17,6 @@ export const App = StackNavigator(
     Session: { screen: Session }
   },
   {
-    initialRouteName: 'Session'
+    initialRouteName: 'Home'
   }
 )

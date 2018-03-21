@@ -100,8 +100,8 @@ export class Home extends Component {
     const key = Object.keys(data)[0]
     const dataToUpdate = data[key]
     axios
-      .post(
-        `${config.API_URL}/api/users/improved/${currentUser._id}`,
+      .put(
+        `${config.API_URL}/api/users/${currentUser._id}`,
         {
           [key]: dataToUpdate
         },
@@ -139,13 +139,13 @@ export class Home extends Component {
             currentUser={currentUser}
           />
         )}
-        {currentUser.account.role === 'user' && (
+        {!currentUser || currentUser.account.role === 'user' ? (
           <Activities
             updateServerFromStorage={this.updateServerFromStorage}
             currentUser={currentUser}
             goToPlanning={this.goToPlanning}
           />
-        )}
+        ) : null}
       </ScrollView>
     )
   }
