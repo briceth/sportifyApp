@@ -23,6 +23,17 @@ export class Session extends Component {
     session: null
   }
 
+  onSelect = data => {
+    this.setState(data)
+  }
+
+  onPress = () => {
+    this.props.navigation.navigate('Scanner', {
+      onSelect: this.onSelect,
+      session: this.state.session
+    })
+  }
+
   componentDidMount() {
     const { session } = this.props.navigation.state.params
 
@@ -134,14 +145,7 @@ export class Session extends Component {
             </ScrollView>
           </View>
         </View>,
-        <CallToAction
-          onPress={() =>
-            this.props.navigation.navigate('Scanner', {
-              session: session
-            })
-          }
-          key="callToAction"
-        >
+        <CallToAction onPress={this.onPress} key="callToAction">
           Scanner un participant
         </CallToAction>
       ]
