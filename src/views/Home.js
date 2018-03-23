@@ -4,7 +4,6 @@ import {
   ScrollView,
   ActivityIndicator,
   View,
-  StyleSheet,
   Image,
   TouchableOpacity,
   Alert
@@ -66,7 +65,7 @@ export class Home extends Component {
             style: 'cancel'
           },
           {
-            text: 'Se déconnecter',
+            text: 'Déconnexion',
             onPress: () => {
               store.delete('currentUser')
               this.setState({ currentUser: null })
