@@ -125,11 +125,14 @@ export class Planning extends Component {
   bookSession = async () => {
     const currentUser = await store.get('currentUser')
     if (!currentUser) return this.props.navigation.navigate('Signup')
+
     currentUser.account.sessions.push(this.state.session)
+
     store.update('currentUser', currentUser).then(res => {
       this.props.navigation.navigate('Home', {
         newCurrentUser: currentUser
       })
+
       axios
         .put(`${config.API_URL}/api/sessions/${this.state.session._id}`, {
           userId: currentUser._id
@@ -139,13 +142,6 @@ export class Planning extends Component {
         })
         .catch(err => console.log(err))
     })
-  }
-
-  renderButton = () => {
-    if (this.state.isHourSelected) {
-      return <CallToAction onPress={this.bookSession}>Réserver</CallToAction>
-    }
-    return null
   }
 
   render() {
@@ -186,19 +182,14 @@ export class Planning extends Component {
             <Icon name="phone-square" size={40} color={DARKBLUE} />
           </View>
         </View>
-        <Animated.ScrollView
-          scrollEventThrottle={1}
-          style={[styles.calendarContainer]}
-          onScroll={this.makeImgBig}
-        >
+        <View style={[styles.calendarContainer]}>
           <Calendar
             dates={dates}
             selectHour={this.selectHour}
             selectedHour={this.state.selectedHour}
           />
-        </Animated.ScrollView>
-
-        {this.renderButton()}
+        </View>
+        <CallToAction bookSession={this.bookSession}>Réserver</CallToAction>
       </View>
     )
   }
@@ -208,8 +199,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 5,
-    marginTop: 5,
-    flex: 1
+    marginTop: 5
   },
   imgContainer: {
     shadowColor: '#000',
@@ -223,7 +213,7 @@ const styles = StyleSheet.create({
   },
   calendarContainer: {
     paddingHorizontal: 5,
-    marginTop: 5,
+    marginTop: 15,
     flex: 1
   },
   img: {
