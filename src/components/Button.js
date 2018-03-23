@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { TouchableOpacity, StyleSheet } from 'react-native'
 import { MyText } from '../components/MyText'
-import { mainStyles, DARKBLUE } from '../mainStyle'
+import { mainStyles, BLUE } from '../mainStyle'
 import PropTypes from 'prop-types'
 
 export class Button extends Component {
@@ -24,7 +24,7 @@ export class Button extends Component {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: DARKBLUE,
+    backgroundColor: BLUE,
     width: 200,
     alignItems: 'center',
     paddingVertical: 15,

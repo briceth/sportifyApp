@@ -4,12 +4,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Animated
+  Animated,
+  Dimensions
 } from 'react-native'
 import PropTypes from 'prop-types'
 import { MyText } from '../MyText'
 import { Hours } from './Hours'
-import { DARKBLUE } from '../../mainStyle'
+import { BLUE, mainStyles } from '../../mainStyle'
+import { manageStyle } from '../../utils/utils'
 
 export class Days extends Component {
   static propTypes = {
@@ -108,6 +110,10 @@ export class Days extends Component {
   }
 }
 
+const { height, width } = Dimensions.get('window')
+const { fontsize } = manageStyle(height, width)
+//console.log('days fontsize', fontsize)
+
 const styles = StyleSheet.create({
   content: {
     marginVertical: 5
@@ -128,18 +134,18 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   num: {
-    fontSize: 20,
+    fontSize: 20 - fontsize, // for iphone SE responsiveness
     fontWeight: '500'
   },
   letter: {
-    fontSize: 16
+    fontSize: 16 - fontsize // for iphone SE responsiveness
   },
   selectedPan: {
-    backgroundColor: DARKBLUE,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2
+    backgroundColor: BLUE
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.5,
+    // shadowRadius: 2
   },
   selectedTextPan: {
     color: 'white'

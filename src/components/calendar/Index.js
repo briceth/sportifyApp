@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Swiper from 'react-native-swiper'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, Dimensions } from 'react-native'
 import { Days } from './Days'
 import { MyText } from '../MyText'
 import { capitalize } from 'lodash'
+import { manageStyle } from '../../utils/utils'
 
 export class Calendar extends Component {
   static propTypes = {
@@ -96,7 +97,6 @@ export class Calendar extends Component {
   render() {
     return [
       <Swiper
-        style={styles.wrapper}
         key="swip"
         showsButtons={false}
         showsPagination={false}
@@ -109,12 +109,12 @@ export class Calendar extends Component {
   }
 }
 
+const { height, width } = Dimensions.get('window')
+const { title } = manageStyle(height, width)
+//console.log('index title', title)
+
 const styles = StyleSheet.create({
-  wrapper: {
-    height: 10
-  },
   text: {
-    width: 300,
-    fontSize: 40
+    fontSize: 40 - title // 40 //title
   }
 })
