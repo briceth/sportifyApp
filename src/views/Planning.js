@@ -143,9 +143,7 @@ export class Planning extends Component {
 
   renderButton = () => {
     if (this.state.isHourSelected) {
-      return (
-        <CallToAction bookSession={this.bookSession}>Réserver</CallToAction>
-      )
+      return <CallToAction onPress={this.bookSession}>Réserver</CallToAction>
     }
     return null
   }

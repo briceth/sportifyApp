@@ -29,7 +29,6 @@ export class Session extends Component {
     axios
       .get(`${config.API_URL}/api/sessions/${session}`)
       .then(response => {
-        console.log('response', response)
         this.setState({ session: response.data })
       })
       .catch(err => console.log(err))
@@ -135,7 +134,16 @@ export class Session extends Component {
             </ScrollView>
           </View>
         </View>,
-        <CallToAction key="callToAction">Scanner un participant</CallToAction>
+        <CallToAction
+          onPress={() =>
+            this.props.navigation.navigate('Scanner', {
+              session: session
+            })
+          }
+          key="callToAction"
+        >
+          Scanner un participant
+        </CallToAction>
       ]
     } else {
       return (
