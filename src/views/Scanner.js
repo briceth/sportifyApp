@@ -32,7 +32,7 @@ export class Scanner extends Component {
       if (peoplePresent.includes(userId)) {
         return this.alert('La personne a déjà été enregistrée')
       }
-      return this.alert("La personne n'est pas inscrite à ce cours")
+      return this.alert("La personne n'est pas inscrite au cours")
     }
 
     axios
