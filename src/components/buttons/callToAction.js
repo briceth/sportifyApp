@@ -7,14 +7,14 @@ import PropTypes from 'prop-types'
 export class CallToAction extends Component {
   static propTypes = {
     children: PropTypes.node,
-    bookSession: PropTypes.func
+    onPress: PropTypes.func
   }
 
   render() {
     return (
       <TouchableOpacity
         style={mainStyles.blueShaddow}
-        onPress={this.props.bookSession}
+        onPress={this.props.onPress}
       >
         <View style={styles.containerText}>
           <MyText style={[styles.button]}>{this.props.children}</MyText>
