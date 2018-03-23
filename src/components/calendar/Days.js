@@ -112,14 +112,13 @@ const styles = StyleSheet.create({
   content: {
     marginVertical: 5
   },
-
   selectedPan: {
     borderColor: 'red',
     borderWidth: 1
   },
   containerDays: {
     width: 70,
-    borderWidth: 0.5,
+    borderWidth: 0.8,
     marginRight: 5,
     borderRadius: 4,
     paddingVertical: 5,

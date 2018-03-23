@@ -189,7 +189,7 @@ export class Planning extends Component {
             selectedHour={this.state.selectedHour}
           />
         </View>
-        <CallToAction bookSession={this.bookSession}>Réserver</CallToAction>
+        <CallToAction onPress={this.bookSession}>Réserver</CallToAction>
       </View>
     )
   }
@@ -198,7 +198,8 @@ export class Planning extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 5,
+    paddingHorizontal: 10,
+    paddingBottom: 10,
     marginTop: 5
   },
   imgContainer: {
