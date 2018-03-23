@@ -1,5 +1,11 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  Animated
+} from 'react-native'
 import PropTypes from 'prop-types'
 import { MyText } from '../MyText'
 import { Hours } from './Hours'
@@ -13,6 +19,17 @@ export class Days extends Component {
     selectedDay: PropTypes.number,
     month: PropTypes.string,
     selectedHour: PropTypes.number
+  }
+
+  state = {
+    animatedValue: new Animated.Value(0)
+  }
+
+  componentDidMount() {
+    Animated.timing(this.state.animatedValue, {
+      toValue: 1,
+      duration: 400
+    }).start()
   }
 
   render() {
@@ -29,41 +46,57 @@ export class Days extends Component {
 
     return (
       <View>
-        <ScrollView horizontal contentContainerStyle={styles.content}>
-          {days.map((day, index) => {
-            // console.log('day hours', day)
+        <Animated.View
+          style={
+            ({ opacity: this.state.animatedValue },
+            {
+              transform: [
+                { scale: this.state.animatedValue },
+                {
+                  rotate: this.state.animatedValue.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['35deg', '0deg'],
+                    extrapolate: 'clamp'
+                  })
+                }
+              ]
+            })
+          }
+        >
+          <ScrollView horizontal contentContainerStyle={styles.content}>
+            {days.map((day, index) => {
+              hoursObject.push(...day.hours)
 
-            hoursObject.push(...day.hours)
-
-            return (
-              <TouchableOpacity
-                key={index}
-                onPress={() => selectMonthAndDay(day.num, month, day.id)}
-                style={[
-                  styles.containerDays,
-                  selectedDay === day.id && styles.selectedPan
-                ]}
-              >
-                <MyText
+              return (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => selectMonthAndDay(day.num, month, day.id)}
                   style={[
-                    styles.num,
-                    selectedDay === day.id && styles.selectedTextPan
+                    styles.containerDays,
+                    selectedDay === day.id && styles.selectedPan
                   ]}
                 >
-                  {day.num}
-                </MyText>
-                <MyText
-                  style={[
-                    styles.letter,
-                    selectedDay === day.id && styles.selectedTextPan
-                  ]}
-                >
-                  {day.letter}
-                </MyText>
-              </TouchableOpacity>
-            )
-          })}
-        </ScrollView>
+                  <MyText
+                    style={[
+                      styles.num,
+                      selectedDay === day.id && styles.selectedTextPan
+                    ]}
+                  >
+                    {day.num}
+                  </MyText>
+                  <MyText
+                    style={[
+                      styles.letter,
+                      selectedDay === day.id && styles.selectedTextPan
+                    ]}
+                  >
+                    {day.letter}
+                  </MyText>
+                </TouchableOpacity>
+              )
+            })}
+          </ScrollView>
+        </Animated.View>
         <Hours
           selectHour={selectHour}
           hours={hoursObject}
@@ -77,7 +110,6 @@ export class Days extends Component {
 
 const styles = StyleSheet.create({
   content: {
-    flex: 1,
     marginVertical: 5
   },
 
