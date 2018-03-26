@@ -94,7 +94,6 @@ export class Home extends Component {
 
   // format: data = {dataToAdd: {sessions: [ids]}}
   updateServerFromStorage = (currentUser, data) => {
-    console.tron.log('IN UPDATE SERVER')
     if (!data) throw Error('No data given')
     const key = Object.keys(data)[0]
     const dataToUpdate = data[key]
@@ -112,7 +111,6 @@ export class Home extends Component {
         }
       )
       .then(response => {
-        console.tron.log(response)
         this.setState({
           loading: false
         })
@@ -151,7 +149,6 @@ export class Home extends Component {
 
 function renderRight(params) {
   const { user } = params || 0
-  console.tron.log(user)
   if (!user) return
   return (
     <TouchableOpacity

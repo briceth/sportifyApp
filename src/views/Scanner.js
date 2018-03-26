@@ -23,18 +23,6 @@ export class Scanner extends Component {
 
   static navigationOptions = { header: null }
 
-  resetAction = () => {
-    return NavigationActions.reset({
-      index: 0,
-      actions: [
-        NavigationActions.navigate({
-          routeName: 'Session',
-          params: { session: this.state.session._id }
-        })
-      ]
-    })
-  }
-
   onSuccess = event => {
     const userId = event.data
     const peoplePresent = this.state.session.peoplePresent.map(s => s._id)
@@ -52,7 +40,9 @@ export class Scanner extends Component {
         userId
       })
       .then(response => {
-        this.props.navigation.dispatch(this.resetAction())
+        const { navigation } = this.props
+        navigation.goBack()
+        navigation.state.params.onSelect({ session: response.data.session })
       })
       .catch(error => {
         this.alert('Problème de connexion')
@@ -95,7 +85,11 @@ export class Scanner extends Component {
         <View
           style={[styles.container, styles.containerTB, styles.containerBottom]}
         >
-          <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.dispatch(this.resetAction())}
+          >
+            {' '}
+            //this.props.navigation.goBack()}>
             <Text style={styles.text}>Annuler</Text>
           </TouchableOpacity>
         </View>

@@ -1473,7 +1473,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.sportify-iOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.Sportify-App";
 				PRODUCT_NAME = sportifyApp;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1499,7 +1499,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.sportify-iOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.Sportify-App";
 				PRODUCT_NAME = sportifyApp;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
