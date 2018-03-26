@@ -88,10 +88,10 @@ export class Planning extends Component {
         const { address } = response.data.center
         const center = response.data.center.name
         const sessions = response.data.sessions
-        console.log(sessions)
-
+        console.log('SESSIONS:', sessions)
+        // format date with date fns
         const formatedDate = formatDate(sessions)
-
+        // range each session by month, then by days, then by hours
         const newDate = rangeDateByMonth(formatedDate)
 
         this.setState({
