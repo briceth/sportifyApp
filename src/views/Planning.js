@@ -7,12 +7,14 @@ import {
   Animated,
   Easing,
   Image,
+  TouchableOpacity,
   Dimensions
 } from 'react-native'
 import axios from 'axios'
 import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import store from 'react-native-simple-store'
+// import RNImmediatePhoneCall from 'react-native-immediate-phone-call'
 import { Calendar } from '../components/calendar/Index'
 import { mainStyles, BLUE } from '../mainStyle'
 import { MyText } from '../components/MyText'
@@ -181,6 +183,11 @@ export class Planning extends Component {
       )
     }
     return null
+  }
+
+  startPhoneCall = () => {
+    console.log('calling !!')
+    // RNImmediatePhoneCall.immediatePhoneCall('0608056528')
   }
 
   render() {
