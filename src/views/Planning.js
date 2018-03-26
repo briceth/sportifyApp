@@ -5,7 +5,8 @@ import {
   ActivityIndicator,
   View,
   Animated,
-  Easing,
+  // Easing,
+  Linking,
   Image,
   TouchableOpacity,
   Dimensions
@@ -51,6 +52,7 @@ export class Planning extends Component {
     image: '',
     address: '',
     center: '',
+    phone: '',
     dates: [],
     firstSessionDate: '',
     duration: 0,
@@ -84,12 +86,13 @@ export class Planning extends Component {
       .then(response => {
         console.log('Fetching Activity :', response.data)
 
-        // A REFACTO
-        const { name } = response.data
-        const { image } = response.data
-        const { address } = response.data.center
-        const center = response.data.center.name
-        const sessions = response.data.sessions
+        const {
+          name,
+          image,
+          center: { address, phone, name: center }, // name: center to rename const !
+          sessions
+        } = response.data
+
         console.log('SESSIONS:', sessions)
         // format date with date fns
         const formatedDate = formatDate(sessions)
@@ -102,6 +105,7 @@ export class Planning extends Component {
           image,
           address,
           center,
+          phone,
           dates: [...newDate],
           firstSessionDate: sessions[0].startsAt, // the first session
           duration: sessions[0].duration // the first session
@@ -135,7 +139,6 @@ export class Planning extends Component {
     // ne peut booker que si il a selectionné une heure
     if (this.state.isHourSelected) {
       const currentUser = await store.get('currentUser')
-
       if (!currentUser) return this.props.navigation.navigate('Signup')
 
       axios
@@ -186,8 +189,16 @@ export class Planning extends Component {
   }
 
   startPhoneCall = () => {
-    console.log('calling !!')
-    // RNImmediatePhoneCall.immediatePhoneCall('0608056528')
+    const url = `tel:${this.state.phone}`
+    Linking.canOpenURL(url)
+      .then(supported => {
+        if (!supported) {
+          console.log("Can't handle url: " + url)
+        } else {
+          return Linking.openURL(url)
+        }
+      })
+      .catch(err => console.error('An error occurred', err))
   }
 
   render() {
@@ -234,7 +245,9 @@ export class Planning extends Component {
               <MyText style={[styles.text]}>{center}</MyText>
               <MyText style={[styles.text]}>{address}</MyText>
             </View>
-            <Icon name="phone-square" size={40} color={BLUE} />
+            <TouchableOpacity onPress={this.startPhoneCall}>
+              <Icon name="phone-square" size={40} color={BLUE} />
+            </TouchableOpacity>
           </View>
         </View>
 

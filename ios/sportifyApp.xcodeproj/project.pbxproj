@@ -49,7 +49,6 @@
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		980961E33F664D64A4AC1FD2 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 78B1230C25844840A5CB0D2D /* Ionicons.ttf */; };
 		9F15D628D6964D868F29804B /* Quicksand-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E8AE2C475BBD4809B0363E0C /* Quicksand-Regular.ttf */; };
-		A256BC16D29B4408B5FC3798 /* libRNImmediatePhoneCall.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F8F2CB431BAB4643ABF20ABE /* libRNImmediatePhoneCall.a */; };
 		A4221F6043634326968D8C7C /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 713EC5B6EEF347B98B6A9657 /* Feather.ttf */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		B5AAABBB9E9B48DFA83F3B12 /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A0F7DC67B1E3428DB2787AAB /* libRNCamera.a */; };
@@ -299,6 +298,13 @@
 			remoteGlobalIDString = 15209BEF1D250F63000D0F44;
 			remoteInfo = RNImmediatePhoneCall;
 		};
+		3E26953120693F3400981D06 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AB5A9B8E92E84BBEA28B17AD /* RNImmediatePhoneCall.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 15209BEF1D250F63000D0F44;
+			remoteInfo = RNImmediatePhoneCall;
+		};
 		3E34B6E0205686CE00B457FB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
@@ -436,6 +442,7 @@
 		8A614C4CDF3042F3BE869533 /* PermanentMarker-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "PermanentMarker-Regular.ttf"; path = "../assets/fonts/Permanent_Marker/PermanentMarker-Regular.ttf"; sourceTree = "<group>"; };
 		8C36EE5FAB9840DCAB935F07 /* SplashScreen.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = SplashScreen.xcodeproj; path = "../node_modules/react-native-splash-screen/ios/SplashScreen.xcodeproj"; sourceTree = "<group>"; };
 		A0F7DC67B1E3428DB2787AAB /* libRNCamera.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCamera.a; sourceTree = "<group>"; };
+		AB5A9B8E92E84BBEA28B17AD /* RNImmediatePhoneCall.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNImmediatePhoneCall.xcodeproj; path = "../node_modules/react-native-immediate-phone-call/ios/RNImmediatePhoneCall.xcodeproj"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		B58F069B5FCB4592AD30E292 /* Quicksand-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Quicksand-Bold.ttf"; path = "../assets/fonts/Quicksand/Quicksand-Bold.ttf"; sourceTree = "<group>"; };
 		B8B175D302E340BA9F1089BE /* PermanentMarker-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "PermanentMarker-Regular.ttf"; path = "../assets/fonts/PermanentMarker/PermanentMarker-Regular.ttf"; sourceTree = "<group>"; };
@@ -448,7 +455,6 @@
 		E2EC6608CA804B478C16530F /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
 		E8AE2C475BBD4809B0363E0C /* Quicksand-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Quicksand-Regular.ttf"; path = "../assets/fonts/Quicksand/Quicksand-Regular.ttf"; sourceTree = "<group>"; };
 		F808A1059C38452ABA8FA13F /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
-		F8F2CB431BAB4643ABF20ABE /* libRNImmediatePhoneCall.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNImmediatePhoneCall.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -703,6 +709,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		3E26950820693F3400981D06 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3E26953220693F3400981D06 /* libRNImmediatePhoneCall.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		5E91572E1DD0AC6500FF2AA8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -740,6 +754,7 @@
 				3232E55D475244BE976B7FBD /* RNSVG.xcodeproj */,
 				85169F519F7A44D8B5CD03DC /* RNCamera.xcodeproj */,
 				8C36EE5FAB9840DCAB935F07 /* SplashScreen.xcodeproj */,
+				AB5A9B8E92E84BBEA28B17AD /* RNImmediatePhoneCall.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -899,11 +914,11 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
-						DevelopmentTeam = C86ZNPC7WB;
+						DevelopmentTeam = 2F6DAN37NB;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = C86ZNPC7WB;
+						DevelopmentTeam = 2F6DAN37NB;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -979,6 +994,10 @@
 				{
 					ProductGroup = 0A753AC42062CAC300334FE8 /* Products */;
 					ProjectRef = 85169F519F7A44D8B5CD03DC /* RNCamera.xcodeproj */;
+				},
+				{
+					ProductGroup = 3E26950820693F3400981D06 /* Products */;
+					ProjectRef = AB5A9B8E92E84BBEA28B17AD /* RNImmediatePhoneCall.xcodeproj */;
 				},
 				{
 					ProductGroup = 3E2694892069349500981D06 /* Products */;
@@ -1240,6 +1259,13 @@
 			remoteRef = 3E2694C9206935FF00981D06 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		3E26953220693F3400981D06 /* libRNImmediatePhoneCall.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNImmediatePhoneCall.a;
+			remoteRef = 3E26953120693F3400981D06 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		3E34B6E1205686CE00B457FB /* libjsinspector.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1480,7 +1506,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = C86ZNPC7WB;
+				DEVELOPMENT_TEAM = 2F6DAN37NB;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1517,7 +1543,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = C86ZNPC7WB;
+				DEVELOPMENT_TEAM = 2F6DAN37NB;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
@@ -1551,7 +1577,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = C86ZNPC7WB;
+				DEVELOPMENT_TEAM = 2F6DAN37NB;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
@@ -1566,7 +1592,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.Sportify-App";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.Sportify-App2";
 				PRODUCT_NAME = sportifyApp;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1578,7 +1604,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = C86ZNPC7WB;
+				DEVELOPMENT_TEAM = 2F6DAN37NB;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
@@ -1593,7 +1619,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.Sportify-App";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.Sportify-App2";
 				PRODUCT_NAME = sportifyApp;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
