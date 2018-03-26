@@ -24,7 +24,7 @@ export const mainStyles = StyleSheet.create({
   },
   shadow: {
     shadowColor: '#3e3e3e',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.7,
     shadowRadius: 2,
     elevation: 1
@@ -41,7 +41,7 @@ export const mainStyles = StyleSheet.create({
   },
   paragraphe: {
     fontSize: 20,
-    fontWeight: '500',
+    fontWeight: 'bold',
     color: 'white',
     shadowColor: 'black',
     shadowOffset: { width: 4, height: 4 },
@@ -49,8 +49,8 @@ export const mainStyles = StyleSheet.create({
     shadowRadius: 4
   },
   tagline: {
-    fontSize: 16,
-    fontWeight: '300',
+    fontSize: 18,
+    fontWeight: '400',
     color: 'white',
     shadowColor: 'black',
     shadowOffset: { width: 3, height: 3 },

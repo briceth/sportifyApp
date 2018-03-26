@@ -22,7 +22,7 @@ const RootStack = StackNavigator(
     Scanner: { screen: Scanner }
   },
   {
-    initialRouteName: 'Home'
+    initialRouteName: 'Login'
   }
 )
 
