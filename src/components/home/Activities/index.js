@@ -38,10 +38,11 @@ export class Activities extends Component {
           favoritesLoad: true,
           favorites: res
         })
-        if (this.props.currentUser)
+        if (this.props.currentUser) {
           return this.props.updateServerFromStorage(this.props.currentUser, {
             dataToReplace: { favoriteActivities: res }
           })
+        }
       }
       // Favoris sur le serveur (donc user connecté)
       if (user) return this.getFavoritesFromServer(user)

@@ -1,8 +1,14 @@
 import React, { Component } from 'react'
-import { StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
+import {
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  Dimensions
+} from 'react-native'
 import PropTypes from 'prop-types'
 import { MyText } from '../MyText'
-import { mainStyles, DARKBLUE } from '../../mainStyle'
+import { mainStyles, BLUE } from '../../mainStyle'
+import { manageStyle } from '../../utils/utils'
 
 export class Hours extends Component {
   static propTypes = {
@@ -51,27 +57,31 @@ export class Hours extends Component {
   }
 }
 
+const { height, width } = Dimensions.get('window')
+const { marginVertical, fontsize } = manageStyle(height, width)
+// console.log('hours fontsize', marginVertical, fontsize)
+
 const styles = StyleSheet.create({
   content: {
-    marginVertical: 15
+    marginVertical: 10 // to change
   },
   text: {
-    fontSize: 15
+    fontSize: 16 - fontsize // to change
   },
   hourContainer: {
-    width: 50,
-    height: 50,
+    width: 50 - marginVertical, // to change
+    height: 50 - marginVertical, // to change
     borderRadius: 25,
     borderColor: 'grey',
     borderWidth: 1,
-    paddingVertical: 15,
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'center',
+    alignItems: 'center',
     marginRight: 15
   },
   selected: {
     borderWidth: 0,
-    backgroundColor: DARKBLUE,
+    backgroundColor: BLUE,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,

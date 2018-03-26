@@ -93,7 +93,7 @@ export function formatDate(sessions) {
           id: dayId,
           hours: [
             {
-              hour: format(parse(date), 'HH:MM'),
+              hour: format(parse(date), 'HH:mm'),
               id: generateId(date, true),
               _dayId: dayId,
               session: session
@@ -128,5 +128,31 @@ export function calcDuration(startsAt, duration) {
   const sumHour = hour + durationHours
   const sumMin = minutes + durationMinutes
 
-  return `De ${hour}:${minutes === 0 ? '00' : minutes} à ${sumHour}:${sumMin}`
+  return `De ${hour}:${minutes === 0 ? '00' : minutes} à ${sumHour}:${
+    sumMin === 0 ? '00' : sumMin
+  }`
+}
+
+export function manageStyle(height, width) {
+  //iphone SE
+  if (height === 568 && width === 320) {
+    return {
+      fontsize: 2,
+      width: 5,
+      height: 5,
+      marginVertical: 5,
+      title: 20,
+      heightImg: 40
+    }
+  } else {
+    //iphone 6S
+    return {
+      fontsize: 0,
+      width: 0,
+      height: 0,
+      marginVertical: 0,
+      title: 0,
+      heightImg: 0
+    }
+  }
 }

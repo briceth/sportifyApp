@@ -19,6 +19,6 @@ export const App = StackNavigator(
     Scanner: { screen: Scanner }
   },
   {
-    initialRouteName: 'Home'
+    initialRouteName: 'Login'
   }
 )
