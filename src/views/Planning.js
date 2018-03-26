@@ -6,12 +6,14 @@ import {
   View,
   Animated,
   Easing,
-  Image
+  Image,
+  TouchableOpacity
 } from 'react-native'
 import axios from 'axios'
 import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import store from 'react-native-simple-store'
+// import RNImmediatePhoneCall from 'react-native-immediate-phone-call'
 import { Calendar } from '../components/calendar/Index'
 import { mainStyles, DARKBLUE } from '../mainStyle'
 import { MyText } from '../components/MyText'
@@ -144,6 +146,11 @@ export class Planning extends Component {
     })
   }
 
+  startPhoneCall = () => {
+    console.log('calling !!')
+    // RNImmediatePhoneCall.immediatePhoneCall('0608056528')
+  }
+
   render() {
     const { name, address, center, dates, image, loading } = this.state
     console.log('Props in Planning :', this.props)
@@ -179,7 +186,9 @@ export class Planning extends Component {
               <MyText style={[styles.text]}>{center}</MyText>
               <MyText style={[styles.text]}>{address}</MyText>
             </View>
-            <Icon name="phone-square" size={40} color={DARKBLUE} />
+            <TouchableOpacity onPress={this.startPhoneCall}>
+              <Icon name="phone-square" size={40} color={DARKBLUE} />
+            </TouchableOpacity>
           </View>
         </View>
         <View style={[styles.calendarContainer]}>
