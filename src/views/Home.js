@@ -41,8 +41,6 @@ export class Home extends Component {
   }
 
   componentDidMount = async () => {
-    //setParams to navbar to dertermine right icon
-
     // Recupération du user du store:
     const currentUser = await store.get('currentUser')
     this.props.navigation.setParams({
