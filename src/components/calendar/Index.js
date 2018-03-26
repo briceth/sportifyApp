@@ -67,7 +67,6 @@ export class Calendar extends Component {
     const { dates, selectHour, selectedHour } = this.props
     const { selectedDay } = this.state
     const month = dates[this.state.monthIndex]
-    console.log('select day', this.props)
 
     return (
       <Days

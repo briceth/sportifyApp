@@ -57,7 +57,8 @@ export class Planning extends Component {
     selectedHour: null,
     session: null,
     isHourSelected: false,
-    flashAlert: false
+    flashAlert: false,
+    errorMessage: ''
   }
 
   // makeImgBig = () => {
@@ -75,13 +76,6 @@ export class Planning extends Component {
   }
 
   componentDidMount() {
-    // to know on which device is running the app
-    const { height, width } = Dimensions.get('window')
-
-    manageStyle(height, width)
-
-    console.log('height, width', height, width)
-
     const { activityId } = this.props.navigation.state.params
     axios
       .get(`${config.API_URL}/api/activities/${activityId}`)
@@ -142,24 +136,33 @@ export class Planning extends Component {
 
       if (!currentUser) return this.props.navigation.navigate('Signup')
 
-      currentUser.account.sessions.push(this.state.session)
-
-      store.update('currentUser', currentUser).then(res => {
-        this.props.navigation.navigate('Home', {
-          newCurrentUser: currentUser
+      axios
+        .put(`${config.API_URL}/api/sessions/${this.state.session._id}`, {
+          userId: currentUser._id
         })
-
-        axios
-          .put(`${config.API_URL}/api/sessions/${this.state.session._id}`, {
-            userId: currentUser._id
+        .then(response => {
+          currentUser.account.sessions.push(this.state.session)
+          store.update('currentUser', currentUser).then(res => {
+            this.props.navigation.navigate('Home', {
+              newCurrentUser: currentUser
+            })
           })
-          .then(response => {
-            console.log(response.data)
-          })
-          .catch(err => console.log(err))
-      })
+        })
+        .catch(err => {
+          // si la session est déjà reservée à la même heure on affiche le FlashAlert
+          if (err.response.status === 404) {
+            this.setState({
+              flashAlert: true,
+              errorMessage: err.response.data.message
+            })
+          }
+        })
     } else {
-      this.setState({ flashAlert: true })
+      // si l'heure n'est pas sélectionné, on affiche le FlashAlert
+      this.setState({
+        flashAlert: true,
+        errorMessage: 'Veuillez selectionner un horraire'
+      })
     }
   }
 
@@ -173,7 +176,7 @@ export class Planning extends Component {
       return (
         <FlashAlert
           removeFlashAlert={this.removeFlashAlert}
-          message="Veuillez selectionner un horraire"
+          message={this.state.errorMessage}
         />
       )
     }
@@ -246,7 +249,6 @@ export class Planning extends Component {
 
 const { height, width } = Dimensions.get('window')
 const { heightImg, fontsize } = manageStyle(height, width)
-// console.log('planning fontsize', heightImg)
 
 const styles = StyleSheet.create({
   container: {
