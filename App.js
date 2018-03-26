@@ -1,4 +1,5 @@
 import './ReactotronConfig'
+import React, { Component } from 'react'
 import { StackNavigator } from 'react-navigation'
 import { Login } from './src/views/Login'
 import { Home } from './src/views/Home'
@@ -7,9 +8,11 @@ import { Signup } from './src/views/Signup'
 import { Session } from './src/views/Session'
 import { Scanner } from './src/views/Scanner'
 
+import SplashScreen from 'react-native-splash-screen'
+
 console.ignoredYellowBox = ['Warning: componentWill', 'Remote debugger']
 
-export const App = StackNavigator(
+const RootStack = StackNavigator(
   {
     Login: { screen: Login },
     Signup: { screen: Signup },
@@ -19,6 +22,16 @@ export const App = StackNavigator(
     Scanner: { screen: Scanner }
   },
   {
-    initialRouteName: 'Home'
+    initialRouteName: 'Login'
   }
 )
+
+export class App extends Component {
+  componentDidMount() {
+    SplashScreen.hide()
+  }
+
+  render() {
+    return <RootStack />
+  }
+}
