@@ -56,7 +56,7 @@ export class Home extends Component {
     if (this.state.currentUser) {
       Alert.alert(
         'Confirmation',
-        'Etes vous sûr de vouloir vous déconnectez ?',
+        'Etes vous sûr de vouloir vous déconnecter ?',
         [
           {
             text: 'Annuler',
