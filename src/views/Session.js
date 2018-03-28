@@ -49,13 +49,16 @@ export class Session extends Component {
     const { bookedBy, peoplePresent } = this.state.session
 
     if (bookedBy.length > 0) {
-      return bookedBy.map((element, index) => {
+      return bookedBy.map((user, index) => {
+        const image = user.account.image
+          ? user.account.image
+          : `https://randomuser.me/api/portraits/men/${index + 5}.jpg`
         return (
           <View style={styles.imgCircle} key={index}>
             <Image
               style={styles.image}
               source={{
-                uri: `https://randomuser.me/api/portraits/men/${index + 5}.jpg`
+                uri: image
               }}
             />
           </View>
