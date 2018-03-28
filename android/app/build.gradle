@@ -137,14 +137,10 @@ android {
 }
 
 dependencies {
-<<<<<<< HEAD
     compile project(':react-native-vector-icons')
     compile project(':react-native-svg')
     compile project(':react-native-splash-screen')
     compile project(':react-native-camera')
-=======
-    compile project(':react-native-immediate-phone-call')
->>>>>>> 1f7722026fc6e0f701cb1b53db5d99d9f1fdf942
     compile project(':react-native-splash-screen')
     compile project(':react-native-camera')
     compile project(':react-native-svg')

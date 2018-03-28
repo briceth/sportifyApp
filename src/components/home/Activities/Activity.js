@@ -118,7 +118,6 @@ export class Activity extends Component {
             uri: image
           }}
         >
-<<<<<<< HEAD
           <Animated.View
             style={[
               styles.centerContainer,
@@ -158,18 +157,6 @@ export class Activity extends Component {
           {geolocation && (
             <View style={styles.distanceContainer}>
               <MyText style={[styles.distance]}>{this.distance()}</MyText>
-=======
-          <Icon name={star} size={30} color={BLUE} />
-        </TouchableOpacity>
-
-        <View style={styles.textContainer}>
-          <MyText style={[styles.nameActivities]}>{name}</MyText>
-          {sessions && (
-            <View style={this.timeBeforeStartContainer()}>
-              <MyText style={[styles.timeBeforeStart]}>
-                Prochaine séance dans {startsAt(this.props.data.sessions)}
-              </MyText>
->>>>>>> 1f7722026fc6e0f701cb1b53db5d99d9f1fdf942
             </View>
           )}
         </AnimatedImageBackground>
