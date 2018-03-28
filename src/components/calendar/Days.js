@@ -49,8 +49,8 @@ export class Days extends Component {
     return (
       <View>
         <Animated.View
-          style={
-            ({ opacity: this.state.animatedValue },
+          style={[
+            { opacity: this.state.animatedValue },
             {
               transform: [
                 { scale: this.state.animatedValue },
@@ -62,8 +62,8 @@ export class Days extends Component {
                   })
                 }
               ]
-            })
-          }
+            }
+          ]}
         >
           <ScrollView horizontal contentContainerStyle={styles.content}>
             {days.map((day, index) => {

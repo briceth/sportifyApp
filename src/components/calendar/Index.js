@@ -11,6 +11,7 @@ export class Calendar extends Component {
   static propTypes = {
     dates: PropTypes.array,
     selectHour: PropTypes.func,
+    onSwipeDay: PropTypes.func,
     selectedHour: PropTypes.number,
     selectedDay: PropTypes.number
   }
@@ -27,28 +28,20 @@ export class Calendar extends Component {
     this.setState({ selectedDay: dates[0].days[0].id })
   }
 
-  // le mois est selectioné en même temps que le jour
+  // le mois est selectionné en même temps que le jour
   // les heures apparaissent en fonction du jour cliqué
   selectMonthAndDay = (day, month, dayId) => {
-    const selectedDay = this.state.selectedDay
+    const { selectedDay } = this.state
+    const { onSwipeDay } = this.props
 
-    if (selectedDay === dayId) {
-      //si il existe tu le supprimes
-      this.setState(
-        {
-          selectedDay: null
-        },
-        () => {
-          console.log('existe', this.state)
-        }
-      )
-    } else {
-      //sinon tu l'ajoutes
+    if (selectedDay !== dayId) {
+      //si il n'existe pas dans le state tu l'ajoutes
       this.setState(
         {
           selectedDay: dayId
         },
         () => {
+          onSwipeDay()
           console.log('existe pas', this.state)
         }
       )
@@ -56,17 +49,20 @@ export class Calendar extends Component {
   }
 
   onSwipe = index => {
-    const { dates } = this.props
-    this.setState({
-      monthIndex: index,
-      selectedDay: dates[index].days[0].id //mettre par défaut le premier jour du mois suivant
-    })
+    const { dates, onSwipeDay } = this.props
+    this.setState(
+      {
+        monthIndex: index,
+        selectedDay: dates[index].days[0].id //mettre par défaut le premier jour du mois suivant
+      },
+      () => onSwipeDay() // on change de jour, du coup le boutton n'est plus bleu
+    )
   }
 
   renderDays = () => {
     const { dates, selectHour, selectedHour } = this.props
-    const { selectedDay } = this.state
-    const month = dates[this.state.monthIndex]
+    const { selectedDay, monthIndex } = this.state
+    const month = dates[monthIndex]
 
     return (
       <Days

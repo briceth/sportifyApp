@@ -135,6 +135,7 @@ export class Session extends Component {
           </View>
         </View>,
         <CallToAction
+          teacher
           onPress={() =>
             this.props.navigation.navigate('Scanner', {
               session: session
