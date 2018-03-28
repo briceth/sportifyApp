@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { FlatList, View, Dimensions } from 'react-native'
+import { FlatList, View, Dimensions, ActivityIndicator } from 'react-native'
 import { MyText } from '../../MyText'
 import { Activity } from './Activity'
 import config from '../../../../config'
@@ -11,7 +11,9 @@ import PropTypes from 'prop-types'
 export class Activities extends Component {
   static propTypes = {
     goToPlanning: PropTypes.func,
-    currentUser: PropTypes.object
+    currentUser: PropTypes.object,
+    imagePos: PropTypes.object,
+    updateServerFromStorage: PropTypes.func
   }
 
   state = {
@@ -198,29 +200,35 @@ export class Activities extends Component {
   }
 
   render() {
-    const { activitiesSorted, favorites } = this.state
+    const { activitiesSorted, favorites, width, geolocation } = this.state
+    const { imagePos, goToPlanning } = this.props
+
     return activitiesSorted ? (
       <View>
         <MyText style={[mainStyles.title]}>Les cours</MyText>
+
         <FlatList
           data={activitiesSorted}
-          extraData={[this.state.favorites, this.state.geolocation]}
+          extraData={[favorites, geolocation]}
           renderItem={({ item }) => {
             return (
               <Activity
-                geolocation={this.state.geolocation}
-                width={this.state.width}
+                imagePos={imagePos}
+                geolocation={geolocation}
+                width={width}
                 data={item}
                 isFavorite={favorites.indexOf(item._id) > -1 ? true : false}
                 updateFavorites={this.updateFavorites}
-                goToPlanning={this.props.goToPlanning}
+                goToPlanning={goToPlanning}
               />
             )
           }}
         />
       </View>
     ) : (
-      <View />
+      <View>
+        <ActivityIndicator />
+      </View>
     )
   }
 }

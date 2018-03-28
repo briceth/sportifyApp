@@ -6,6 +6,8 @@ import {
   View,
   Image,
   TouchableOpacity,
+  Animated,
+  Easing,
   Alert
 } from 'react-native'
 import { Reservations } from '../components/home/Reservations'
@@ -39,7 +41,8 @@ export class Home extends Component {
 
   state = {
     loading: true,
-    currentUser: null
+    currentUser: null,
+    imagePos: new Animated.Value(0)
   }
 
   componentDidMount = async () => {
@@ -118,6 +121,24 @@ export class Home extends Component {
       .catch(err => console.tron.log(err))
   }
 
+  scroll = e => {
+    //console.log('scroll !', e.nativeEvent.contentOffset.y)
+    this.state.imagePos.setValue(0)
+    Animated.timing(this.state.imagePos, {
+      toValue: 1,
+      duration: 2000,
+      easing: Easing.linear
+    }).start()
+  }
+
+  scrollEnd = e => {
+    Animated.timing(this.state.imagePos, {
+      toValue: 0,
+      duration: 1000,
+      easing: Easing.linear
+    }).start()
+  }
+
   render() {
     const { currentUser, loading } = this.state
     const { navigation } = this.props
@@ -126,7 +147,11 @@ export class Home extends Component {
         <ActivityIndicator />
       </View>
     ) : (
-      <ScrollView style={mainStyles.containerFlex}>
+      <ScrollView
+        style={mainStyles.containerFlex}
+        onScrollBeginDrag={this.scroll}
+        scrollEventThrottle={16}
+      >
         {currentUser && (
           <Reservations
             navigation={navigation}
@@ -137,6 +162,7 @@ export class Home extends Component {
         )}
         {!currentUser || currentUser.account.role === 'user' ? (
           <Activities
+            imagePos={this.state.imagePos}
             updateServerFromStorage={this.updateServerFromStorage}
             currentUser={currentUser}
             goToPlanning={this.goToPlanning}
