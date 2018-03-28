@@ -6,6 +6,8 @@ import {
   View,
   Image,
   TouchableOpacity,
+  Animated,
+  Easing,
   Alert
 } from 'react-native'
 import { Reservations } from '../components/home/Reservations'
@@ -31,18 +33,19 @@ export class Home extends Component {
           source={require('../images/logo.png')}
         />
       ),
-      headerRight: renderRight(params)
+      headerRight: renderRight(params),
+      headerLeft: null,
+      gesturesEnabled: false
     }
   }
 
   state = {
     loading: true,
-    currentUser: null
+    currentUser: null,
+    imagePos: new Animated.Value(0)
   }
 
   componentDidMount = async () => {
-    //setParams to navbar to dertermine right icon
-
     // Recupération du user du store:
     const currentUser = await store.get('currentUser')
     this.props.navigation.setParams({
@@ -58,7 +61,7 @@ export class Home extends Component {
     if (this.state.currentUser) {
       Alert.alert(
         'Confirmation',
-        'Etes vous sûr de vouloir vous déconnectez ?',
+        'Etes vous sûr de vouloir vous déconnecter ?',
         [
           {
             text: 'Annuler',
@@ -94,7 +97,6 @@ export class Home extends Component {
 
   // format: data = {dataToAdd: {sessions: [ids]}}
   updateServerFromStorage = (currentUser, data) => {
-    console.tron.log('IN UPDATE SERVER')
     if (!data) throw Error('No data given')
     const key = Object.keys(data)[0]
     const dataToUpdate = data[key]
@@ -112,12 +114,29 @@ export class Home extends Component {
         }
       )
       .then(response => {
-        console.tron.log(response)
         this.setState({
           loading: false
         })
       })
       .catch(err => console.tron.log(err))
+  }
+
+  scroll = e => {
+    //console.log('scroll !', e.nativeEvent.contentOffset.y)
+    this.state.imagePos.setValue(0)
+    Animated.timing(this.state.imagePos, {
+      toValue: 1,
+      duration: 2000,
+      easing: Easing.linear
+    }).start()
+  }
+
+  scrollEnd = e => {
+    Animated.timing(this.state.imagePos, {
+      toValue: 0,
+      duration: 1000,
+      easing: Easing.linear
+    }).start()
   }
 
   render() {
@@ -128,7 +147,11 @@ export class Home extends Component {
         <ActivityIndicator />
       </View>
     ) : (
-      <ScrollView style={mainStyles.containerFlex}>
+      <ScrollView
+        style={mainStyles.containerFlex}
+        onScrollBeginDrag={this.scroll}
+        scrollEventThrottle={16}
+      >
         {currentUser && (
           <Reservations
             navigation={navigation}
@@ -139,6 +162,7 @@ export class Home extends Component {
         )}
         {!currentUser || currentUser.account.role === 'user' ? (
           <Activities
+            imagePos={this.state.imagePos}
             updateServerFromStorage={this.updateServerFromStorage}
             currentUser={currentUser}
             goToPlanning={this.goToPlanning}
@@ -151,7 +175,6 @@ export class Home extends Component {
 
 function renderRight(params) {
   const { user } = params || 0
-  console.tron.log(user)
   if (!user) return
   return (
     <TouchableOpacity

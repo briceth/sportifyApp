@@ -1,12 +1,21 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Image, TouchableOpacity } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Animated,
+  ImageBackground
+} from 'react-native'
 import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { MyText } from '../../MyText'
 import { BLUE } from '../../../mainStyle'
 import { startsAt } from '../../../utils/utils'
-// import { distanceInWords } from 'date-fns'
-// import Fr from 'date-fns/locale/fr'
+
+const AnimatedMyText = Animated.createAnimatedComponent(MyText)
+const AnimatedImageBackground = Animated.createAnimatedComponent(
+  ImageBackground
+)
 
 export class Activity extends Component {
   static propTypes = {
@@ -15,7 +24,9 @@ export class Activity extends Component {
     data: PropTypes.object,
     width: PropTypes.number,
     goToPlanning: PropTypes.func,
-    updateFavorites: PropTypes.func
+    updateFavorites: PropTypes.func,
+    imagePos: PropTypes.object,
+    geolocation: PropTypes.object
   }
 
   constructor(props) {
@@ -37,12 +48,6 @@ export class Activity extends Component {
     return false
   }
 
-  // startsAt() {
-  //   return distanceInWords(this.props.data.sessions, new Date(), {
-  //     locale: frLocale
-  //   })
-  // }
-
   distance() {
     const { distance } = this.props.data
 
@@ -51,74 +56,131 @@ export class Activity extends Component {
     return ''
   }
 
-  timeBeforeStartContainer = function() {
+  timeBeforeStartContainer = () => {
     return {
       maxWidth: this.props.width - 100
     }
   }
 
   render() {
-    const { image, name, center, _id, sessions } = this.props.data
-    const { start } = this.state
+    const {
+      geolocation,
+      updateFavorites,
+      goToPlanning,
+      isFavorite,
+      imagePos,
+      data: { image, name, center, _id, sessions }
+    } = this.props
 
-    const star = this.props.isFavorite ? 'star' : 'star-o'
+    const ImgParallax = [
+      {
+        translateY: imagePos.interpolate({
+          inputRange: [0, 1],
+          outputRange: [-6, 6],
+          extrapolate: 'clamp'
+        })
+      }
+    ]
+
+    const TextParallax = [
+      {
+        translateY: imagePos.interpolate({
+          inputRange: [0, 1],
+          outputRange: [-4, 4],
+          extrapolate: 'clamp'
+        })
+      }
+    ]
+
+    console.tron.display({
+      name: 'Kévin',
+      preview: '_id',
+      value: this.props.data,
+      important: true
+    })
+
+    const star = isFavorite ? 'star' : 'star-o'
+
     return (
       <TouchableOpacity
         style={styles.lessonContainer}
-        onPress={() => this.props.goToPlanning(_id)}
+        onPress={() => goToPlanning(_id)}
       >
-        <Image
+        <AnimatedImageBackground
           resizeMode="cover"
-          style={{ height: 200 }}
+          style={[
+            styles.img,
+            {
+              transform: ImgParallax
+            }
+          ]}
           source={{
             uri: image
           }}
-        />
-
-        <View style={styles.blackfilter} />
-
-        <View style={styles.centerContainer}>
-          <MyText style={[styles.centerText]}>{center}</MyText>
-        </View>
-
-        <TouchableOpacity
-          style={styles.starContainer}
-          onPress={() => this.props.updateFavorites(_id)}
         >
-          <Icon name={star} size={30} color={BLUE} />
-        </TouchableOpacity>
+          <Animated.View
+            style={[
+              styles.centerContainer,
+              {
+                transform: TextParallax
+              }
+            ]}
+          >
+            <MyText style={[styles.centerText]}>{center}</MyText>
+          </Animated.View>
 
-        <View style={styles.textContainer}>
-          <MyText style={[styles.nameActivities]}>{name}</MyText>
-          {sessions && (
-            <View style={this.timeBeforeStartContainer()}>
-              <MyText style={[styles.timeBeforeStart]}>
-                Prochaine scéance dans {startsAt(this.props.data.sessions)}
-              </MyText>
+          <TouchableOpacity
+            style={styles.starContainer}
+            onPress={() => updateFavorites(_id)}
+          >
+            <Icon name={star} size={30} color={BLUE} />
+          </TouchableOpacity>
+
+          <Animated.View
+            style={[
+              styles.textContainer,
+              {
+                transform: TextParallax
+              }
+            ]}
+          >
+            <MyText style={[styles.nameActivities]}>{name}</MyText>
+            {sessions && (
+              <View style={this.timeBeforeStartContainer()}>
+                <MyText style={[styles.timeBeforeStart]}>
+                  Prochaine séance dans {startsAt(sessions)}
+                </MyText>
+              </View>
+            )}
+          </Animated.View>
+
+          {geolocation && (
+            <View style={styles.distanceContainer}>
+              <MyText style={[styles.distance]}>{this.distance()}</MyText>
             </View>
           )}
-        </View>
-
-        {this.props.geolocation && (
-          <View style={styles.distanceContainer}>
-            <MyText style={[styles.distance]}>{this.distance()}</MyText>
-          </View>
-        )}
+        </AnimatedImageBackground>
       </TouchableOpacity>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  img: {
+    height: 200,
+    position: 'relative'
+  },
   lessonContainer: {
-    marginBottom: 10
+    marginBottom: 10,
+    overflow: 'hidden',
+    marginVertical: 10
   },
   centerContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 20,
+    top: 10,
+    left: -15,
+    borderRadius: 3,
     height: 40,
-    minWidth: 170,
+    maxWidth: 170,
     paddingHorizontal: 20,
     backgroundColor: 'black',
     justifyContent: 'center',
@@ -138,12 +200,12 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     position: 'absolute',
-    bottom: 30,
-    left: -10,
+    bottom: 20,
+    left: -15,
     paddingLeft: 30,
     paddingRight: 10,
     paddingBottom: 5,
-    borderRadius: 4,
+    borderRadius: 3,
     backgroundColor: BLUE
   },
   nameActivities: {

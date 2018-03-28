@@ -23,6 +23,17 @@ export class Session extends Component {
     session: null
   }
 
+  onSelect = data => {
+    this.setState(data)
+  }
+
+  onPress = () => {
+    this.props.navigation.navigate('Scanner', {
+      onSelect: this.onSelect,
+      session: this.state.session
+    })
+  }
+
   componentDidMount() {
     const { session } = this.props.navigation.state.params
 
@@ -38,13 +49,16 @@ export class Session extends Component {
     const { bookedBy, peoplePresent } = this.state.session
 
     if (bookedBy.length > 0) {
-      return bookedBy.map((element, index) => {
+      return bookedBy.map((user, index) => {
+        const image = user.account.image
+          ? user.account.image
+          : `https://randomuser.me/api/portraits/men/${index + 5}.jpg`
         return (
           <View style={styles.imgCircle} key={index}>
             <Image
               style={styles.image}
               source={{
-                uri: `https://randomuser.me/api/portraits/men/${index + 5}.jpg`
+                uri: image
               }}
             />
           </View>
@@ -134,6 +148,7 @@ export class Session extends Component {
             </ScrollView>
           </View>
         </View>,
+<<<<<<< HEAD
         <CallToAction
           teacher
           onPress={() =>
@@ -143,6 +158,9 @@ export class Session extends Component {
           }
           key="callToAction"
         >
+=======
+        <CallToAction onPress={this.onPress} key="callToAction">
+>>>>>>> 490ef99e2cc0794257fbb937c46b1b0cc39b9bbf
           Scanner un participant
         </CallToAction>
       ]

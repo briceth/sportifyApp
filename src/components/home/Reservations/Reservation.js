@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, TouchableHighlight } from 'react-native'
+import { Animated, View, StyleSheet, TouchableHighlight } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import { mainStyles, BLUE } from '../../../mainStyle'
@@ -20,17 +20,40 @@ export class Reservation extends Component {
     navigation: PropTypes.object
   }
 
-  renderActions = () => {
-    const { session, currentUser, navigation } = this.props
-    const { role } = currentUser.account
+  constructor(props) {
+    super(props)
 
+    this._animated = new Animated.Value(0)
+  }
+
+  componentDidMount() {
+    Animated.timing(this._animated, {
+      toValue: 1,
+      duration: 250
+    }).start()
+  }
+
+  renderActions = () => {
+    const {
+      session: {
+        _id: sessionId,
+        startsAt,
+        duration,
+        teacher: { firstName: teacher },
+        activity: { name: activity, center: { name: center } }
+      },
+      currentUser: { _id: currentUserId, account: { role } },
+      navigation
+    } = this.props
+
+    // warning
     const sessionInfos = {
-      sessionId: session._id,
-      activity: session.activity.name,
-      // center: session.activity.center.name,
-      startsAt: session.startsAt,
-      duration: session.duration,
-      teacher: session.teacher.firstName
+      sessionId,
+      activity,
+      center,
+      startsAt,
+      duration,
+      teacher
     }
 
     return role === 'teacher' ? (
@@ -38,8 +61,8 @@ export class Reservation extends Component {
         style={styles.link}
         onPress={() =>
           navigation.navigate('Session', {
-            teacher: currentUser._id,
-            session: session._id
+            teacher: currentUserId,
+            session: sessionId
           })
         }
       >
@@ -48,6 +71,7 @@ export class Reservation extends Component {
     ) : (
       <TouchableHighlight
         underlayColor="#EFEFF4"
+        //onPress={() => this.props.toggleQrCode(this.props.session)}
         onPress={() => this.props.toggleQrCode(sessionInfos)}
       >
         <Actions style={[styles.actions]}>
@@ -58,19 +82,25 @@ export class Reservation extends Component {
   }
 
   render() {
-    const { session, style } = this.props
+    const {
+      style,
+      session: {
+        startsAt,
+        activity: { name: activity, center: { name: center } }
+      }
+    } = this.props
 
     return (
-      <View style={style}>
+      <Animated.View style={[style]}>
         <ReservationInfos>
-          <MyText style={[mainStyles.boldText]}>{session.activity.name}</MyText>
-          <MyText>{/* session.activity.center.name */}Le centre</MyText>
+          <MyText style={[mainStyles.boldText]}>{activity}</MyText>
+          <MyText>{center}</MyText>
           <MyText>
-            {format(session.startsAt, 'ddd DD MMM [à] HH:mm', { locale: fr })}
+            {format(startsAt, 'ddd DD MMM [à] HH:mm', { locale: fr })}
           </MyText>
         </ReservationInfos>
         {this.renderActions()}
-      </View>
+      </Animated.View>
     )
   }
 }

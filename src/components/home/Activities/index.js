@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { FlatList, View, Dimensions } from 'react-native'
+import { FlatList, View, Dimensions, ActivityIndicator } from 'react-native'
 import { MyText } from '../../MyText'
 import { Activity } from './Activity'
 import config from '../../../../config'
@@ -11,7 +11,9 @@ import PropTypes from 'prop-types'
 export class Activities extends Component {
   static propTypes = {
     goToPlanning: PropTypes.func,
-    currentUser: PropTypes.object
+    currentUser: PropTypes.object,
+    imagePos: PropTypes.object,
+    updateServerFromStorage: PropTypes.func
   }
 
   state = {
@@ -20,7 +22,10 @@ export class Activities extends Component {
     favoritesLoad: false,
     favorites: [],
     width: Dimensions.get('window').width,
-    geolocation: null
+    geolocation: {
+      latitude: null,
+      longitude: null
+    }
   }
 
   componentDidMount() {
@@ -143,7 +148,7 @@ export class Activities extends Component {
         )
       },
       error => {
-        this.getActivities()
+        this.getActivities() //Get Activitites
         console.log(error.message)
       },
       { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 }
@@ -152,11 +157,13 @@ export class Activities extends Component {
 
   getActivities() {
     const { geolocation } = this.state
-    const long = geolocation ? geolocation.longitude : 0
-    const lat = geolocation ? geolocation.latitude : 0
 
     axios
-      .get(`${config.API_URL}/api/activities?long=${long}&lat=${lat}`)
+      .get(
+        `${config.API_URL}/api/activities?long=${geolocation.longitude}&lat=${
+          geolocation.latitude
+        }`
+      )
       .then(response => {
         this.setState({
           activities: response.data
@@ -193,29 +200,35 @@ export class Activities extends Component {
   }
 
   render() {
-    const { activitiesSorted, favorites } = this.state
+    const { activitiesSorted, favorites, width, geolocation } = this.state
+    const { imagePos, goToPlanning } = this.props
+
     return activitiesSorted ? (
       <View>
         <MyText style={[mainStyles.title]}>Les cours</MyText>
+
         <FlatList
           data={activitiesSorted}
-          extraData={[this.state.favorites, this.state.geolocation]}
+          extraData={[favorites, geolocation]}
           renderItem={({ item }) => {
             return (
               <Activity
-                geolocation={this.state.geolocation}
-                width={this.state.width}
+                imagePos={imagePos}
+                geolocation={geolocation}
+                width={width}
                 data={item}
                 isFavorite={favorites.indexOf(item._id) > -1 ? true : false}
                 updateFavorites={this.updateFavorites}
-                goToPlanning={this.props.goToPlanning}
+                goToPlanning={goToPlanning}
               />
             )
           }}
         />
       </View>
     ) : (
-      <View />
+      <View>
+        <ActivityIndicator />
+      </View>
     )
   }
 }

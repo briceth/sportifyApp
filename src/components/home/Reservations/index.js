@@ -165,6 +165,13 @@ export class Reservations extends Component {
   }
 
   renderQrModal = () => {
+    const { currentUser } = this.props
+    console.tron.display({
+      name: 'Kévin',
+      preview: 'Currentuser',
+      value: currentUser,
+      important: true
+    })
     const {
       activity,
       center,
@@ -188,8 +195,8 @@ export class Reservations extends Component {
             <MyText style={[mainStyles.boldText]}>{activity}</MyText>
             <MyText style={[mainStyles.boldText]}>{center}</MyText>
             <View style={[styles.infoLine, { paddingTop: 20 }]}>
-              <Text style={styles.label}>Prof : </Text>
-              <MyText>{teacher}</MyText>
+              {/* <Text style={styles.label}>Prof : </Text>
+              <MyText>{teacher}</MyText> */}
             </View>
             <View style={styles.infoLine}>
               <Text style={styles.label}>Date : </Text>
@@ -213,7 +220,7 @@ export class Reservations extends Component {
             </View>
           </View>
 
-          <QRCode value={sessionId} size={width * 0.75} color="black" />
+          <QRCode value={currentUser._id} size={width * 0.75} color="black" />
         </View>
       </Modal>
     )
