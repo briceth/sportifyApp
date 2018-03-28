@@ -20,7 +20,10 @@ export class Activities extends Component {
     favoritesLoad: false,
     favorites: [],
     width: Dimensions.get('window').width,
-    geolocation: null
+    geolocation: {
+      latitude: null,
+      longitude: null
+    }
   }
 
   componentDidMount() {
@@ -143,7 +146,7 @@ export class Activities extends Component {
         )
       },
       error => {
-        this.getActivities()
+        this.getActivities() //Get Activitites
         console.log(error.message)
       },
       { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 }
@@ -152,11 +155,13 @@ export class Activities extends Component {
 
   getActivities() {
     const { geolocation } = this.state
-    const long = geolocation ? geolocation.longitude : 0
-    const lat = geolocation ? geolocation.latitude : 0
 
     axios
-      .get(`${config.API_URL}/api/activities?long=${long}&lat=${lat}`)
+      .get(
+        `${config.API_URL}/api/activities?long=${geolocation.longitude}&lat=${
+          geolocation.latitude
+        }`
+      )
       .then(response => {
         this.setState({
           activities: response.data

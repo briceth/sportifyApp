@@ -31,7 +31,9 @@ export class Home extends Component {
           source={require('../images/logo.png')}
         />
       ),
-      headerRight: renderRight(params)
+      headerRight: renderRight(params),
+      headerLeft: null,
+      gesturesEnabled: false
     }
   }
 
