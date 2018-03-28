@@ -31,7 +31,9 @@ export class Home extends Component {
           source={require('../images/logo.png')}
         />
       ),
-      headerRight: renderRight(params)
+      headerRight: renderRight(params),
+      headerLeft: null,
+      gesturesEnabled: false
     }
   }
 
@@ -56,7 +58,7 @@ export class Home extends Component {
     if (this.state.currentUser) {
       Alert.alert(
         'Confirmation',
-        'Etes vous sûr de vouloir vous déconnectez ?',
+        'Etes vous sûr de vouloir vous déconnecter ?',
         [
           {
             text: 'Annuler',

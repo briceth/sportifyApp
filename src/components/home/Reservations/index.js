@@ -195,8 +195,8 @@ export class Reservations extends Component {
             <MyText style={[mainStyles.boldText]}>{activity}</MyText>
             <MyText style={[mainStyles.boldText]}>{center}</MyText>
             <View style={[styles.infoLine, { paddingTop: 20 }]}>
-              <Text style={styles.label}>Prof : </Text>
-              <MyText>{teacher}</MyText>
+              {/* <Text style={styles.label}>Prof : </Text>
+              <MyText>{teacher}</MyText> */}
             </View>
             <View style={styles.infoLine}>
               <Text style={styles.label}>Date : </Text>

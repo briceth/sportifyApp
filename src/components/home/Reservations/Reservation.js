@@ -64,7 +64,7 @@ export class Reservation extends Component {
       <View style={style}>
         <ReservationInfos>
           <MyText style={[mainStyles.boldText]}>{session.activity.name}</MyText>
-          <MyText>{/* session.activity.center.name */}Le centre</MyText>
+          {/*<MyText> session.activity.center.name </MyText>*/}
           <MyText>
             {format(session.startsAt, 'ddd DD MMM [à] HH:mm', { locale: fr })}
           </MyText>
