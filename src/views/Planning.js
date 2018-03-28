@@ -5,23 +5,29 @@ import {
   ActivityIndicator,
   View,
   Animated,
-  Easing,
-  Image
+  // Easing,
+  Linking,
+  Image,
+  TouchableOpacity,
+  Dimensions
 } from 'react-native'
 import axios from 'axios'
 import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import store from 'react-native-simple-store'
+// import RNImmediatePhoneCall from 'react-native-immediate-phone-call'
 import { Calendar } from '../components/calendar/Index'
-import { mainStyles, DARKBLUE } from '../mainStyle'
+import { mainStyles, BLUE } from '../mainStyle'
 import { MyText } from '../components/MyText'
 import { CallToAction } from '../components/buttons/callToAction'
+import { FlashAlert } from '../components/FlashAlert'
 import config from '../../config'
 import {
   rangeDateByMonth,
   formatDate,
   startsAt,
-  formatDuration
+  formatDuration,
+  manageStyle
 } from '../utils/utils'
 const log = console.log
 
@@ -39,12 +45,14 @@ export class Planning extends Component {
     activityId: PropTypes.string,
     navigation: PropTypes.object
   }
+
   state = {
     loading: true,
     name: '',
     image: '',
     address: '',
     center: '',
+    phone: '',
     dates: [],
     firstSessionDate: '',
     duration: 0,
@@ -52,17 +60,19 @@ export class Planning extends Component {
     isOpen: false,
     selectedHour: null,
     session: null,
-    isHourSelected: false
+    isHourSelected: false,
+    flashAlert: false,
+    errorMessage: ''
   }
 
-  makeImgBig = () => {
-    log('make big img')
-    Animated.timing(this.state.scaleValue, {
-      toValue: 1,
-      duration: 1000,
-      easing: Easing.easeOutBack
-    }).start()
-  }
+  // makeImgBig = () => {
+  //   log('make big img')
+  //   Animated.timing(this.state.scaleValue, {
+  //     toValue: 1,
+  //     duration: 1000,
+  //     easing: Easing.easeOutBack
+  //   }).start()
+  // }
 
   toggleTab = () => {
     log('open tab')
@@ -76,15 +86,17 @@ export class Planning extends Component {
       .then(response => {
         console.log('Fetching Activity :', response.data)
 
-        const { name } = response.data
-        const { image } = response.data
-        const { address } = response.data.center
-        const center = response.data.center.name
-        const sessions = response.data.sessions
-        console.log(sessions)
+        const {
+          name,
+          image,
+          center: { address, phone, name: center }, // name: center to rename const !
+          sessions
+        } = response.data
 
+        console.log('SESSIONS:', sessions)
+        // format date with date fns
         const formatedDate = formatDate(sessions)
-
+        // range each session by month, then by days, then by hours
         const newDate = rangeDateByMonth(formatedDate)
 
         this.setState({
@@ -93,6 +105,7 @@ export class Planning extends Component {
           image,
           address,
           center,
+          phone,
           dates: [...newDate],
           firstSessionDate: sessions[0].startsAt, // the first session
           duration: sessions[0].duration // the first session
@@ -123,29 +136,81 @@ export class Planning extends Component {
   }
 
   bookSession = async () => {
-    const currentUser = await store.get('currentUser')
-    if (!currentUser) return this.props.navigation.navigate('Signup')
-
-    currentUser.account.sessions.push(this.state.session)
-
-    store.update('currentUser', currentUser).then(res => {
-      this.props.navigation.navigate('Home', {
-        newCurrentUser: currentUser
-      })
+    // ne peut booker que si il a selectionné une heure
+    if (this.state.isHourSelected) {
+      const currentUser = await store.get('currentUser')
+      if (!currentUser) return this.props.navigation.navigate('Signup')
 
       axios
         .put(`${config.API_URL}/api/sessions/${this.state.session._id}`, {
           userId: currentUser._id
         })
         .then(response => {
-          console.log(response.data)
+          currentUser.account.sessions.push(this.state.session)
+          store.update('currentUser', currentUser).then(res => {
+            this.props.navigation.navigate('Home', {
+              newCurrentUser: currentUser
+            })
+          })
         })
-        .catch(err => console.log(err))
-    })
+        .catch(err => {
+          // si la session est déjà reservée à la même heure on affiche le FlashAlert
+          if (err.response.status === 404) {
+            this.setState({
+              flashAlert: true,
+              errorMessage: err.response.data.message
+            })
+          }
+        })
+    } else {
+      // si l'heure n'est pas sélectionné, on affiche le FlashAlert
+      this.setState({
+        flashAlert: true,
+        errorMessage: 'Veuillez selectionner un horraire'
+      })
+    }
+  }
+
+  //remove flash alert pop-up and make email & password inputs empty
+  removeFlashAlert = () => {
+    this.setState({ flashAlert: false })
+  }
+
+  renderFlashAlert = () => {
+    if (this.state.flashAlert) {
+      return (
+        <FlashAlert
+          removeFlashAlert={this.removeFlashAlert}
+          message={this.state.errorMessage}
+        />
+      )
+    }
+    return null
+  }
+
+  startPhoneCall = () => {
+    const url = `tel:${this.state.phone}`
+    Linking.canOpenURL(url)
+      .then(supported => {
+        if (!supported) {
+          console.log("Can't handle url: " + url)
+        } else {
+          return Linking.openURL(url)
+        }
+      })
+      .catch(err => console.error('An error occurred', err))
   }
 
   render() {
-    const { name, address, center, dates, image, loading } = this.state
+    const {
+      name,
+      address,
+      center,
+      dates,
+      image,
+      loading,
+      isHourSelected
+    } = this.state
     console.log('Props in Planning :', this.props)
 
     return loading ? (
@@ -154,12 +219,13 @@ export class Planning extends Component {
       </View>
     ) : (
       <View style={styles.container}>
+        {this.renderFlashAlert()}
         <View style={styles.imgContainer}>
           <View style={styles.imgBorder}>
             <ImageBackground
               resizeMode="cover"
               source={{ uri: image }}
-              style={[styles.img, this.state.imgWidth]}
+              style={[styles.img]}
             >
               <View style={styles.textImg}>
                 <MyText style={[mainStyles.paragraphe]}>
@@ -179,9 +245,12 @@ export class Planning extends Component {
               <MyText style={[styles.text]}>{center}</MyText>
               <MyText style={[styles.text]}>{address}</MyText>
             </View>
-            <Icon name="phone-square" size={40} color={DARKBLUE} />
+            <TouchableOpacity onPress={this.startPhoneCall}>
+              <Icon name="phone-square" size={40} color={BLUE} />
+            </TouchableOpacity>
           </View>
         </View>
+
         <View style={[styles.calendarContainer]}>
           <Calendar
             dates={dates}
@@ -189,35 +258,39 @@ export class Planning extends Component {
             selectedHour={this.state.selectedHour}
           />
         </View>
-        <CallToAction bookSession={this.bookSession}>Réserver</CallToAction>
+
+        <CallToAction isSelected={isHourSelected} onPress={this.bookSession}>
+          Réserver
+        </CallToAction>
       </View>
     )
   }
 }
 
+const { height, width } = Dimensions.get('window')
+const { heightImg, fontsize } = manageStyle(height, width)
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 5,
-    marginTop: 5
+    paddingHorizontal: 10,
+    paddingBottom: 10,
+    marginTop: 5,
+    flexDirection: 'column'
   },
   imgContainer: {
+    height: 200 - heightImg,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 2
   },
+  img: {
+    height: '100%'
+  },
   imgBorder: {
     borderRadius: 4,
     overflow: 'hidden'
-  },
-  calendarContainer: {
-    paddingHorizontal: 5,
-    marginTop: 15,
-    flex: 1
-  },
-  img: {
-    height: 200
   },
   textImg: {
     position: 'absolute',
@@ -225,9 +298,15 @@ const styles = StyleSheet.create({
     left: 10
   },
   infosWrapper: {
-    paddingVertical: 10,
+    height: 100,
+    marginTop: 15,
     borderBottomWidth: 0.5,
     borderBottomColor: 'grey'
+  },
+  calendarContainer: {
+    paddingHorizontal: 5,
+    marginTop: 15,
+    flex: 1
   },
   center: {
     textAlign: 'center',
@@ -242,7 +321,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   text: {
-    fontSize: 16,
+    fontSize: 18 - fontsize,
     lineHeight: 25
   }
 })

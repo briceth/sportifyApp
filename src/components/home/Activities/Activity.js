@@ -61,6 +61,13 @@ export class Activity extends Component {
     const { image, name, center, _id, sessions } = this.props.data
     const { start } = this.state
 
+    console.tron.display({
+      name: 'Kévin',
+      preview: '_id',
+      value: this.props.data,
+      important: true
+    })
+
     const star = this.props.isFavorite ? 'star' : 'star-o'
     return (
       <TouchableOpacity
