@@ -85,11 +85,7 @@ export class Scanner extends Component {
         <View
           style={[styles.container, styles.containerTB, styles.containerBottom]}
         >
-          <TouchableOpacity
-            onPress={() => this.props.navigation.dispatch(this.resetAction())}
-          >
-            {' '}
-            //this.props.navigation.goBack()}>
+          <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
             <Text style={styles.text}>Annuler</Text>
           </TouchableOpacity>
         </View>

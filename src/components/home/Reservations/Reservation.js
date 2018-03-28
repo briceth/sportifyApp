@@ -87,8 +87,13 @@ export class Reservation extends Component {
     return (
       <Animated.View style={[style]}>
         <ReservationInfos>
+<<<<<<< HEAD
           <MyText style={[mainStyles.boldText]}>{activity}</MyText>
           <MyText>{center}</MyText>
+=======
+          <MyText style={[mainStyles.boldText]}>{session.activity.name}</MyText>
+          {/*<MyText> session.activity.center.name </MyText>*/}
+>>>>>>> 1f7722026fc6e0f701cb1b53db5d99d9f1fdf942
           <MyText>
             {format(startsAt, 'ddd DD MMM [à] HH:mm', { locale: fr })}
           </MyText>

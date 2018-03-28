@@ -3,10 +3,14 @@ package com.sportifyapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+<<<<<<< HEAD
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.horcrux.svg.SvgPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import org.reactnative.camera.RNCameraPackage;
+=======
+import com.github.wumke.RNImmediatePhoneCall.RNImmediatePhoneCallPackage;
+>>>>>>> 1f7722026fc6e0f701cb1b53db5d99d9f1fdf942
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import org.reactnative.camera.RNCameraPackage;
 import com.horcrux.svg.SvgPackage;
@@ -32,10 +36,14 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+<<<<<<< HEAD
             new VectorIconsPackage(),
             new SvgPackage(),
             new SplashScreenReactPackage(),
             new RNCameraPackage(),
+=======
+            new RNImmediatePhoneCallPackage(),
+>>>>>>> 1f7722026fc6e0f701cb1b53db5d99d9f1fdf942
             new SplashScreenReactPackage(),
             new RNCameraPackage(),
             new SvgPackage(),
