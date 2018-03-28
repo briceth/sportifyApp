@@ -11,8 +11,12 @@ import axios from 'axios'
 import { NavigationActions } from 'react-navigation'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 import config from '../../config'
+import PropTypes from 'prop-types'
 
 export class Scanner extends Component {
+  static propTypes = {
+    navigation: PropTypes.object
+  }
   constructor(props) {
     super(props)
 
