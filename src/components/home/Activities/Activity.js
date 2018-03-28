@@ -148,7 +148,7 @@ export class Activity extends Component {
             {sessions && (
               <View style={this.timeBeforeStartContainer()}>
                 <MyText style={[styles.timeBeforeStart]}>
-                  Prochaine scéance dans {startsAt(sessions)}
+                  Prochaine séance dans {startsAt(sessions)}
                 </MyText>
               </View>
             )}
