@@ -35,20 +35,26 @@ export class Reservation extends Component {
 
   renderActions = () => {
     const {
-      session: { _id: sessionId },
+      session: {
+        _id: sessionId,
+        startsAt,
+        duration,
+        teacher: { firstName: teacher },
+        activity: { name: activity, center: { name: center } }
+      },
       currentUser: { _id: currentUserId, account: { role } },
       navigation
     } = this.props
 
     // warning
-    // const sessionInfos = {
-    //sessionId: session._id,
-    // activity: session.activity.name
-    // center: session.activity.center.name,
-    // startsAt: session.startsAt,
-    // duration: session.duration,
-    // teacher: session.teacher.firstName
-    // }
+    const sessionInfos = {
+      sessionId,
+      activity,
+      center,
+      startsAt,
+      duration,
+      teacher
+    }
 
     return role === 'teacher' ? (
       <TouchableHighlight
@@ -65,8 +71,8 @@ export class Reservation extends Component {
     ) : (
       <TouchableHighlight
         underlayColor="#EFEFF4"
-        onPress={() => this.props.toggleQrCode(this.props.session)}
-        // onPress={() => this.props.toggleQrCode(sessionInfos)}
+        //onPress={() => this.props.toggleQrCode(this.props.session)}
+        onPress={() => this.props.toggleQrCode(sessionInfos)}
       >
         <Actions style={[styles.actions]}>
           <Icon name="qrcode" size={40} color={BLUE} />
