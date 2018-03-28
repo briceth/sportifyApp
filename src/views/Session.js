@@ -150,7 +150,7 @@ export class Session extends Component {
             </ScrollView>
           </View>
         </View>,
-        <CallToAction onPress={this.onPress} key="callToAction">
+        <CallToAction teacher onPress={this.onPress} key="callToAction">
           Scanner un participant
         </CallToAction>
       ]
