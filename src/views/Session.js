@@ -78,19 +78,21 @@ export class Session extends Component {
 
     if (peoplePresent.length > 0) {
       return peoplePresent.map((user, index) => {
-        const { firstName } = user.account
+        // const { firstName } = user.account
+        const image = user.account.image
+          ? user.account.image
+          : `https://randomuser.me/api/portraits/men/${index + 5}.jpg`
         return (
           <View key={index} style={styles.userContainer}>
             <View style={styles.imgCircle}>
               <Image
                 style={styles.image}
                 source={{
-                  uri: `https://randomuser.me/api/portraits/men/${index +
-                    5}.jpg`
+                  uri: image
                 }}
               />
             </View>
-            <MyText>{firstName}</MyText>
+            {/* <MyText>{firstName}</MyText> */}
           </View>
         )
       })
