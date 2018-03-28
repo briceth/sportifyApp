@@ -61,6 +61,7 @@ export class Planning extends Component {
     selectedHour: null,
     session: null,
     isHourSelected: false,
+    isDayChanged: false,
     flashAlert: false,
     errorMessage: ''
   }
@@ -127,12 +128,23 @@ export class Planning extends Component {
     } else {
       // sinon tu l'ajoutes
       this.setState(
-        { isHourSelected: true, selectedHour: hourId, session },
+        {
+          isHourSelected: true,
+          selectedHour: hourId,
+          session,
+          isDayChanged: false
+        },
         () => {
           console.log('this state', this.state)
         }
       )
     }
+  }
+
+  onSwipeDay = () => {
+    console.log('on change de jour')
+
+    this.setState({ isDayChanged: true })
   }
 
   bookSession = async () => {
@@ -209,8 +221,13 @@ export class Planning extends Component {
       dates,
       image,
       loading,
-      isHourSelected
+      isHourSelected,
+      selectedHour,
+      duration,
+      firstSessionDate,
+      isDayChanged
     } = this.state
+
     console.log('Props in Planning :', this.props)
 
     return loading ? (
@@ -229,10 +246,10 @@ export class Planning extends Component {
             >
               <View style={styles.textImg}>
                 <MyText style={[mainStyles.paragraphe]}>
-                  {name} - {formatDuration(this.state.duration)}
+                  {name} - {formatDuration(duration)}
                 </MyText>
                 <MyText style={[mainStyles.tagline]}>
-                  Prochaine session dans {startsAt(this.state.firstSessionDate)}
+                  Prochaine session dans {startsAt(firstSessionDate)}
                 </MyText>
               </View>
             </ImageBackground>
@@ -251,15 +268,20 @@ export class Planning extends Component {
           </View>
         </View>
 
-        <View style={[styles.calendarContainer]}>
+        <View style={styles.calendarContainer}>
           <Calendar
             dates={dates}
             selectHour={this.selectHour}
-            selectedHour={this.state.selectedHour}
+            selectedHour={selectedHour}
+            onSwipeDay={this.onSwipeDay}
           />
         </View>
 
-        <CallToAction isSelected={isHourSelected} onPress={this.bookSession}>
+        <CallToAction
+          isSelected={isHourSelected}
+          isDayChanged={isDayChanged}
+          onPress={this.bookSession}
+        >
           Réserver
         </CallToAction>
       </View>
@@ -304,7 +326,6 @@ const styles = StyleSheet.create({
     borderBottomColor: 'grey'
   },
   calendarContainer: {
-    paddingHorizontal: 5,
     marginTop: 15,
     flex: 1
   },

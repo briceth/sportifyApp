@@ -148,7 +148,19 @@ export class Session extends Component {
             </ScrollView>
           </View>
         </View>,
+<<<<<<< HEAD
+        <CallToAction
+          teacher
+          onPress={() =>
+            this.props.navigation.navigate('Scanner', {
+              session: session
+            })
+          }
+          key="callToAction"
+        >
+=======
         <CallToAction onPress={this.onPress} key="callToAction">
+>>>>>>> 490ef99e2cc0794257fbb937c46b1b0cc39b9bbf
           Scanner un participant
         </CallToAction>
       ]
