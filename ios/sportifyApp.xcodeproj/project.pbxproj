@@ -914,19 +914,11 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
-<<<<<<< HEAD
 						DevelopmentTeam = NQM98SD5C9;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = NQM98SD5C9;
-=======
-						DevelopmentTeam = 2F6DAN37NB;
-						TestTargetID = 13B07F861A680F5B00A75B9A;
-					};
-					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = 2F6DAN37NB;
->>>>>>> 4851aeb88e82fb009484090c9e7712228b5e52d3
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -1514,11 +1506,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-<<<<<<< HEAD
 				DEVELOPMENT_TEAM = NQM98SD5C9;
-=======
-				DEVELOPMENT_TEAM = 2F6DAN37NB;
->>>>>>> 4851aeb88e82fb009484090c9e7712228b5e52d3
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1555,11 +1543,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
-<<<<<<< HEAD
 				DEVELOPMENT_TEAM = NQM98SD5C9;
-=======
-				DEVELOPMENT_TEAM = 2F6DAN37NB;
->>>>>>> 4851aeb88e82fb009484090c9e7712228b5e52d3
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
@@ -1593,11 +1577,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-<<<<<<< HEAD
 				DEVELOPMENT_TEAM = NQM98SD5C9;
-=======
-				DEVELOPMENT_TEAM = 2F6DAN37NB;
->>>>>>> 4851aeb88e82fb009484090c9e7712228b5e52d3
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
@@ -1612,11 +1592,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-<<<<<<< HEAD
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.sportify-reacteur";
-=======
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.Sportify-App2";
->>>>>>> 4851aeb88e82fb009484090c9e7712228b5e52d3
 				PRODUCT_NAME = sportifyApp;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1628,11 +1604,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
-<<<<<<< HEAD
 				DEVELOPMENT_TEAM = NQM98SD5C9;
-=======
-				DEVELOPMENT_TEAM = 2F6DAN37NB;
->>>>>>> 4851aeb88e82fb009484090c9e7712228b5e52d3
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
