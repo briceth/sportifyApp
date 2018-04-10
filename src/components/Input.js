@@ -31,6 +31,7 @@ export class Input extends Component {
 
     return (
       <TextInput
+        underlineColorAndroid="transparent"
         autoCorrect={autoCorrect}
         autoCapitalize={noCapitalize && 'none'}
         secureTextEntry={secureTextEntry}
