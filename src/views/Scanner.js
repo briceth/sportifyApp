@@ -5,10 +5,10 @@ import {
   View,
   TouchableOpacity,
   Dimensions,
-  Alert
+  Alert,
+  Platform
 } from 'react-native'
 import axios from 'axios'
-import { NavigationActions } from 'react-navigation'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 import config from '../../config'
 
@@ -94,7 +94,10 @@ export class Scanner extends Component {
   }
 }
 
-const height = Dimensions.get('window').height
+const height =
+  Platform.OS === 'ios'
+    ? Dimensions.get('window').height
+    : Dimensions.get('window').height - 24
 const width = Dimensions.get('window').width
 const widthSide = width * 0.1
 const heightSide = width * 0.8

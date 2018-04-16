@@ -34,11 +34,19 @@ const log = console.log
 export class Planning extends Component {
   static navigationOptions = {
     headerTitle: (
-      <Image
-        style={{ width: 150, height: 30 }}
-        source={require('../images/logo.png')}
-      />
-    )
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center'
+        }}
+      >
+        <Image
+          style={{ width: 150, height: 30 }}
+          source={require('../images/logo.png')}
+        />
+      </View>
+    ),
+    headerRight: <View />
   }
 
   static propTypes = {

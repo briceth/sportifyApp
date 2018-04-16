@@ -18,6 +18,22 @@ export class Session extends Component {
   static propTypes = {
     navigation: PropTypes.object
   }
+  static navigationOptions = {
+    headerTitle: (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center'
+        }}
+      >
+        <Image
+          style={{ width: 150, height: 30 }}
+          source={require('../images/logo.png')}
+        />
+      </View>
+    ),
+    headerRight: <View />
+  }
 
   state = {
     session: null

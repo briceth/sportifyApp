@@ -139,10 +139,8 @@ export class Signup extends Component {
           <View style={[styles.subContainer, styles.buttonContainer]}>
             <Button handleSubmit={this.signup}>S'inscrire</Button>
           </View>
-
           {console.tron.log(typeof this.imageHeight)}
         </KeyboardAvoidingView>
-
         {!this.state.keyboardShow && (
           <View style={[styles.subContainer, styles.footer]}>
             <MyText>Déjà inscrit ?</MyText>
@@ -157,7 +155,6 @@ export class Signup extends Component {
     )
   }
 }
-
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
