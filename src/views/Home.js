@@ -28,13 +28,20 @@ export class Home extends Component {
     const { params = {} } = navigation.state
     return {
       headerTitle: (
-        <Image
-          style={{ width: 150, height: 30 }}
-          source={require('../images/logo.png')}
-        />
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center'
+          }}
+        >
+          <Image
+            style={{ width: 150, height: 30 }}
+            source={require('../images/logo.png')}
+          />
+        </View>
       ),
       headerRight: renderRight(params),
-      headerLeft: null,
+      headerLeft: <View />,
       gesturesEnabled: false
     }
   }
